@@ -464,7 +464,7 @@ body.fever .fever-badge{transform:translate(-50%,-35%) scale(1)}
    1. 配置：所有关键参数集中在这里
    ===================================================================== */
 const CONFIG = {
-  version: '1.2',
+  version: '1.2.1',
   rows: 10, cols: 7,             // 默认棋盘行列（rows*cols 必须为偶数；每关可单独设置 rows/cols）
   maxTile: 64,                   // 方块最大边长(px)
   ringRatio: 0.32,               // 外圈留白 = 方块边长 * ringRatio（连线可走外圈）
@@ -486,7 +486,7 @@ const CONFIG = {
   warn: { ratio: 0.12, minSeconds: 10, tickFrom: 5 },  // 进度条闪红阈值
   stars: [0.45, 0.2],            // 剩余时间比例 ≥0.45 三星，≥0.2 两星，否则一星
   timeScore: 10,                 // 每剩 1 秒奖励分
-  genAttempts: 40,               // 生成有解棋盘的最大尝试次数
+  genAttempts: 120,              // 生成有解棋盘的最大尝试次数
   levels: [                      // cols 越少方块越大；ice/walls/timeCandy/spark 为特殊方块数量；goal 为过关目标
     // 第 1 章 · 草莓农场
     { kinds: 12, time: 150, rule: 'none', cols: 6 },
@@ -659,8 +659,16 @@ const Logic = (() => {
 
   function clone(g) { return g.map(row => row.map(t => t && { id: t.id, kind: t.kind, r: t.r, c: t.c, ice: t.ice, wall: t.wall, mod: t.mod })); }
 
-  /** 把一条格子序列上的方块向序列开头压紧，记录移动 */
+  /** 把一条格子序列上的方块向序列开头压紧；巧克力墙固定不动，把序列分成几段各自压紧 */
   function compactLine(g, cells, moves) {
+    let seg = [];
+    for (const p of cells) {
+      const t = g[p.r][p.c];
+      if (t && t.wall) { compactSeg(g, seg, moves); seg = []; } else seg.push(p);
+    }
+    compactSeg(g, seg, moves);
+  }
+  function compactSeg(g, cells, moves) {
     const ts = [];
     for (const p of cells) if (g[p.r][p.c]) ts.push(g[p.r][p.c]);
     cells.forEach((p, i) => {
@@ -710,13 +718,17 @@ const Logic = (() => {
   function thawAll(g) { const out = []; forEachTile(g, t => { if (t.ice) { t.ice = false; out.push(t); } }); return out; }
   function countClearable(g) { let n = 0; forEachTile(g, t => { if (!t.wall) n++; }); return n; }
 
-  /** 贪心随机模拟能否消完（包含移动规则、冰冻、闪光） */
-  function isSolvable(g, rule) {
+  /** 随机贪心模拟能否消完（包含移动规则、冰冻、闪光）；换几种消除顺序各试一次，有一次能消完就算有解 */
+  function isSolvable(g, rule, tries = 4) {
+    for (let k = 0; k < tries; k++) if (simulateOnce(g, rule)) return true;
+    return false;
+  }
+  function simulateOnce(g, rule) {
     const s = clone(g);
     let n = countClearable(s), guard = 0;
     while (n > 0 && guard++ < 500) {
       const p = findAnyPair(s, true);
-      if (!p) return false;
+      if (!p) { if (thawAll(s).length) continue; return false; }   // 与游戏一致：卡住时冰块全部碎掉
       n -= resolveRemoval(s, p.a, p.b).removed.length;
       applyRule(s, rule);
     }
@@ -745,9 +757,9 @@ const Logic = (() => {
       for (let n = 0; n < (spec.spark || 0); n++) tiles[j++].mod = 'spark';
       for (let n = 0; n < (spec.timeCandy || 0); n++) tiles[j++].mod = 'time';
       for (let n = 0; n < (spec.ice || 0); n++) tiles[j++].ice = true;
-      if (isSolvable(g, rule)) return g;
+      if (isSolvable(g, rule, 2)) { g.verified = true; return g; }
     }
-    return g;
+    return g;   // 极少数情况：没验证到完整解，游戏里卡住时会自动碎冰/重列兜底
   }
 
   /** 重列：方块在已占用的位置间随机交换（巧克力墙不动），保证至少有一对可消（尽量保证可解） */
@@ -1640,6 +1652,8 @@ const Tests = (() => {
 
     g = G(['A.', '.B', 'A.', '..']); Logic.applyRule(g, 'down');
     ok('规则：下落', g[4][1]?.kind === 'A' && g[3][1]?.kind === 'A' && g[1][1] === null && g[4][2]?.kind === 'B');
+    g = G(['A', '.', 'B', '.']); g[2][1] = { id: uid++, kind: 'W', wall: true, r: 2, c: 1 }; Logic.applyRule(g, 'down');
+    ok('规则：巧克力墙不随下落移动', g[2][1]?.wall && g[1][1]?.kind === 'A' && g[4][1]?.kind === 'B');
     g = G(['A..B']); Logic.applyRule(g, 'centerX');
     ok('规则：左右聚拢', g[1][2]?.kind === 'A' && g[1][3]?.kind === 'B');
     g = G(['.AB.']); Logic.applyRule(g, 'splitX');
@@ -1647,7 +1661,7 @@ const Tests = (() => {
 
     g = Logic.generate(CONFIG.rows, CONFIG.cols, [...Array(16).keys()], 'none');
     ok('生成：每种图案数量为偶数', [...Logic.groupByKind(g).values()].every(l => l.length % 2 === 0));
-    ok('生成：有解', [0, 1, 2, 3, 4, 5].some(() => Logic.isSolvable(g, 'none')));   // 贪心模拟带随机性，多试几次
+    ok('生成：找到了完整解', g.verified === true);
     const before = Logic.countTiles(g); Logic.shuffleBoard(g, 'none');
     ok('重列：数量不变且有可消对', Logic.countTiles(g) === before && !!Logic.findAnyPair(g));
     g = G(['A.A']); g[1][2] = { id: uid++, kind: 'W', wall: true, r: 1, c: 2 };
@@ -1663,7 +1677,7 @@ const Tests = (() => {
     const cnt = { wall: 0, ice: 0, time: 0, spark: 0 };
     Logic.forEachTile(g, t => { if (t.wall) cnt.wall++; if (t.ice) cnt.ice++; if (t.mod) cnt[t.mod]++; });
     ok('生成：特殊方块数量正确', cnt.wall === 4 && cnt.ice === 8 && cnt.time === 2 && cnt.spark === 2);
-    ok('生成：带特殊方块也有解', [0, 1, 2, 3, 4, 5].some(() => Logic.isSolvable(g, 'down')));
+    ok('生成：带特殊方块也找到了完整解', g.verified === true);
     const code = Backup.encode();
     ok('存档码：可解析且校验正确', !!Backup.decode(code) && !Backup.decode(code.slice(0, -1) + (code.slice(-1) === 'a' ? 'b' : 'a')));
 
