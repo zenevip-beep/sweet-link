@@ -107,7 +107,7 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
 @keyframes cardIn{from{opacity:0;transform:scale(.4) translateY(30px)}}
 
 /* ---------- 游戏界面 ---------- */
-.hud{width:100%;display:flex;align-items:center;justify-content:space-between;padding:8px 12px 6px;gap:8px}
+.hud{width:100%;display:flex;align-items:center;justify-content:space-between;padding:6px 10px 4px;gap:6px}
 .hud-left{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:90px}
 .lv-badge{font-weight:900;font-size:17px;color:#fff;background:linear-gradient(#ffa8cc,#ff6fa8);padding:3px 12px;border-radius:12px;border:2px solid #fff;box-shadow:0 3px 0 #d94f8a}
 .rule-tag{font-size:12px;font-weight:800;color:#c45584;background:rgba(255,255,255,.8);padding:1px 8px;border-radius:8px}
@@ -116,7 +116,7 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
 .hud-score b{font-size:28px;font-weight:900;color:#fff;text-shadow:0 2px 0 #ff6fa8,0 4px 0 #e0508c;display:inline-block}
 .bump{animation:bump .3s}
 @keyframes bump{40%{transform:scale(1.3)}}
-.hud-right{display:flex;gap:8px;min-width:90px;justify-content:flex-end}
+.hud-right{display:flex;gap:6px;justify-content:flex-end}
 .timebar{position:relative;width:calc(100% - 24px);height:18px;border-radius:99px;background:rgba(255,255,255,.75);border:3px solid #fff;overflow:hidden;
   box-shadow:inset 0 2px 3px rgba(200,100,140,.2),0 2px 0 #f3b5cc}
 .timebar .fill{position:absolute;inset:0;transform-origin:left center;border-radius:99px;
@@ -131,8 +131,8 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
 #board{position:relative;flex:none;border-radius:20px;
   background:radial-gradient(rgba(255,255,255,.6) 2px,transparent 2.5px) 0 0/18px 18px,rgba(255,255,255,.42);
   box-shadow:inset 0 0 0 3px rgba(255,255,255,.85),0 8px 24px rgba(220,90,140,.18)}
-.items{display:flex;gap:16px;justify-content:center;padding:6px 0 12px}
-.item{position:relative;width:66px;height:62px;border-radius:20px;background:linear-gradient(#fff,#ffeef5);border:3px solid #fff;
+.items{display:flex;gap:16px;justify-content:center;padding:4px 0 8px}
+.item{position:relative;width:64px;height:56px;border-radius:20px;background:linear-gradient(#fff,#ffeef5);border:3px solid #fff;
   box-shadow:0 4px 0 #f3b5cc,0 6px 12px rgba(220,90,140,.15);display:flex;flex-direction:column;align-items:center;justify-content:center}
 .item:active{transform:translateY(3px);box-shadow:0 1px 0 #f3b5cc}
 .item .ic{font-family:var(--emoji);font-size:24px;line-height:1}
@@ -145,10 +145,10 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
 .tile{position:absolute;left:0;top:0;width:var(--T);height:var(--T);will-change:transform;
   transition:transform var(--move) cubic-bezier(.3,1.25,.5,1)}
 .tile.noanim{transition:none!important}
-.face{position:absolute;inset:2px;border-radius:24%;display:flex;align-items:center;justify-content:center;
+.face{position:absolute;inset:1.5px;border-radius:24%;display:flex;align-items:center;justify-content:center;
   background:linear-gradient(165deg,#fff 0%,var(--c) 48%,var(--c2) 100%);
   box-shadow:inset 0 -4px 0 rgba(0,0,0,.07),inset 0 0 0 1.5px rgba(255,255,255,.7),0 2px 0 var(--c2),0 3px 6px rgba(150,60,100,.18);
-  font-family:var(--emoji);font-size:calc(var(--T)*.58);line-height:1}
+  font-family:var(--emoji);font-size:calc(var(--T)*.7);line-height:1}
 .face::after{content:"";position:absolute;left:13%;top:7%;width:44%;height:20%;border-radius:50%;background:rgba(255,255,255,.7)}
 .face .em{position:relative;z-index:1;transform:translateY(1px);filter:drop-shadow(0 1.5px 0 rgba(0,0,0,.12))}
 .tile.sel{z-index:5}
@@ -168,7 +168,7 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
 @keyframes lost{to{filter:grayscale(1);transform:translateY(6px) scale(.9);opacity:.6}}
 
 /* ---------- 特效层 ---------- */
-#fx{position:fixed;left:0;top:0;pointer-events:none;z-index:30}
+#fx{position:fixed;left:0;top:0;pointer-events:none;z-index:55}
 #floatLayer{position:fixed;inset:0;pointer-events:none;z-index:35;overflow:hidden}
 .ftext{position:absolute;transform:translate(-50%,-50%);white-space:nowrap;font-weight:900;pointer-events:none}
 .ftext.score{font-size:20px;color:#fff;text-shadow:0 2px 0 #ff6fa8,0 0 6px #ff9ec7;animation:fup .8s ease-out forwards}
@@ -225,6 +225,37 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
   background:rgba(255,255,255,.95);color:#c45584;font-weight:900;font-size:15px;padding:9px 18px;border-radius:99px;border:2px solid #ffc4dc;
   box-shadow:0 6px 16px rgba(200,70,120,.2);transition:all .3s cubic-bezier(.2,1.4,.4,1);white-space:nowrap}
 #toast.show{opacity:1;transform:translate(-50%,0)}
+/* ---------- v1.1 ---------- */
+.board-wrap{position:relative}
+.icon-btn.off{opacity:.45;filter:grayscale(1)}
+.ver{font-size:12px;font-weight:800;color:#d36a95;opacity:.7;margin-top:-2vh}
+#toast{z-index:65}
+#flash{position:fixed;inset:0;z-index:31;pointer-events:none;opacity:0;
+  background:radial-gradient(circle,rgba(255,255,255,.9),rgba(255,236,170,.45) 60%,transparent)}
+#flash.on{animation:flash .35s ease-out}
+@keyframes flash{0%{opacity:.85}100%{opacity:0}}
+.shake{animation:shake .45s cubic-bezier(.36,.07,.19,.97)}
+@keyframes shake{10%,90%{transform:translate(-2px,1px)}20%,80%{transform:translate(4px,-2px)}30%,50%,70%{transform:translate(-6px,2px)}40%,60%{transform:translate(6px,-1px)}}
+body.fever #bg{animation:rainbow 2.4s linear infinite}
+@keyframes rainbow{to{filter:hue-rotate(360deg)}}
+body.fever #board{box-shadow:inset 0 0 0 3px rgba(255,255,255,.9),0 0 0 4px #ffd35c,0 0 26px 8px rgba(255,170,60,.65)}
+.fever-badge{position:absolute;top:0;left:50%;transform:translate(-50%,-35%) scale(0);z-index:6;pointer-events:none;white-space:nowrap;
+  font-weight:900;font-size:14px;color:#fff;padding:3px 14px 7px;border-radius:14px;border:2px solid #fff;overflow:hidden;
+  background:linear-gradient(90deg,#ff6fa8,#ffb43b,#5fd3b0,#6cc8ff,#b59cff,#ff6fa8);background-size:200% 100%;animation:feverBg 1s linear infinite;
+  box-shadow:0 3px 0 #e0508c;text-shadow:0 1px 0 rgba(0,0,0,.2);transition:transform .35s cubic-bezier(.2,1.6,.4,1)}
+body.fever .fever-badge{transform:translate(-50%,-35%) scale(1)}
+.fever-badge i{position:absolute;left:0;bottom:0;height:4px;width:100%;background:#fff;transform-origin:left center}
+@keyframes feverBg{to{background-position:200% 0}}
+.ftext.feverT{font-size:42px;color:#fff;letter-spacing:2px;
+  text-shadow:0 3px 0 #ff6fa8,0 6px 0 #b59cff,0 0 18px rgba(255,111,168,.9);animation:comboUp 1.4s cubic-bezier(.2,1.4,.4,1) forwards}
+.ftext.feverT small{display:block;text-align:center;font-size:16px}
+#updatePill{position:fixed;left:50%;top:calc(var(--sat) + 8px);z-index:70;transform:translate(-50%,-90px);
+  transition:transform .45s cubic-bezier(.2,1.5,.4,1);white-space:nowrap;color:#fff;font-weight:900;font-size:15px;
+  padding:9px 18px;border-radius:99px;border:3px solid #fff;background:linear-gradient(#8ff0d2,#3fc49d);box-shadow:0 4px 0 #2a9b79}
+#updatePill.show{transform:translate(-50%,0)}
+.save-box{display:block;width:100%;height:64px;resize:none;border-radius:14px;border:2px solid #ffc4dc;background:#fff;padding:8px 10px;
+  font:12px/1.4 ui-monospace,Menlo,monospace;color:#7a4436;-webkit-user-select:text;user-select:text;-webkit-touch-callout:default;margin:6px 0 10px;outline:none}
+.panel .tip{font-size:13px;font-weight:700;color:#a35a78;margin:4px 0;text-align:left;line-height:1.5}
 </style>
 </head>
 <body>
@@ -244,9 +275,12 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
       <button class="btn lemon" id="btnHelp">玩法说明</button>
     </div>
     <div class="menu-foot">
-      <button class="icon-btn" data-mute aria-label="静音">🔊</button>
+      <button class="icon-btn" data-mute aria-label="音效">🔊</button>
+      <button class="icon-btn" data-music aria-label="音乐">🎵</button>
       <div class="star-total" id="starTotal">★ 0 / 36</div>
+      <button class="icon-btn" id="btnSave" aria-label="存档">💾</button>
     </div>
+    <div class="ver" id="verLabel"></div>
   </section>
 
   <!-- 关卡选择 -->
@@ -265,12 +299,13 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
       <div class="hud-left"><div class="lv-badge" id="hudLevel">第 1 关</div><div class="rule-tag" id="hudRule">经典</div></div>
       <div class="hud-score"><small>得分</small><b id="hudScore">0</b></div>
       <div class="hud-right">
-        <button class="icon-btn" data-mute aria-label="静音">🔊</button>
+        <button class="icon-btn" data-mute aria-label="音效">🔊</button>
+        <button class="icon-btn" data-music aria-label="音乐">🎵</button>
         <button class="icon-btn" id="btnPause" aria-label="暂停"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1.5"/><rect x="14" y="5" width="4" height="14" rx="1.5"/></svg></button>
       </div>
     </div>
     <div class="timebar" id="timebar"><div class="fill" id="timeFill"></div><span id="timeText">0</span></div>
-    <div class="board-wrap" id="boardWrap"><div id="board"></div></div>
+    <div class="board-wrap" id="boardWrap"><div class="fever-badge" id="feverBadge">🔥 狂热中 · 得分×2<i id="feverBar"></i></div><div id="board"></div></div>
     <div class="items">
       <button class="item" data-item="hint"><span class="ic">💡</span><em>提示</em><span class="cnt">3</span></button>
       <button class="item" data-item="shuffle"><span class="ic">🔀</span><em>重列</em><span class="cnt">2</span></button>
@@ -290,7 +325,7 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
   <div class="btns">
     <button class="btn" data-act="resume">继续游戏</button>
     <button class="btn mint small" data-act="restart">重新开始</button>
-    <div class="row"><button class="btn lemon small" data-act="levels">关卡列表</button><button class="icon-btn" data-mute>🔊</button></div>
+    <div class="row"><button class="btn lemon small" data-act="levels">关卡列表</button><button class="icon-btn" data-mute>🔊</button><button class="icon-btn" data-music>🎵</button></div>
   </div>
 </div></div>
 
@@ -332,7 +367,9 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
       <li>快速连续消除触发<b>连击</b>：额外加分并奖励时间。</li>
       <li>道具：💡提示一对 · 🔀重新排列 · 💣直接炸掉一对。</li>
       <li>第 4 关起，消除后剩余方块会按规则<b>移动</b>（下落、左靠、聚拢、散开…）。</li>
+      <li>连击到 5 次进入<b>🔥狂热模式</b>：8 秒内得分翻倍，音乐也会加速！</li>
       <li>剩余时间越多，星星越多 ★★★</li>
+      <li>主界面 💾 可以<b>备份/恢复进度</b>，换手机或删图标前记得备份。</li>
     </ul>
     <div id="testOut"></div>
   </div>
@@ -344,6 +381,19 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
 
 <div id="banner"></div>
 <div id="toast"></div>
+<div id="flash"></div>
+<button id="updatePill">✨ 新版本已就绪，点我更新</button>
+
+<!-- 存档备份 -->
+<div class="overlay" id="ovSave"><div class="panel">
+  <div class="ribbon">存档备份</div>
+  <p class="tip">① 复制下面的存档码，存到备忘录里：</p>
+  <textarea class="save-box" id="saveCode" readonly></textarea>
+  <button class="btn small" data-act="copySave" style="margin:0 auto">复制存档码</button>
+  <p class="tip" style="margin-top:14px">② 恢复：把存档码粘贴到这里（只会补上更好的记录，不会覆盖丢失）</p>
+  <textarea class="save-box" id="loadCode" placeholder="粘贴存档码…"></textarea>
+  <div class="row"><button class="btn mint small" data-act="loadSave">恢复进度</button><button class="btn lemon small" data-act="closeSave">关闭</button></div>
+</div></div>
 <div id="wipe"><span>🍓</span></div>
 
 <script>
@@ -354,32 +404,36 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
    1. 配置：所有关键参数集中在这里
    ===================================================================== */
 const CONFIG = {
-  rows: 10, cols: 8,             // 棋盘行列（rows*cols 必须为偶数）
+  version: '1.1',
+  rows: 10, cols: 7,             // 默认棋盘行列（rows*cols 必须为偶数；每关可单独设置 rows/cols）
   maxTile: 64,                   // 方块最大边长(px)
-  ringRatio: 0.4,                // 外圈留白 = 方块边长 * ringRatio（连线可走外圈）
+  ringRatio: 0.32,               // 外圈留白 = 方块边长 * ringRatio（连线可走外圈）
   anim: {                        // 动画时长(ms)
     lineDraw: 140, lineHold: 300, lineFade: 180,
-    pop: 300, move: 260, shuffle: 520, wipe: 340, banner: 1400
+    pop: 300, move: 260, shuffle: 520, wipe: 340, banner: 1400, lastPair: 650, fireworks: 2400
   },
   combo: { window: 3000, baseScore: 10, bonusPerCombo: 5, timeBonusPer: 1, timeBonusMax: 3 },
+  fever: { every: 5, duration: 8, mult: 2 },        // 连击到 5 的倍数进入狂热，持续 8 秒，得分×2
+  comboFx: { flash: 3, shake: 5, rain: 8 },          // 连击特效分档：闪光 / 震屏 / 糖果雨
+  music: { volume: 0.16, bpm: { normal: 112, danger: 138, fever: 152 } },
   items: { hint: 3, shuffle: 2, bomb: 2 },
   warn: { ratio: 0.12, minSeconds: 10, tickFrom: 5 },  // 进度条闪红阈值
   stars: [0.45, 0.2],            // 剩余时间比例 ≥0.45 三星，≥0.2 两星，否则一星
   timeScore: 10,                 // 每剩 1 秒奖励分
   genAttempts: 40,               // 生成有解棋盘的最大尝试次数
-  levels: [
-    { kinds: 14, time: 240, rule: 'none' },
-    { kinds: 15, time: 225, rule: 'none' },
-    { kinds: 16, time: 210, rule: 'none' },
-    { kinds: 16, time: 210, rule: 'down' },
-    { kinds: 17, time: 200, rule: 'left' },
-    { kinds: 17, time: 195, rule: 'up' },
-    { kinds: 18, time: 190, rule: 'right' },
-    { kinds: 18, time: 180, rule: 'centerX' },
-    { kinds: 19, time: 175, rule: 'splitX' },
-    { kinds: 19, time: 165, rule: 'centerY' },
-    { kinds: 20, time: 160, rule: 'splitY', items: { hint: 3, shuffle: 2, bomb: 1 } },
-    { kinds: 20, time: 150, rule: 'zigzag', items: { hint: 2, shuffle: 2, bomb: 1 } },
+  levels: [                      // cols 越少方块越大
+    { kinds: 12, time: 150, rule: 'none',    cols: 6 },
+    { kinds: 13, time: 140, rule: 'none',    cols: 6 },
+    { kinds: 14, time: 175, rule: 'none' },
+    { kinds: 15, time: 170, rule: 'down' },
+    { kinds: 15, time: 165, rule: 'left' },
+    { kinds: 16, time: 160, rule: 'up' },
+    { kinds: 16, time: 155, rule: 'right' },
+    { kinds: 17, time: 150, rule: 'centerX' },
+    { kinds: 18, time: 145, rule: 'splitX' },
+    { kinds: 18, time: 140, rule: 'centerY' },
+    { kinds: 19, time: 135, rule: 'splitY', items: { hint: 3, shuffle: 2, bomb: 1 } },
+    { kinds: 20, time: 130, rule: 'zigzag', items: { hint: 2, shuffle: 2, bomb: 1 } },
   ],
 };
 
@@ -593,24 +647,25 @@ const Store = {
   load() {
     let d = {};
     try { d = JSON.parse(localStorage.getItem(this.key)) || {}; } catch (e) {}
-    this.d = Object.assign({ unlocked: 1, stars: [], best: [], muted: false }, d);
+    this.d = Object.assign({ unlocked: 1, stars: [], best: [], muted: false, music: true }, d);
   },
   save() { try { localStorage.setItem(this.key, JSON.stringify(this.d)); } catch (e) {} },
   totalStars() { return this.d.stars.reduce((s, v) => s + (v || 0), 0); },
 };
 
 /* =====================================================================
-   6. 音效：Web Audio 程序化合成
+   6. 声音：Web Audio 程序化合成（音效 + 背景音乐，各自独立开关）
    ===================================================================== */
 const Sound = (() => {
-  let ctx = null, master = null, muted = false, noiseBuf = null;
+  let ctx = null, sfxBus = null, musBus = null, muted = false, musicOn = true, ducked = false, noiseBuf = null;
   const VOL = 0.55;
   function ensure() {
     if (ctx) return ctx;
     const AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return null;
     ctx = new AC();
-    master = ctx.createGain(); master.gain.value = muted ? 0 : VOL; master.connect(ctx.destination);
+    sfxBus = ctx.createGain(); sfxBus.gain.value = muted ? 0 : VOL; sfxBus.connect(ctx.destination);
+    musBus = ctx.createGain(); musBus.gain.value = 0; musBus.connect(ctx.destination);
     return ctx;
   }
   /** 第一次触摸时调用：iOS 需要在用户手势中 resume 并播一个空 buffer */
@@ -618,8 +673,9 @@ const Sound = (() => {
     const c = ensure(); if (!c) return;
     if (c.state !== 'running') c.resume();
     const s = c.createBufferSource(); s.buffer = c.createBuffer(1, 1, 22050); s.connect(c.destination); s.start(0);
+    Music.start();
   }
-  function tone(t, f, dur, o = {}) {
+  function tone(t, f, dur, o = {}, bus = sfxBus) {
     const osc = ctx.createOscillator(), g = ctx.createGain();
     osc.type = o.type || 'sine';
     osc.frequency.setValueAtTime(f, t);
@@ -627,16 +683,16 @@ const Sound = (() => {
     g.gain.setValueAtTime(0.0001, t);
     g.gain.exponentialRampToValueAtTime(o.vol || 0.25, t + (o.attack || 0.006));
     g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-    osc.connect(g); g.connect(master); osc.start(t); osc.stop(t + dur + 0.03);
+    osc.connect(g); g.connect(bus); osc.start(t); osc.stop(t + dur + 0.03);
   }
-  function noise(t, dur, o = {}) {
+  function noise(t, dur, o = {}, bus = sfxBus) {
     if (!noiseBuf) { noiseBuf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate); const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
     const s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
     s.buffer = noiseBuf; f.type = o.type || 'bandpass'; f.Q.value = o.q || 0.8;
     f.frequency.setValueAtTime(o.freq || 1200, t);
     if (o.to) f.frequency.exponentialRampToValueAtTime(o.to, t + dur);
     g.gain.setValueAtTime(o.vol || 0.3, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-    s.connect(f); f.connect(g); g.connect(master); s.start(t); s.stop(t + dur + 0.02);
+    s.connect(f); f.connect(g); g.connect(bus); s.start(t); s.stop(t + dur + 0.02);
   }
   const notes = (t, list, step, o) => list.forEach((f, i) => tone(t + i * step, f, o.dur || 0.18, o));
   const sfx = {
@@ -651,6 +707,7 @@ const Sound = (() => {
     },
     pop: t => { noise(t, 0.16, { vol: 0.22, freq: 2600, to: 700, q: 1.2 }); tone(t, 1400, 0.08, { vol: 0.08, to: 2400 }); },
     combo: (t, n) => notes(t, [659, 784, 988, 1319].map(f => f * Math.pow(2, Math.min(n - 2, 6) / 12)), 0.05, { type: 'square', vol: 0.07, dur: 0.12 }),
+    fever: t => { notes(t, [523, 659, 784, 1047, 1319, 1568, 2093], 0.045, { type: 'square', vol: 0.08, dur: 0.14 }); noise(t, 0.5, { vol: 0.15, freq: 500, to: 6000, q: 2 }); },
     bomb: t => { noise(t, 0.6, { vol: 0.6, freq: 900, to: 60, type: 'lowpass', q: 0.5 }); tone(t, 140, 0.45, { vol: 0.45, to: 40 }); },
     shuffle: t => { noise(t, 0.5, { vol: 0.25, freq: 300, to: 3200, q: 3 }); notes(t + 0.1, [523, 659, 784], 0.08, { type: 'triangle', vol: 0.12, dur: 0.12 }); },
     hint: t => notes(t, [1047, 1319, 1568], 0.07, { type: 'sine', vol: 0.16, dur: 0.16 }),
@@ -659,15 +716,52 @@ const Sound = (() => {
     lose: t => notes(t, [523, 494, 440, 349], 0.18, { type: 'triangle', vol: 0.2, dur: 0.3 }),
     star: (t, i) => { tone(t, 784 * Math.pow(2, i * 4 / 12), 0.25, { type: 'triangle', vol: 0.2 }); tone(t + 0.04, 1568 * Math.pow(2, i * 4 / 12), 0.2, { vol: 0.08 }); },
     banner: t => notes(t, [392, 523, 659], 0.09, { type: 'triangle', vol: 0.16, dur: 0.15 }),
+    boom: t => { noise(t, 0.35, { vol: 0.12, freq: 1800, to: 300, q: 0.7 }); },
   };
+
+  /* ---- 背景音乐：程序化八音盒循环（C - G - Am - F），随紧张度变速 ---- */
+  const Music = (() => {
+    const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
+    const MEL = [76,79,84,79,81,79,76,0,  74,79,83,79,81,79,74,0,  72,76,81,76,79,76,72,74,  72,77,81,77,79,76,74,0];
+    const BASS = [48, 43, 45, 41];
+    let timer = null, step = 0, next = 0, mode = 'normal';
+    const spb = () => 60 / CONFIG.music.bpm[mode] / 2;          // 八分音符时长
+    const level = () => musicOn ? CONFIG.music.volume * (ducked ? 0.3 : 1) : 0;
+    function apply() { if (musBus) musBus.gain.setTargetAtTime(level(), ctx.currentTime, 0.15); }
+    function schedule(t) {
+      const i = step & 7, bar = (step >> 3) & 3, m = MEL[step & 31];
+      if (m) {
+        tone(t, mtof(m), 0.5, { type: 'sine', vol: 0.5 }, musBus);
+        tone(t, mtof(m) * 2, 0.18, { type: 'triangle', vol: 0.1 }, musBus);
+        if (mode === 'fever') tone(t + spb() / 2, mtof(m + 12), 0.16, { type: 'sine', vol: 0.18 }, musBus);
+      }
+      if (i === 0 || i === 4) tone(t, mtof(BASS[bar] + (i === 4 ? 7 : 0)), 0.4, { type: 'triangle', vol: 0.45 }, musBus);
+      if (mode !== 'normal' && i % 2 === 1) noise(t, 0.04, { vol: 0.14, freq: 7000, q: 1, type: 'highpass' }, musBus);
+    }
+    function tick() {
+      if (!ctx || ctx.state !== 'running' || !musicOn) return;
+      if (next < ctx.currentTime) next = ctx.currentTime + 0.05;
+      while (next < ctx.currentTime + 0.15) { try { schedule(next); } catch (e) {} next += spb(); step++; }
+    }
+    return {
+      start() { if (!ctx) return; apply(); if (!timer) timer = setInterval(tick, 30); },
+      setMode(m) { if (CONFIG.music.bpm[m]) mode = m; },
+      apply,
+    };
+  })();
+
   return {
     unlock,
     play(name, ...args) {
       if (muted || !ctx || ctx.state !== 'running') return;
       try { sfx[name](ctx.currentTime + 0.005, ...args); } catch (e) {}
     },
-    setMuted(m) { muted = m; if (master) master.gain.value = m ? 0 : VOL; },
+    setMuted(m) { muted = m; if (sfxBus) sfxBus.gain.value = m ? 0 : VOL; },
     get muted() { return muted; },
+    setMusic(on) { musicOn = on; if (ctx) { Music.apply(); if (on) Music.start(); } },
+    get musicOn() { return musicOn; },
+    setMusicMode(m) { Music.setMode(m); },
+    duck(on) { ducked = on; if (ctx) Music.apply(); },
   };
 })();
 
@@ -784,6 +878,32 @@ const Renderer = (() => {
     parts.push({ shape: 'ring', x, y, vx: 0, vy: 0, g: 0, life: 0, max: 0.4, size: T * (big ? 1.6 : 0.9), color: big ? '#ffb43b' : '#fff' });
     kick();
   }
+  function flash() { const f = $('#flash'); f.classList.remove('on'); void f.offsetWidth; f.classList.add('on'); }
+  function shake() { const a = $('#app'); a.classList.remove('shake'); void a.offsetWidth; a.classList.add('shake'); }
+  /** 糖果雨：从屏幕顶部落下一阵甜品 */
+  function candyRain(n = 28) {
+    for (let i = 0; i < n; i++) parts.push({ shape: 'emoji', ch: THEME.tiles[(Math.random() * THEME.tiles.length) | 0][0],
+      x: Math.random() * vw, y: -30 - Math.random() * 220, vx: (Math.random() - 0.5) * 60, vy: 120 + Math.random() * 160, g: 380,
+      life: 0, max: 1.8 + Math.random() * 0.6, size: 22 + Math.random() * 16, rot: Math.random() * 6, vr: (Math.random() - 0.5) * 6, color: '#fff' });
+    kick();
+  }
+  const FW = ['#ff6fa8', '#ffcc33', '#5fd3b0', '#6cc8ff', '#b59cff', '#ff9e57'];
+  function firework(x, y) {
+    const c = FW[(Math.random() * FW.length) | 0], n = 36;
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * Math.PI * 2 + Math.random() * 0.1, sp = 150 + Math.random() * 90;
+      parts.push({ shape: 'dot', x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, g: 150, drag: 1.6, life: 0, max: 1 + Math.random() * 0.5,
+        size: 2.5 + Math.random() * 2, rot: 0, vr: 0, color: Math.random() < 0.25 ? '#fff' : c });
+    }
+    parts.push({ shape: 'ring', x, y, vx: 0, vy: 0, g: 0, life: 0, max: 0.45, size: 60, color: c });
+    kick();
+  }
+  /** 过关烟花 */
+  function fireworks(ms, onBoom) {
+    const end = performance.now() + ms;
+    const go = () => { if (performance.now() > end) return; firework(vw * (0.15 + Math.random() * 0.7), vh * (0.1 + Math.random() * 0.4)); onBoom && onBoom(); setTimeout(go, 220 + Math.random() * 220); };
+    go();
+  }
   function kick() { if (!running) { running = true; last = performance.now(); requestAnimationFrame(loop); } }
   function star4(x, y, r) {
     fctx.beginPath(); fctx.moveTo(x, y - r);
@@ -824,6 +944,7 @@ const Renderer = (() => {
       const p = parts[i];
       p.life += dt;
       if (p.life >= p.max) { parts.splice(i, 1); continue; }
+      if (p.drag) { const d = Math.exp(-p.drag * dt); p.vx *= d; p.vy *= d; }
       p.vy += p.g * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.rot += p.vr * dt;
       const k = p.life / p.max;
       fctx.globalAlpha = 1 - k; fctx.fillStyle = p.color;
@@ -835,6 +956,14 @@ const Renderer = (() => {
         fctx.restore();
       } else if (p.shape === 'star') {
         star4(p.x, p.y, p.size * (1 - k * 0.5));
+      } else if (p.shape === 'dot') {
+        fctx.beginPath(); fctx.arc(p.x, p.y, p.size * (1 - k * 0.5), 0, 7); fctx.fill();
+      } else if (p.shape === 'emoji') {
+        fctx.globalAlpha = k > 0.75 ? (1 - k) / 0.25 : 1;
+        fctx.save(); fctx.translate(p.x, p.y); fctx.rotate(p.rot);
+        fctx.font = `${p.size | 0}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`;
+        fctx.textAlign = 'center'; fctx.textBaseline = 'middle'; fctx.fillText(p.ch, 0, 0);
+        fctx.restore();
       } else {
         fctx.strokeStyle = p.color; fctx.lineWidth = 4 * (1 - k);
         fctx.beginPath(); fctx.arc(p.x, p.y, p.size * (0.3 + k), 0, 7); fctx.stroke();
@@ -856,6 +985,7 @@ const Renderer = (() => {
   function clearFx() { lines.length = 0; parts.length = 0; floatLayer.innerHTML = ''; }
 
   return { resizeFx, layout, build, center, centerVP, setSelected, setHint, markDying, pop, move, link, burst, floatText, loseFx, clearFx,
+           flash, shake, candyRain, fireworks,
            get tileSize() { return T; } };
 })();
 
@@ -884,7 +1014,10 @@ const UI = {
     const b = $('#banner'); b.innerHTML = `<div class="b"><b>${title}</b><small>${sub}</small></div>`;
     setTimeout(() => { b.innerHTML = ''; }, CONFIG.anim.banner + 100);
   },
-  updateMute() { $$('[data-mute]').forEach(b => b.textContent = Sound.muted ? '🔇' : '🔊'); },
+  updateMute() {
+    $$('[data-mute]').forEach(b => b.textContent = Sound.muted ? '🔇' : '🔊');
+    $$('[data-music]').forEach(b => b.classList.toggle('off', !Sound.musicOn));
+  },
   renderMenu() { $('#starTotal').textContent = `★ ${Store.totalStars()} / ${CONFIG.levels.length * 3}`; },
   layoutLevels() {
     const h = $('#scr-levels').clientHeight - 80, w = $('#scr-levels').clientWidth - 60;
@@ -926,16 +1059,18 @@ const Game = {
     const tok = this.token;
     UI.hideOverlays(); Renderer.clearFx();
     this.level = i; this.cfg = CONFIG.levels[i];
+    this.R = this.cfg.rows || CONFIG.rows; this.C = this.cfg.cols || CONFIG.cols;
     const kinds = shuffleArr(THEME.tiles.map((_, k) => k)).slice(0, this.cfg.kinds);
-    this.grid = Logic.generate(CONFIG.rows, CONFIG.cols, kinds, this.cfg.rule);
+    this.grid = Logic.generate(this.R, this.C, kinds, this.cfg.rule);
     this.tiles = new Map(); Logic.forEachTile(this.grid, t => this.tiles.set(t.id, t));
-    Object.assign(this, { sel: null, hint: [], score: 0, combo: 0, maxCombo: 0, lastMatch: 0, running: false, paused: false, busy: true, lastTick: 0 });
+    Object.assign(this, { sel: null, hint: [], score: 0, combo: 0, maxCombo: 0, lastMatch: 0, running: false, paused: false, busy: true, lastTick: 0, _danger: false });
+    this.setFever(false); Sound.duck(false);
     this.timeLeft = this.timeTotal = this.cfg.time;
     this.items = Object.assign({}, CONFIG.items, this.cfg.items || {});
     $('#hudLevel').textContent = `第 ${i + 1} 关`;
     $('#hudRule').textContent = RULES[this.cfg.rule].name;
     this.updateHud(); this.updateTime();
-    Renderer.layout(CONFIG.rows, CONFIG.cols);
+    Renderer.layout(this.R, this.C);
     Renderer.build(this.grid);
     setTimeout(() => {
       if (tok !== this.token) return;
@@ -965,13 +1100,17 @@ const Game = {
     this.clearHint();
     const now = performance.now();
     if (!isBomb) { this.combo = (now - this.lastMatch <= CB.window) ? this.combo + 1 : 1; this.lastMatch = now; this.maxCombo = Math.max(this.maxCombo, this.combo); }
-    const gain = CB.baseScore + (isBomb ? 0 : (this.combo - 1) * CB.bonusPerCombo);
+    const F = CONFIG.fever;
+    const feverStart = !isBomb && this.combo >= F.every && this.combo % F.every === 0 && this.fever <= 0;
+    if (feverStart) this.setFever(true);
+    const gain = (CB.baseScore + (isBomb ? 0 : (this.combo - 1) * CB.bonusPerCombo)) * (this.fever > 0 ? F.mult : 1);
     this.score += gain; this.updateHud(true);
     const pa = Renderer.centerVP(a.r, a.c), pb = Renderer.centerVP(b.r, b.c);
     const mid = { x: (pa.x + pb.x) / 2, y: (pa.y + pb.y) / 2 };
 
     Logic.removePair(this.grid, a, b);
     this.tiles.delete(a.id); this.tiles.delete(b.id);
+    const last = this.tiles.size === 0;
     Renderer.markDying([a.id, b.id]);
     const moves = Logic.applyRule(this.grid, this.cfg.rule);
     if (moves.length) this.busy = true;
@@ -984,12 +1123,18 @@ const Game = {
       this.timeLeft = Math.min(this.timeTotal, this.timeLeft + tb);
       Renderer.floatText(`连击 x${this.combo}!<small>+${tb}秒</small>`, mid.x, mid.y - 30, 'combo');
       Sound.play('combo', this.combo);
+      const FX = CONFIG.comboFx;                       // 连击特效分档
+      if (this.combo >= FX.flash) Renderer.flash();
+      if (this.combo >= FX.shake) Renderer.shake();
+      if (this.combo === FX.rain || (this.combo > FX.rain && this.combo % 4 === 0)) Renderer.candyRain();
     }
+    if (feverStart) Renderer.floatText(`🔥 FEVER!<small>${F.duration} 秒内得分×${F.mult}</small>`, innerWidth / 2, innerHeight * 0.32, 'feverT', 1500);
 
-    const delay = isBomb ? 60 : A.lineDraw + A.lineHold;
+    const delay = isBomb ? 60 : A.lineDraw + (last ? A.lastPair : A.lineHold);   // 最后一对：慢镜头
     setTimeout(() => {
       if (tok !== this.token) return;
-      Renderer.pop([a.id, b.id], isBomb); Sound.play('pop');
+      Renderer.pop([a.id, b.id], isBomb || last); Sound.play(last ? 'bomb' : 'pop');
+      if (last) { Renderer.flash(); Renderer.shake(); }
       if (moves.length) Renderer.move(moves, A.move);
       setTimeout(() => { if (tok !== this.token) return; if (moves.length) this.busy = false; this.check(); }, moves.length ? A.move + 30 : 30);
     }, delay);
@@ -1032,8 +1177,22 @@ const Game = {
     this.updateHud();
   },
 
+  setFever(on) {
+    this.fever = on ? CONFIG.fever.duration : 0;
+    document.body.classList.toggle('fever', on);
+    $('#feverBar').style.transform = 'scaleX(1)';
+    if (on) Sound.play('fever');
+    this.syncMusic();
+  },
+  syncMusic() { Sound.setMusicMode(this.fever > 0 ? 'fever' : (this.running && this._danger) ? 'danger' : 'normal'); },
+
   update(dt) {
     if (!this.running || this.paused) return;
+    if (this.fever > 0) {
+      this.fever -= dt;
+      $('#feverBar').style.transform = `scaleX(${Math.max(0, this.fever / CONFIG.fever.duration)})`;
+      if (this.fever <= 0) this.setFever(false);
+    }
     this.timeLeft -= dt;
     if (this.timeLeft <= 0) { this.timeLeft = 0; this.updateTime(); this.lose(); return; }
     this.updateTime();
@@ -1045,6 +1204,7 @@ const Game = {
     $('#timeText').textContent = sec + 's';
     const W = CONFIG.warn, danger = this.timeLeft <= Math.max(W.minSeconds, this.timeTotal * W.ratio) && this.running;
     $('#timebar').classList.toggle('danger', danger);
+    if (danger !== this._danger) { this._danger = danger; this.syncMusic(); }
     if (this.running && sec <= W.tickFrom && sec !== this.lastTick) { this.lastTick = sec; Sound.play('tick'); }
   },
   updateHud(bump) {
@@ -1058,12 +1218,12 @@ const Game = {
 
   pause() {
     if (!this.running || this.paused) return;
-    this.paused = true; UI.overlay('ovPause', true); Sound.play('tap');
+    this.paused = true; UI.overlay('ovPause', true); Sound.play('tap'); Sound.duck(true);
   },
-  resume() { this.paused = false; UI.overlay('ovPause', false); },
+  resume() { this.paused = false; UI.overlay('ovPause', false); Sound.duck(false); },
 
   win() {
-    this.running = false; this.busy = true; this.updateTime();
+    this.running = false; this.busy = true; this.setFever(false); this.updateTime();
     const remain = Math.ceil(this.timeLeft), bonus = remain * CONFIG.timeScore, total = this.score + bonus;
     const ratio = this.timeLeft / this.timeTotal;
     const stars = ratio >= CONFIG.stars[0] ? 3 : ratio >= CONFIG.stars[1] ? 2 : 1;
@@ -1086,6 +1246,7 @@ const Game = {
       const ss = $$('#winStars span');
       ss.forEach(s => s.className = '');
       UI.overlay('ovWin', true);
+      Renderer.fireworks(CONFIG.anim.fireworks, () => Sound.play('boom'));
       ss.forEach((s, k) => setTimeout(() => {
         if (tok !== this.token) return;
         s.className = 'show' + (k < stars ? ' on' : '');
@@ -1099,14 +1260,42 @@ const Game = {
   },
 
   lose() {
-    this.running = false; this.busy = true; this.clearSel(); this.clearHint();
+    this.running = false; this.busy = true; this.setFever(false); this.clearSel(); this.clearHint();
     Sound.play('lose'); Renderer.loseFx();
     const tok = this.token;
     $('#loseText').textContent = `还剩 ${this.tiles.size / 2} 对没消掉，布丁都化掉了…`;
     setTimeout(() => { if (tok === this.token) UI.overlay('ovLose', true); }, 700);
   },
 
-  quit() { this.token++; this.running = false; this.busy = true; Renderer.clearFx(); },
+  quit() { this.token++; this.running = false; this.busy = true; this.setFever(false); Sound.duck(false); Renderer.clearFx(); },
+};
+
+/* =====================================================================
+   9.5 存档备份：生成/解析存档码（恢复时只取更好的记录，不会丢进度）
+   ===================================================================== */
+const Backup = {
+  sum(s) { let h = 7; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 1679616; return h.toString(36).padStart(4, '0'); },
+  encode() {
+    const d = Store.d, json = JSON.stringify({ v: 1, u: d.unlocked, s: d.stars, b: d.best });
+    const b64 = btoa(unescape(encodeURIComponent(json))).replace(/=+$/, '');
+    return 'SWEET-' + b64 + '-' + this.sum(b64);
+  },
+  decode(code) {
+    const m = String(code || '').replace(/\s+/g, '').match(/^SWEET-([A-Za-z0-9+/]+)-([0-9a-z]{4})$/);
+    if (!m || this.sum(m[1]) !== m[2]) return null;
+    try { let b = m[1]; while (b.length % 4) b += '='; const o = JSON.parse(decodeURIComponent(escape(atob(b)))); return o && o.v === 1 ? o : null; }
+    catch (e) { return null; }
+  },
+  restore(code) {
+    const o = this.decode(code); if (!o) return false;
+    const d = Store.d, n = CONFIG.levels.length;
+    d.unlocked = Math.min(n, Math.max(d.unlocked || 1, (o.u | 0) || 1));
+    for (let i = 0; i < n; i++) {
+      d.stars[i] = Math.max(d.stars[i] || 0, Math.min(3, (o.s || [])[i] | 0));
+      d.best[i] = Math.max(d.best[i] || 0, (o.b || [])[i] | 0);
+    }
+    Store.save(); return true;
+  },
 };
 
 /* =====================================================================
@@ -1187,9 +1376,11 @@ const Tests = (() => {
 
     g = Logic.generate(CONFIG.rows, CONFIG.cols, [...Array(16).keys()], 'none');
     ok('生成：每种图案数量为偶数', [...Logic.groupByKind(g).values()].every(l => l.length % 2 === 0));
-    ok('生成：有解', Logic.isSolvable(g, 'none'));
+    ok('生成：有解', [0, 1, 2, 3, 4, 5].some(() => Logic.isSolvable(g, 'none')));   // 贪心模拟带随机性，多试几次
     const before = Logic.countTiles(g); Logic.shuffleBoard(g, 'none');
     ok('重列：数量不变且有可消对', Logic.countTiles(g) === before && !!Logic.findAnyPair(g));
+    const code = Backup.encode();
+    ok('存档码：可解析且校验正确', !!Backup.decode(code) && !Backup.decode(code.slice(0, -1) + (code.slice(-1) === 'a' ? 'b' : 'a')));
 
     const pass = res.filter(r => r.pass).length;
     console.table(res);
@@ -1230,7 +1421,11 @@ function setupPWA() {
   // Service Worker 必须是同源的独立 JS 文件（浏览器规定），与本 HTML 放在同一目录即可
   if ('serviceWorker' in navigator && /^https?:/.test(location.protocol)) {
     navigator.serviceWorker.register('sw.js').catch(() => {});
+    // 新版本提示：sw.js 在后台发现 index.html 变了会通知页面
+    navigator.serviceWorker.addEventListener('message', e => { if (e.data && e.data.type === 'update-ready') $('#updatePill').classList.add('show'); });
+    setTimeout(() => { const c = navigator.serviceWorker.controller; if (c) c.postMessage({ type: 'ping' }); }, 4000);
   }
+  $('#updatePill').addEventListener('click', () => location.reload());
 }
 
 /* =====================================================================
@@ -1239,11 +1434,13 @@ function setupPWA() {
 function init() {
   Store.load();
   Sound.setMuted(!!Store.d.muted);
+  Sound.setMusic(Store.d.music !== false);
+  $('#verLabel').textContent = 'v' + CONFIG.version;
   UI.updateMute();
   setupPWA();
 
   // iOS：禁止页面回弹、双指缩放、双击缩放、长按菜单
-  document.addEventListener('touchmove', e => { if (!e.target.closest('.help')) e.preventDefault(); }, { passive: false });
+  document.addEventListener('touchmove', e => { if (!e.target.closest('.help, textarea')) e.preventDefault(); }, { passive: false });
   ['gesturestart', 'gesturechange', 'dblclick', 'contextmenu'].forEach(ev => document.addEventListener(ev, e => e.preventDefault(), { passive: false }));
   // 第一次触摸解锁音频
   const unlock = () => Sound.unlock();
@@ -1270,6 +1467,10 @@ function init() {
     Sound.setMuted(!Sound.muted); Store.d.muted = Sound.muted; Store.save(); UI.updateMute(); Sound.play('tap');
   }));
 
+  $$('[data-music]').forEach(b => b.addEventListener('click', () => {
+    Sound.setMusic(!Sound.musicOn); Store.d.music = Sound.musicOn; Store.save(); UI.updateMute(); Sound.play('tap');
+  }));
+  $('#btnSave').addEventListener('click', () => { Sound.play('tap'); $('#saveCode').value = Backup.encode(); $('#loadCode').value = ''; UI.overlay('ovSave', true); });
   $('#btnPlay').addEventListener('click', () => { Sound.play('tap'); const i = Math.min(Store.d.unlocked, CONFIG.levels.length) - 1; UI.go('game', () => Game.start(i)); });
   $('#btnLevels').addEventListener('click', () => { Sound.play('tap'); UI.go('levels', () => UI.renderLevels()); });
   $('#btnHelp').addEventListener('click', () => { Sound.play('tap'); UI.overlay('ovHelp', true); });
@@ -1282,6 +1483,21 @@ function init() {
     next: () => { UI.hideOverlays(); UI.go('game', () => Game.start(Math.min(Game.level + 1, CONFIG.levels.length - 1))); },
     levels: () => { UI.hideOverlays(); Game.quit(); UI.go('levels', () => UI.renderLevels()); },
     closeHelp: () => UI.overlay('ovHelp', false),
+    closeSave: () => UI.overlay('ovSave', false),
+    copySave: () => {
+      const ta = $('#saveCode'), ok = () => UI.toast('已复制！去备忘录粘贴保存吧');
+      const fallback = () => {
+        ta.focus(); ta.setSelectionRange(0, ta.value.length);
+        try { document.execCommand('copy') ? ok() : UI.toast('请长按文本手动复制'); } catch (e) { UI.toast('请长按文本手动复制'); }
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(ta.value).then(ok, fallback); else fallback();
+    },
+    loadSave: () => {
+      if (Backup.restore($('#loadCode').value)) {
+        $('#loadCode').value = ''; $('#saveCode').value = Backup.encode(); UI.renderMenu();
+        Sound.play('win'); UI.toast(`恢复成功！现在共 ★ ${Store.totalStars()}`);
+      } else { Sound.play('deny'); UI.toast('存档码不对，检查是否复制完整'); }
+    },
     runTests: () => {
       const r = Tests.run();
       $('#testOut').textContent = r.res.map(x => (x.pass ? '✅ ' : '❌ ') + x.name).join('\n');
@@ -1299,7 +1515,7 @@ function init() {
   // 尺寸变化
   const onResize = () => {
     Renderer.resizeFx();
-    if (UI.cur === 'game' && Game.grid) Renderer.layout(CONFIG.rows, CONFIG.cols);
+    if (UI.cur === 'game' && Game.grid) Renderer.layout(Game.R, Game.C);
     if (UI.cur === 'levels') UI.layoutLevels();
   };
   window.addEventListener('resize', onResize);
@@ -1317,7 +1533,7 @@ function init() {
   if (/[?&]test\b/.test(location.search)) { UI.overlay('ovHelp', true); acts.runTests(); }
 }
 
-window.LLK = { CONFIG, RULES, THEME, Logic, Renderer, Game, Tests, Store };
+window.LLK = { CONFIG, RULES, THEME, Logic, Renderer, Game, Tests, Store, Backup, Sound };
 init();
 })();
 </script>
