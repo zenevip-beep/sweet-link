@@ -1,10 +1,11 @@
-// 甜品连连看 Service Worker：离线缓存（与 index.html 放在同一目录）
-const CACHE = 'sweet-link-v1';
+// 甜品连连看 Service Worker v2：离线缓存 + 新版本提示（与 index.html 放在同一目录）
+const CACHE = 'sweet-link-v2';
 const ASSETS = ['./', './index.html', './sw.js'];
+let updateReady = false;
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE)
-    .then(c => Promise.all(ASSETS.map(u => c.add(u).catch(() => {}))))
+    .then(c => Promise.all(ASSETS.map(u => c.add(new Request(u, { cache: 'reload' })).catch(() => {}))))
     .then(() => self.skipWaiting()));
 });
 
@@ -14,13 +15,39 @@ self.addEventListener('activate', e => {
     .then(() => self.clients.claim()));
 });
 
-// 缓存优先 + 后台更新（stale-while-revalidate）
+function notifyUpdate() {
+  updateReady = true;
+  self.clients.matchAll({ type: 'window' }).then(cs => cs.forEach(c => c.postMessage({ type: 'update-ready' })));
+}
+
+// 页面启动几秒后会 ping 一下，防止错过通知
+self.addEventListener('message', e => {
+  if (e.data && e.data.type === 'ping' && updateReady && e.source) e.source.postMessage({ type: 'update-ready' });
+});
+
+// 缓存优先（秒开、可离线）+ 后台检查更新；页面有变化时通知页面显示“新版本”按钮
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
   e.respondWith(caches.open(CACHE).then(async cache => {
     const cached = await cache.match(req, { ignoreSearch: true });
-    const net = fetch(req).then(res => { if (res && res.ok) cache.put(req, res.clone()); return res; }).catch(() => null);
+    // 先读出旧页面内容（cached 交给页面后就不能再读了）
+    const oldTextP = cached && req.mode === 'navigate' ? cached.clone().text() : null;
+    // 导航请求不能直接带参数重发，改用 URL 新建请求，并绕过 HTTP 缓存做校验
+    const netReq = req.mode === 'navigate' ? new Request(req.url, { cache: 'no-cache', credentials: 'same-origin' }) : req;
+    const net = fetch(netReq).then(async res => {
+      if (res && res.ok) {
+        const toCache = res.clone();
+        if (oldTextP) {
+          const [oldText, newText] = await Promise.all([oldTextP, res.clone().text()]);
+          await cache.put(req, toCache);
+          if (oldText !== newText) notifyUpdate();
+        } else {
+          await cache.put(req, toCache);
+        }
+      }
+      return res;
+    }).catch(() => null);
     if (cached) { e.waitUntil(net); return cached; }
     const res = await net;
     if (res) return res;
