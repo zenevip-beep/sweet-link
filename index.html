@@ -256,6 +256,52 @@ body.fever .fever-badge{transform:translate(-50%,-35%) scale(1)}
 .save-box{display:block;width:100%;height:64px;resize:none;border-radius:14px;border:2px solid #ffc4dc;background:#fff;padding:8px 10px;
   font:12px/1.4 ui-monospace,Menlo,monospace;color:#7a4436;-webkit-user-select:text;user-select:text;-webkit-touch-callout:default;margin:6px 0 10px;outline:none}
 .panel .tip{font-size:13px;font-weight:700;color:#a35a78;margin:4px 0;text-align:left;line-height:1.5}
+/* ---------- v1.2 ---------- */
+.tile.wall{pointer-events:none}
+.tile.wall .face{background:
+  linear-gradient(rgba(255,255,255,.14),rgba(0,0,0,.06)),
+  linear-gradient(90deg,transparent calc(50% - 1px),rgba(60,25,10,.4) calc(50% - 1px) calc(50% + 1px),transparent calc(50% + 1px)),
+  linear-gradient(0deg,transparent calc(50% - 1px),rgba(60,25,10,.4) calc(50% - 1px) calc(50% + 1px),transparent calc(50% + 1px)),
+  linear-gradient(160deg,#a9684b,#6c3a27);
+  box-shadow:inset 0 -4px 0 rgba(0,0,0,.2),inset 0 0 0 2px rgba(255,255,255,.18),0 2px 0 #4a2518,0 3px 6px rgba(0,0,0,.2)}
+.tile.wall .face::after{opacity:.25}
+.tile.ice .face::before{content:"❄️";position:absolute;inset:-1px;border-radius:inherit;z-index:2;display:flex;justify-content:flex-end;align-items:flex-start;
+  padding:3% 7%;font-size:calc(var(--T)*.26);
+  background:linear-gradient(135deg,rgba(240,252,255,.62),rgba(150,215,255,.3) 42%,rgba(255,255,255,.55) 50%,rgba(150,215,255,.3) 58%,rgba(240,252,255,.6));
+  box-shadow:inset 0 0 0 2.5px #8fd6ff,inset 0 0 0 4px rgba(255,255,255,.9),inset 0 0 14px rgba(80,180,255,.9),0 0 6px rgba(120,200,255,.6)}
+.tile.ice .em{filter:saturate(.6) brightness(1.05)}
+.face .bd{position:absolute;right:-3px;top:-5px;z-index:3;font-size:calc(var(--T)*.34);line-height:1;filter:drop-shadow(0 1px 1px rgba(0,0,0,.25));animation:bd 1s ease-in-out infinite alternate}
+@keyframes bd{to{transform:translateY(-2px) rotate(8deg)}}
+.tile.mod-spark:not(.sel):not(.hint):not(.pop):not(.enter):not(.spin):not(.lost):not(.nudge) .face{animation:sparkGlow 1.1s ease-in-out infinite alternate}
+@keyframes sparkGlow{from{box-shadow:0 0 0 2px #fff,0 0 6px 2px rgba(255,210,80,.6)}to{box-shadow:0 0 0 3px #fff,0 0 0 5px #ffd35c,0 0 16px 6px rgba(255,150,220,.75)}}
+.tile.nudge .face{animation:nudge .3s}
+@keyframes nudge{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.goal-row{display:none;width:calc(100% - 24px);margin-top:6px;align-items:center;gap:6px;font-weight:900;color:#a24a6f}
+.goal-row.show{display:flex}
+.goal-row .gi{font-family:var(--emoji);font-size:24px;line-height:1;display:inline-block}
+.goal-row small{font-size:12px;white-space:nowrap}
+.goal-row b{font-size:14px;min-width:54px;text-align:right}
+.gbar{flex:1;height:13px;border-radius:99px;background:rgba(255,255,255,.75);border:2px solid #fff;overflow:hidden;position:relative;box-shadow:0 2px 0 #f3b5cc}
+.gbar i{position:absolute;inset:0;transform-origin:left center;background:linear-gradient(90deg,#ffd35c,#ff9ec7);transition:transform .35s cubic-bezier(.2,1.3,.4,1)}
+.goal-row.boss .gbar i{background:linear-gradient(90deg,#ff4d6d,#ff9e57)}
+.boss-face.hit{animation:bossHit .35s}
+.boss-face.atk{animation:bossAtk .6s}
+.boss-face.warn{animation:bossWarn .35s infinite alternate}
+@keyframes bossHit{30%{transform:scale(.75) rotate(-14deg)}60%{transform:scale(1.15) rotate(8deg)}}
+@keyframes bossAtk{30%{transform:scale(1.7) translateY(6px)}100%{transform:none}}
+@keyframes bossWarn{to{transform:scale(1.25);filter:drop-shadow(0 0 6px #ff4d6d)}}
+.chapter{display:flex;align-items:center;justify-content:space-between;width:calc(100% - 28px);margin-top:2px}
+.ch-title{text-align:center;font-weight:900;color:#fff;font-size:20px;text-shadow:0 2px 0 #ff6fa8,0 4px 0 #e0508c}
+.ch-title .ce{font-family:var(--emoji);font-size:34px;display:block;line-height:1.15;text-shadow:none;animation:bob 1.8s ease-in-out infinite}
+.ch-title small{display:block;font-size:13px;color:#e39a1c;text-shadow:none;margin-top:2px}
+.ch-dots{display:flex;gap:8px;padding:8px 0 16px}
+.ch-dots i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.85);transition:transform .2s}
+.ch-dots i.on{background:var(--pink);transform:scale(1.3)}
+.lv .ft{position:absolute;bottom:7px;font-family:var(--emoji);font-size:12px;letter-spacing:1px;line-height:1}
+.intro-item{display:flex;gap:12px;align-items:center;text-align:left;background:rgba(255,255,255,.8);border-radius:16px;padding:8px 12px;margin:8px 0}
+.intro-item .ii{font-family:var(--emoji);font-size:34px;line-height:1}
+.intro-item b{color:var(--pink);font-size:16px}
+.panel .intro-item p{margin:2px 0 0;font-size:13px;text-align:left}
 </style>
 </head>
 <body>
@@ -290,7 +336,11 @@ body.fever .fever-badge{transform:translate(-50%,-35%) scale(1)}
       <h2>选择关卡</h2>
       <button class="icon-btn" data-mute aria-label="静音">🔊</button>
     </div>
+    <div class="chapter"><button class="icon-btn" id="chPrev" aria-label="上一章"><svg viewBox="0 0 24 24"><path d="M15.5 4 7.5 12l8 8 2-2-6-6 6-6z"/></svg></button>
+      <div class="ch-title" id="chTitle"></div>
+      <button class="icon-btn" id="chNext" aria-label="下一章"><svg viewBox="0 0 24 24"><path d="M8.5 4l8 8-8 8-2-2 6-6-6-6z"/></svg></button></div>
     <div class="lvgrid" id="lvGrid"></div>
+    <div class="ch-dots" id="chDots"></div>
   </section>
 
   <!-- 游戏 -->
@@ -305,6 +355,7 @@ body.fever .fever-badge{transform:translate(-50%,-35%) scale(1)}
       </div>
     </div>
     <div class="timebar" id="timebar"><div class="fill" id="timeFill"></div><span id="timeText">0</span></div>
+    <div class="goal-row" id="goalRow"></div>
     <div class="board-wrap" id="boardWrap"><div class="fever-badge" id="feverBadge">🔥 狂热中 · 得分×2<i id="feverBar"></i></div><div id="board"></div></div>
     <div class="items">
       <button class="item" data-item="hint"><span class="ic">💡</span><em>提示</em><span class="cnt">3</span></button>
@@ -366,6 +417,8 @@ body.fever .fever-badge{transform:translate(-50%,-35%) scale(1)}
       <li>再点一次已选中的方块可<b>取消</b>选中；点到连不通的方块会改为选中它。</li>
       <li>快速连续消除触发<b>连击</b>：额外加分并奖励时间。</li>
       <li>道具：💡提示一对 · 🔀重新排列 · 💣直接炸掉一对。</li>
+      <li>特殊方块：❄️冰冻（消掉旁边的才能解冻）· 🍫巧克力墙（挡路）· ⏰时间糖（+5 秒）· ✨闪光（同款全消）。</li>
+      <li>特殊关卡：🎯收集指定甜品 · 👑打败蛋糕大魔王（它会定时冰冻你的方块）。</li>
       <li>第 4 关起，消除后剩余方块会按规则<b>移动</b>（下落、左靠、聚拢、散开…）。</li>
       <li>连击到 5 次进入<b>🔥狂热模式</b>：8 秒内得分翻倍，音乐也会加速！</li>
       <li>剩余时间越多，星星越多 ★★★</li>
@@ -383,6 +436,13 @@ body.fever .fever-badge{transform:translate(-50%,-35%) scale(1)}
 <div id="toast"></div>
 <div id="flash"></div>
 <button id="updatePill">✨ 新版本已就绪，点我更新</button>
+
+<!-- 新元素介绍 -->
+<div class="overlay" id="ovIntro"><div class="panel">
+  <div class="ribbon">新元素!</div>
+  <div id="introList" style="margin-top:6px"></div>
+  <div class="btns"><button class="btn" data-act="introGo">开始挑战</button></div>
+</div></div>
 
 <!-- 存档备份 -->
 <div class="overlay" id="ovSave"><div class="panel">
@@ -404,7 +464,7 @@ body.fever .fever-badge{transform:translate(-50%,-35%) scale(1)}
    1. 配置：所有关键参数集中在这里
    ===================================================================== */
 const CONFIG = {
-  version: '1.1',
+  version: '1.2',
   rows: 10, cols: 7,             // 默认棋盘行列（rows*cols 必须为偶数；每关可单独设置 rows/cols）
   maxTile: 64,                   // 方块最大边长(px)
   ringRatio: 0.32,               // 外圈留白 = 方块边长 * ringRatio（连线可走外圈）
@@ -417,23 +477,45 @@ const CONFIG = {
   comboFx: { flash: 3, shake: 5, rain: 8 },          // 连击特效分档：闪光 / 震屏 / 糖果雨
   music: { volume: 0.16, bpm: { normal: 112, danger: 138, fever: 152 } },
   items: { hint: 3, shuffle: 2, bomb: 2 },
+  special: { timeCandy: 5, sparkScore: 10 },        // 时间糖 +5 秒；闪光额外每块 +10 分
+  chapterSize: 6,
+  chapters: [
+    { name: '草莓农场', icon: '🍓' }, { name: '柠檬工坊', icon: '🍋' },
+    { name: '巧克力城堡', icon: '🍫' }, { name: '彩虹糖宫', icon: '🍭' },
+  ],
   warn: { ratio: 0.12, minSeconds: 10, tickFrom: 5 },  // 进度条闪红阈值
   stars: [0.45, 0.2],            // 剩余时间比例 ≥0.45 三星，≥0.2 两星，否则一星
   timeScore: 10,                 // 每剩 1 秒奖励分
   genAttempts: 40,               // 生成有解棋盘的最大尝试次数
-  levels: [                      // cols 越少方块越大
-    { kinds: 12, time: 150, rule: 'none',    cols: 6 },
-    { kinds: 13, time: 140, rule: 'none',    cols: 6 },
-    { kinds: 14, time: 175, rule: 'none' },
-    { kinds: 15, time: 170, rule: 'down' },
-    { kinds: 15, time: 165, rule: 'left' },
-    { kinds: 16, time: 160, rule: 'up' },
+  levels: [                      // cols 越少方块越大；ice/walls/timeCandy/spark 为特殊方块数量；goal 为过关目标
+    // 第 1 章 · 草莓农场
+    { kinds: 12, time: 150, rule: 'none', cols: 6 },
+    { kinds: 13, time: 140, rule: 'none', cols: 6, timeCandy: 2 },
+    { kinds: 14, time: 175, rule: 'none', timeCandy: 2, spark: 1 },
+    { kinds: 15, time: 170, rule: 'down', spark: 1 },
+    { kinds: 15, time: 165, rule: 'none', goal: { type: 'collect', count: 10 } },
+    { kinds: 16, time: 160, rule: 'up', timeCandy: 2, spark: 2 },
+    // 第 2 章 · 柠檬工坊
     { kinds: 16, time: 155, rule: 'right' },
-    { kinds: 17, time: 150, rule: 'centerX' },
-    { kinds: 18, time: 145, rule: 'splitX' },
-    { kinds: 18, time: 140, rule: 'centerY' },
-    { kinds: 19, time: 135, rule: 'splitY', items: { hint: 3, shuffle: 2, bomb: 1 } },
-    { kinds: 20, time: 130, rule: 'zigzag', items: { hint: 2, shuffle: 2, bomb: 1 } },
+    { kinds: 17, time: 150, rule: 'centerX', goal: { type: 'collect', count: 12 } },
+    { kinds: 18, time: 145, rule: 'splitX', spark: 2 },
+    { kinds: 18, time: 140, rule: 'centerY', timeCandy: 3 },
+    { kinds: 19, time: 135, rule: 'splitY', goal: { type: 'collect', count: 12 }, items: { hint: 3, shuffle: 2, bomb: 1 } },
+    { kinds: 20, time: 130, rule: 'zigzag', spark: 2, timeCandy: 2, items: { hint: 2, shuffle: 2, bomb: 1 } },
+    // 第 3 章 · 巧克力城堡（冰冻 + 巧克力墙）
+    { kinds: 16, time: 165, rule: 'none', ice: 6 },
+    { kinds: 17, time: 160, rule: 'none', walls: 4, ice: 4 },
+    { kinds: 17, time: 155, rule: 'down', ice: 8, timeCandy: 2 },
+    { kinds: 18, time: 150, rule: 'none', walls: 6, goal: { type: 'collect', count: 10 } },
+    { kinds: 18, time: 150, rule: 'left', walls: 4, ice: 8, spark: 2 },
+    { kinds: 18, time: 170, rule: 'none', walls: 2, timeCandy: 2, goal: { type: 'boss', hp: 30, every: 12, freeze: 3 } },
+    // 第 4 章 · 彩虹糖宫
+    { kinds: 19, time: 150, rule: 'centerX', ice: 8, timeCandy: 3 },
+    { kinds: 19, time: 145, rule: 'splitY', walls: 4, goal: { type: 'collect', count: 12 } },
+    { kinds: 20, time: 145, rule: 'zigzag', ice: 10, spark: 2 },
+    { kinds: 20, time: 140, rule: 'down', walls: 6, ice: 6, timeCandy: 3 },
+    { kinds: 20, time: 140, rule: 'splitX', ice: 8, goal: { type: 'collect', count: 14 }, items: { hint: 2, shuffle: 2, bomb: 1 } },
+    { kinds: 20, time: 165, rule: 'down', walls: 4, ice: 4, spark: 2, timeCandy: 2, goal: { type: 'boss', hp: 36, every: 10, freeze: 4 }, items: { hint: 2, shuffle: 2, bomb: 2 } },
   ],
 };
 
@@ -449,6 +531,22 @@ const RULES = {
   splitY:  { name: '⤒⤓ 上下分离', desc: '上半往上、下半往下' },
   zigzag:  { name: '⇅ 交错',   desc: '单数列下落，双数列上浮' },
 };
+
+/** 特殊元素说明（首次遇到时弹出介绍） */
+const FEATURES = {
+  time:    { icon: '⏰', name: '时间糖',     desc: '带小闹钟的方块，消掉它奖励 5 秒。' },
+  spark:   { icon: '✨', name: '闪光方块',   desc: '消掉它时，棋盘上所有同款甜品一起消失！' },
+  collect: { icon: '🎯', name: '收集目标',   desc: '在时间内收集够指定的甜品就过关。' },
+  ice:     { icon: '❄️', name: '冰冻方块',   desc: '不能直接点选。消掉它上下左右相邻的方块就能解冻。' },
+  wall:    { icon: '🍫', name: '巧克力墙',   desc: '不能消除，会挡住连线，想办法绕过去。' },
+  boss:    { icon: '🎂', name: '蛋糕大魔王', desc: '每次消除都会打掉它的血，它会定时冻住你的方块！' },
+};
+function levelFeatures(c) {
+  const f = [];
+  if (c.timeCandy) f.push('time'); if (c.spark) f.push('spark'); if (c.ice) f.push('ice'); if (c.walls) f.push('wall');
+  if (c.goal) f.push(c.goal.type);
+  return f;
+}
 
 /* =====================================================================
    2. 主题：换风格只需替换这里（图案、配色）
@@ -533,13 +631,15 @@ const Logic = (() => {
   /** 图案相同且可连通 → 路径；否则 null */
   function canLink(g, a, b) {
     const ta = g[a.r][a.c], tb = g[b.r][b.c];
-    if (!ta || !tb || ta === tb || ta.kind !== tb.kind) return null;
+    if (!selectable(ta) || !selectable(tb) || ta === tb || ta.kind !== tb.kind) return null;
     return findPath(g, a, b);
   }
 
   function forEachTile(g, fn) { for (let r = 1; r < g.length - 1; r++) for (let c = 1; c < g[0].length - 1; c++) if (g[r][c]) fn(g[r][c], r, c); }
   function countTiles(g) { let n = 0; forEachTile(g, () => n++); return n; }
-  function groupByKind(g) { const m = new Map(); forEachTile(g, (t, r, c) => { if (!m.has(t.kind)) m.set(t.kind, []); m.get(t.kind).push({ r, c }); }); return m; }
+  /** 可以点选的方块：不是巧克力墙、没有被冰冻 */
+  const selectable = t => !!t && !t.wall && !t.ice;
+  function groupByKind(g) { const m = new Map(); forEachTile(g, (t, r, c) => { if (!selectable(t)) return; if (!m.has(t.kind)) m.set(t.kind, []); m.get(t.kind).push({ r, c }); }); return m; }
 
   /** 找任意一对可消方块 */
   function findAnyPair(g, random = false) {
@@ -557,7 +657,7 @@ const Logic = (() => {
 
   function removePair(g, a, b) { g[a.r][a.c] = null; g[b.r][b.c] = null; }
 
-  function clone(g) { return g.map(row => row.map(t => t && { id: t.id, kind: t.kind, r: t.r, c: t.c })); }
+  function clone(g) { return g.map(row => row.map(t => t && { id: t.id, kind: t.kind, r: t.r, c: t.c, ice: t.ice, wall: t.wall, mod: t.mod })); }
 
   /** 把一条格子序列上的方块向序列开头压紧，记录移动 */
   function compactLine(g, cells, moves) {
@@ -592,39 +692,68 @@ const Logic = (() => {
     return moves;
   }
 
-  /** 贪心随机模拟能否消完（包含移动规则） */
+  /** 消除一对：处理“闪光”（同款全消）与“冰冻”（上下左右相邻解冻），返回 {removed, thawed} */
+  function resolveRemoval(g, a, b) {
+    const ta = g[a.r][a.c], tb = g[b.r][b.c];
+    const removed = [ta, tb];
+    g[ta.r][ta.c] = null; g[tb.r][tb.c] = null;
+    if (ta.mod === 'spark' || tb.mod === 'spark') {
+      forEachTile(g, (t, r, c) => { if (!t.wall && t.kind === ta.kind) { removed.push(t); g[r][c] = null; } });
+    }
+    const thawed = [];
+    for (const t of removed) for (const [dr, dc] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+      const n = g[t.r + dr] && g[t.r + dr][t.c + dc];
+      if (n && n.ice) { n.ice = false; thawed.push(n); }
+    }
+    return { removed, thawed };
+  }
+  function thawAll(g) { const out = []; forEachTile(g, t => { if (t.ice) { t.ice = false; out.push(t); } }); return out; }
+  function countClearable(g) { let n = 0; forEachTile(g, t => { if (!t.wall) n++; }); return n; }
+
+  /** 贪心随机模拟能否消完（包含移动规则、冰冻、闪光） */
   function isSolvable(g, rule) {
     const s = clone(g);
-    let n = countTiles(s);
-    while (n > 0) {
+    let n = countClearable(s), guard = 0;
+    while (n > 0 && guard++ < 500) {
       const p = findAnyPair(s, true);
       if (!p) return false;
-      removePair(s, p.a, p.b); n -= 2;
+      n -= resolveRemoval(s, p.a, p.b).removed.length;
       applyRule(s, rule);
     }
-    return true;
+    return n <= 0;
   }
 
-  /** 生成棋盘：每种图案数量为偶数，并验证有解 */
-  function generate(R, C, kindIds, rule) {
-    if ((R * C) % 2) throw new Error('rows*cols 必须为偶数');
+  /** 生成棋盘：巧克力墙左右对称摆放；每种图案数量为偶数；再随机附加闪光/时间糖/冰冻；验证有解 */
+  function generate(R, C, kindIds, rule, spec = {}) {
+    const walls = spec.walls || 0, cells = R * C - walls;
+    if (cells % 2 || walls % 2) throw new Error('巧克力墙和可消方块数量都必须为偶数');
     const bag = [];
-    for (let i = 0; i < R * C / 2; i++) { const k = kindIds[i % kindIds.length]; bag.push(k, k); }
+    for (let i = 0; i < cells / 2; i++) { const k = kindIds[i % kindIds.length]; bag.push(k, k); }
     let g;
     for (let att = 0; att < CONFIG.genAttempts; att++) {
       shuffleArr(bag);
       g = makeGrid(R, C);
+      const half = [];
+      for (let r = 1; r <= R; r++) for (let c = 1; c <= Math.floor(C / 2); c++) half.push({ r, c });
+      shuffleArr(half);
+      for (let w = 0; w < walls / 2; w++) { const p = half[w]; for (const c of [p.c, C + 1 - p.c]) g[p.r][c] = { id: nextId++, kind: -1, wall: true, r: p.r, c }; }
+      const tiles = [];
       let i = 0;
-      for (let r = 1; r <= R; r++) for (let c = 1; c <= C; c++) g[r][c] = { id: nextId++, kind: bag[i++], r, c };
+      for (let r = 1; r <= R; r++) for (let c = 1; c <= C; c++) if (!g[r][c]) { g[r][c] = { id: nextId++, kind: bag[i++], r, c }; tiles.push(g[r][c]); }
+      shuffleArr(tiles);
+      let j = 0;
+      for (let n = 0; n < (spec.spark || 0); n++) tiles[j++].mod = 'spark';
+      for (let n = 0; n < (spec.timeCandy || 0); n++) tiles[j++].mod = 'time';
+      for (let n = 0; n < (spec.ice || 0); n++) tiles[j++].ice = true;
       if (isSolvable(g, rule)) return g;
     }
     return g;
   }
 
-  /** 重列：方块在已占用的位置间随机交换，保证至少有一对可消（尽量保证可解） */
+  /** 重列：方块在已占用的位置间随机交换（巧克力墙不动），保证至少有一对可消（尽量保证可解） */
   function shuffleBoard(g, rule) {
     const pos = [], tiles = [];
-    forEachTile(g, (t, r, c) => { pos.push({ r, c }); tiles.push(t); });
+    forEachTile(g, (t, r, c) => { if (t.wall) return; pos.push({ r, c }); tiles.push(t); });
     const old = new Map(tiles.map(t => [t.id, { r: t.r, c: t.c }]));
     for (let att = 0; att < 60; att++) {
       shuffleArr(tiles);
@@ -635,8 +764,8 @@ const Logic = (() => {
       .map(t => ({ tile: t, from: old.get(t.id), to: { r: t.r, c: t.c } }));
   }
 
-  return { makeGrid, lineClear, findPath, canLink, findAnyPair, removePair, applyRule, isSolvable, generate,
-           shuffleBoard, clone, countTiles, groupByKind, forEachTile };
+  return { makeGrid, lineClear, findPath, canLink, findAnyPair, removePair, resolveRemoval, thawAll, applyRule, isSolvable, generate,
+           shuffleBoard, clone, countTiles, countClearable, groupByKind, forEachTile, selectable };
 })();
 
 /* =====================================================================
@@ -647,7 +776,7 @@ const Store = {
   load() {
     let d = {};
     try { d = JSON.parse(localStorage.getItem(this.key)) || {}; } catch (e) {}
-    this.d = Object.assign({ unlocked: 1, stars: [], best: [], muted: false, music: true }, d);
+    this.d = Object.assign({ unlocked: 1, stars: [], best: [], muted: false, music: true, seen: {} }, d);
   },
   save() { try { localStorage.setItem(this.key, JSON.stringify(this.d)); } catch (e) {} },
   totalStars() { return this.d.stars.reduce((s, v) => s + (v || 0), 0); },
@@ -717,6 +846,11 @@ const Sound = (() => {
     star: (t, i) => { tone(t, 784 * Math.pow(2, i * 4 / 12), 0.25, { type: 'triangle', vol: 0.2 }); tone(t + 0.04, 1568 * Math.pow(2, i * 4 / 12), 0.2, { vol: 0.08 }); },
     banner: t => notes(t, [392, 523, 659], 0.09, { type: 'triangle', vol: 0.16, dur: 0.15 }),
     boom: t => { noise(t, 0.35, { vol: 0.12, freq: 1800, to: 300, q: 0.7 }); },
+    freeze: t => { notes(t, [2093, 2637, 3136], 0.04, { type: 'sine', vol: 0.1, dur: 0.25 }); noise(t, 0.3, { vol: 0.12, freq: 6000, q: 4 }); },
+    thaw: t => { noise(t, 0.18, { vol: 0.22, freq: 4000, to: 1500, q: 2 }); tone(t, 1760, 0.12, { type: 'triangle', vol: 0.08, to: 2600 }); },
+    bonus: t => notes(t, [1568, 2093], 0.06, { type: 'sine', vol: 0.18, dur: 0.18 }),
+    spark: t => notes(t, [1047, 1319, 1568, 2093, 2637], 0.035, { type: 'triangle', vol: 0.1, dur: 0.15 }),
+    bossHit: t => { tone(t, 220, 0.15, { type: 'square', vol: 0.1, to: 110 }); noise(t, 0.12, { vol: 0.18, freq: 900, q: 1 }); },
   };
 
   /* ---- 背景音乐：程序化八音盒循环（C - G - Am - F），随紧张度变速 ---- */
@@ -808,20 +942,37 @@ const Renderer = (() => {
   function build(grid) {
     board.innerHTML = ''; els.clear();
     Logic.forEachTile(grid, t => {
-      const [emoji, color] = THEME.tiles[t.kind];
       const el = document.createElement('div');
-      el.className = 'tile enter';
       el.dataset.id = t.id;
-      el.style.setProperty('--c', color);
-      el.style.setProperty('--c2', shade(color, -0.2));
       el.style.setProperty('--d', ((t.r + t.c) * 26) + 'ms');
-      el.innerHTML = `<div class="face"><span class="em">${emoji}</span></div>`;
+      if (t.wall) {
+        el.className = 'tile wall enter';
+        el.innerHTML = '<div class="face"></div>';
+      } else {
+        const [emoji, color] = THEME.tiles[t.kind];
+        el.className = 'tile enter' + (t.ice ? ' ice' : '') + (t.mod ? ' mod-' + t.mod : '');
+        el.style.setProperty('--c', color);
+        el.style.setProperty('--c2', shade(color, -0.2));
+        const badge = t.mod === 'time' ? '<span class="bd">⏰</span>' : t.mod === 'spark' ? '<span class="bd">✨</span>' : '';
+        el.innerHTML = `<div class="face"><span class="em">${emoji}</span>${badge}</div>`;
+      }
       posEl(el, t.r, t.c);
       board.appendChild(el);
       els.set(t.id, el);
     });
     setTimeout(() => els.forEach(e => e.classList.remove('enter')), 1100);
   }
+
+  /** 冰冻 / 解冻（带冰渣特效） */
+  function setIce(ids, on) {
+    ids.forEach(id => {
+      const el = els.get(id); if (!el) return;
+      el.classList.toggle('ice', on);
+      const b = el.getBoundingClientRect();
+      burst(b.left + b.width / 2, b.top + b.height / 2, '#cdeeff', false);
+    });
+  }
+  function nudge(id) { const el = els.get(id); if (!el) return; el.classList.remove('nudge'); void el.offsetWidth; el.classList.add('nudge'); setTimeout(() => el.classList.remove('nudge'), 320); }
 
   function setSelected(id, on) {
     const el = els.get(id); if (!el) return;
@@ -985,7 +1136,7 @@ const Renderer = (() => {
   function clearFx() { lines.length = 0; parts.length = 0; floatLayer.innerHTML = ''; }
 
   return { resizeFx, layout, build, center, centerVP, setSelected, setHint, markDying, pop, move, link, burst, floatText, loseFx, clearFx,
-           flash, shake, candyRain, fireworks,
+           flash, shake, candyRain, fireworks, setIce, nudge,
            get tileSize() { return T; } };
 })();
 
@@ -1020,29 +1171,64 @@ const UI = {
   },
   renderMenu() { $('#starTotal').textContent = `★ ${Store.totalStars()} / ${CONFIG.levels.length * 3}`; },
   layoutLevels() {
-    const h = $('#scr-levels').clientHeight - 80, w = $('#scr-levels').clientWidth - 60;
-    const rowsN = Math.ceil(CONFIG.levels.length / 3);
-    const card = Math.floor(Math.min(w / 3, (h - 14 * (rowsN - 1)) / rowsN - 4, 120));
-    $('#lvGrid').style.setProperty('--card', card + 'px');
+    const scr = $('#scr-levels'), h = scr.clientHeight - 200, w = scr.clientWidth - 60;
+    const rowsN = Math.ceil(CONFIG.chapterSize / 3);
+    const card = Math.floor(Math.min(w / 3, (h - 14 * (rowsN - 1)) / rowsN - 4, 130));
+    $('#lvGrid').style.setProperty('--card', Math.max(70, card) + 'px');
   },
-  renderLevels() {
+  /** 章节式选关：每章 6 关，左右翻页或滑动切换 */
+  renderLevels(ch) {
+    const per = CONFIG.chapterSize, total = CONFIG.levels.length, nCh = Math.ceil(total / per);
+    if (ch == null) ch = Math.floor((Math.min(Store.d.unlocked, total) - 1) / per);
+    this.ch = ch = Math.max(0, Math.min(nCh - 1, ch));
     this.layoutLevels();
+    const C = CONFIG.chapters[ch] || { name: '', icon: '🍬' }, from = ch * per, to = Math.min(total, from + per);
+    let stars = 0; for (let i = from; i < to; i++) stars += Store.d.stars[i] || 0;
+    $('#chTitle').innerHTML = `<span class="ce">${C.icon}</span>第 ${ch + 1} 章 · ${C.name}<small>★ ${stars} / ${(to - from) * 3}</small>`;
+    $('#chPrev').style.visibility = ch > 0 ? 'visible' : 'hidden';
+    $('#chNext').style.visibility = ch < nCh - 1 ? 'visible' : 'hidden';
+    $('#chDots').innerHTML = Array.from({ length: nCh }, (_, k) => `<i class="${k === ch ? 'on' : ''}"></i>`).join('');
+    const FI = { time: '⏰', spark: '✨', ice: '❄️', wall: '🍫', collect: '🎯', boss: '👑' };
     const g = $('#lvGrid'); g.innerHTML = '';
-    CONFIG.levels.forEach((lv, i) => {
+    for (let i = from; i < to; i++) {
+      const lv = CONFIG.levels[i];
       const [lc, ld] = THEME.levelColors[i % THEME.levelColors.length];
       const locked = i + 1 > Store.d.unlocked, st = Store.d.stars[i] || 0;
       const b = document.createElement('button');
       b.className = 'lv' + (locked ? ' locked' : '');
-      b.style.setProperty('--lc', lc); b.style.setProperty('--ld', ld); b.style.setProperty('--d', i * 40 + 'ms');
+      b.style.setProperty('--lc', lc); b.style.setProperty('--ld', ld); b.style.setProperty('--d', (i - from) * 50 + 'ms');
       b.innerHTML = locked ? '<b>🔒</b>' :
         `<b>${i + 1}</b><div class="st">${'★'.repeat(st)}<i>${'★'.repeat(3 - st)}</i></div>` +
-        (lv.rule !== 'none' ? `<span class="rl">${RULES[lv.rule].name}</span>` : '');
+        (lv.rule !== 'none' ? `<span class="rl">${RULES[lv.rule].name}</span>` : '') +
+        `<span class="ft">${levelFeatures(lv).map(f => FI[f]).join('')}</span>`;
       b.addEventListener('click', () => {
+        if (performance.now() - (UI._swipedAt || 0) < 400) return;   // 刚滑动翻页，不算点击
         if (locked) { Sound.play('deny'); UI.toast('先通过前一关解锁哦~'); return; }
         Sound.play('tap'); UI.go('game', () => Game.start(i));
       });
       g.appendChild(b);
-    });
+    }
+  },
+  /** 关卡目标栏（收集 / Boss） */
+  renderGoal(G) {
+    const row = $('#goalRow');
+    row.className = 'goal-row' + (G.type === 'collect' ? ' show' : G.type === 'boss' ? ' show boss' : '');
+    row.innerHTML = G.type === 'collect' ? `<span class="gi">${THEME.tiles[G.kind][0]}</span><small>收集</small><div class="gbar"><i></i></div><b></b>`
+      : G.type === 'boss' ? `<span class="gi boss-face">🎂</span><small>蛋糕大魔王</small><div class="gbar"><i></i></div><b></b>` : '';
+    this.updateGoal(G);
+  },
+  updateGoal(G, anim) {
+    const row = $('#goalRow'); if (!row.firstChild) return;
+    const ratio = G.type === 'collect' ? G.got / G.need : G.hp / G.max;
+    row.querySelector('.gbar i').style.transform = `scaleX(${Math.max(0, Math.min(1, ratio))})`;
+    row.querySelector('b').textContent = G.type === 'collect' ? `${G.got}/${G.need}` : `HP ${Math.ceil(G.hp)}`;
+    if (anim) { const f = row.querySelector('.gi'); f.classList.remove('hit', 'atk'); void f.offsetWidth; f.classList.add(anim); }
+  },
+  showIntro(feats, done) {
+    $('#introList').innerHTML = feats.map(f => { const F = FEATURES[f];
+      return `<div class="intro-item"><span class="ii">${F.icon}</span><div><b>${F.name}</b><p>${F.desc}</p></div></div>`; }).join('');
+    this._introDone = done;
+    this.overlay('ovIntro', true);
   },
 };
 
@@ -1060,10 +1246,22 @@ const Game = {
     UI.hideOverlays(); Renderer.clearFx();
     this.level = i; this.cfg = CONFIG.levels[i];
     this.R = this.cfg.rows || CONFIG.rows; this.C = this.cfg.cols || CONFIG.cols;
-    const kinds = shuffleArr(THEME.tiles.map((_, k) => k)).slice(0, this.cfg.kinds);
-    this.grid = Logic.generate(this.R, this.C, kinds, this.cfg.rule);
-    this.tiles = new Map(); Logic.forEachTile(this.grid, t => this.tiles.set(t.id, t));
-    Object.assign(this, { sel: null, hint: [], score: 0, combo: 0, maxCombo: 0, lastMatch: 0, running: false, paused: false, busy: true, lastTick: 0, _danger: false });
+    // 有巧克力墙的关卡不用 🍫 图案，免得看混
+    const pool = THEME.tiles.map((_, k) => k).filter(k => !(this.cfg.walls && THEME.tiles[k][0] === '🍫'));
+    const kinds = shuffleArr(pool).slice(0, this.cfg.kinds);
+    const GC = this.cfg.goal || { type: 'clear' };
+    // 收集关：目标甜品多分配几份，保证数量够
+    const kindList = GC.type === 'collect' ? [kinds[0], kinds[0], ...kinds] : kinds;
+    this.grid = Logic.generate(this.R, this.C, kindList, this.cfg.rule, this.cfg);
+    this.goal = { type: GC.type };
+    if (GC.type === 'collect') {
+      let n = 0; Logic.forEachTile(this.grid, t => { if (t.kind === kinds[0]) n++; });
+      Object.assign(this.goal, { kind: kinds[0], need: Math.min(GC.count, n), got: 0 });
+    }
+    if (GC.type === 'boss') Object.assign(this.goal, { hp: GC.hp, max: GC.hp, every: GC.every, freeze: GC.freeze, t: GC.every });
+    UI.renderGoal(this.goal);
+    this.tiles = new Map(); Logic.forEachTile(this.grid, t => { if (!t.wall) this.tiles.set(t.id, t); });
+    Object.assign(this, { sel: null, hint: [], score: 0, combo: 0, maxCombo: 0, lastMatch: 0, running: false, paused: false, busy: true, lastTick: 0, _danger: false, shuffles: 0 });
     this.setFever(false); Sound.duck(false);
     this.timeLeft = this.timeTotal = this.cfg.time;
     this.items = Object.assign({}, CONFIG.items, this.cfg.items || {});
@@ -1072,18 +1270,36 @@ const Game = {
     this.updateHud(); this.updateTime();
     Renderer.layout(this.R, this.C);
     Renderer.build(this.grid);
+    const feats = levelFeatures(this.cfg).filter(f => !Store.d.seen[f]);
     setTimeout(() => {
       if (tok !== this.token) return;
-      UI.banner(`第 ${i + 1} 关`, RULES[this.cfg.rule].desc); Sound.play('banner');
-      setTimeout(() => { if (tok !== this.token) return; this.running = true; this.busy = false; }, CONFIG.anim.banner - 300);
+      if (feats.length) UI.showIntro(feats, () => { feats.forEach(f => { Store.d.seen[f] = 1; }); Store.save(); this.go(tok); });
+      else this.go(tok);
     }, 250);
   },
+  go(tok) {
+    if (tok !== this.token) return;
+    UI.banner(`第 ${this.level + 1} 关`, this.goalText()); Sound.play('banner');
+    setTimeout(() => { if (tok !== this.token) return; this.running = true; this.busy = false; }, CONFIG.anim.banner - 300);
+  },
+  goalText() {
+    const G = this.goal, rule = this.cfg.rule !== 'none' ? ' · ' + RULES[this.cfg.rule].name : '';
+    if (G.type === 'collect') return `收集 ${G.need} 个 ${THEME.tiles[G.kind][0]}` + rule;
+    if (G.type === 'boss') return '打败蛋糕大魔王！' + rule;
+    return RULES[this.cfg.rule].desc;
+  },
+  goalDone() { const G = this.goal; return (G.type === 'collect' && G.got >= G.need) || (G.type === 'boss' && G.hp <= 0); },
 
   canAct() { return this.running && !this.paused && !this.busy; },
 
   tap(id) {
     if (!this.canAct()) return;
     const t = this.tiles.get(id); if (!t) return;
+    if (t.ice) {
+      Sound.play('deny'); Renderer.nudge(t.id);
+      if (!this._iceTip) { this._iceTip = 1; UI.toast('冻住啦！先消掉它旁边的方块'); }
+      return;
+    }
     if (this.sel === t) { Renderer.setSelected(t.id, false); this.sel = null; Sound.play('unselect'); return; }
     if (!this.sel) { this.select(t); return; }
     const path = Logic.canLink(this.grid, this.sel, t);
@@ -1094,46 +1310,67 @@ const Game = {
   clearSel() { if (this.sel) Renderer.setSelected(this.sel.id, false); this.sel = null; },
   clearHint() { this.hint = []; Renderer.setHint([]); },
 
-  /** 消除一对（普通连线或炸弹） */
+  /** 消除一对（普通连线或炸弹），并处理闪光、冰冻、时间糖、目标进度 */
   resolve(a, b, path, isBomb) {
-    const tok = this.token, A = CONFIG.anim, CB = CONFIG.combo;
-    this.clearHint();
+    const tok = this.token, A = CONFIG.anim, CB = CONFIG.combo, F = CONFIG.fever, SP = CONFIG.special;
+    this.clearHint(); this.shuffles = 0;
     const now = performance.now();
     if (!isBomb) { this.combo = (now - this.lastMatch <= CB.window) ? this.combo + 1 : 1; this.lastMatch = now; this.maxCombo = Math.max(this.maxCombo, this.combo); }
-    const F = CONFIG.fever;
     const feverStart = !isBomb && this.combo >= F.every && this.combo % F.every === 0 && this.fever <= 0;
     if (feverStart) this.setFever(true);
-    const gain = (CB.baseScore + (isBomb ? 0 : (this.combo - 1) * CB.bonusPerCombo)) * (this.fever > 0 ? F.mult : 1);
-    this.score += gain; this.updateHud(true);
+    const mult = this.fever > 0 ? F.mult : 1;
     const pa = Renderer.centerVP(a.r, a.c), pb = Renderer.centerVP(b.r, b.c);
     const mid = { x: (pa.x + pb.x) / 2, y: (pa.y + pb.y) / 2 };
 
-    Logic.removePair(this.grid, a, b);
-    this.tiles.delete(a.id); this.tiles.delete(b.id);
+    const { removed, thawed } = Logic.resolveRemoval(this.grid, a, b);
+    removed.forEach(t => this.tiles.delete(t.id));
+    const ids = removed.map(t => t.id), extra = removed.length - 2;
     const last = this.tiles.size === 0;
-    Renderer.markDying([a.id, b.id]);
+    const gain = (CB.baseScore + (isBomb ? 0 : (this.combo - 1) * CB.bonusPerCombo) + extra * SP.sparkScore) * mult;
+    this.score += gain; this.updateHud(true);
+    Renderer.markDying(ids);
     const moves = Logic.applyRule(this.grid, this.cfg.rule);
     if (moves.length) this.busy = true;
 
     if (isBomb) Sound.play('bomb');
     else { Renderer.link(path); Sound.play('match', this.combo); }
     Renderer.floatText('+' + gain, mid.x, mid.y, 'score', 900);
+    if (extra > 0) { Sound.play('spark'); Renderer.flash(); Renderer.floatText(`✨ 同款全消 +${extra / 2} 对`, mid.x, mid.y - 64, 'time', 1200); }
+    const candies = removed.filter(t => t.mod === 'time').length;
+    if (candies) {
+      const add = candies * SP.timeCandy;
+      this.timeLeft = Math.min(this.timeTotal, this.timeLeft + add);
+      Renderer.floatText(`⏰ +${add}秒`, mid.x, mid.y + 34, 'time', 1100); Sound.play('bonus');
+    }
     if (!isBomb && this.combo >= 2) {
       const tb = Math.min(CB.timeBonusMax, CB.timeBonusPer * (this.combo - 1));
       this.timeLeft = Math.min(this.timeTotal, this.timeLeft + tb);
       Renderer.floatText(`连击 x${this.combo}!<small>+${tb}秒</small>`, mid.x, mid.y - 30, 'combo');
       Sound.play('combo', this.combo);
-      const FX = CONFIG.comboFx;                       // 连击特效分档
+      const FX = CONFIG.comboFx;
       if (this.combo >= FX.flash) Renderer.flash();
       if (this.combo >= FX.shake) Renderer.shake();
       if (this.combo === FX.rain || (this.combo > FX.rain && this.combo % 4 === 0)) Renderer.candyRain();
     }
     if (feverStart) Renderer.floatText(`🔥 FEVER!<small>${F.duration} 秒内得分×${F.mult}</small>`, innerWidth / 2, innerHeight * 0.32, 'feverT', 1500);
 
+    // 目标进度
+    const G = this.goal;
+    if (G.type === 'collect') {
+      const n = removed.filter(t => t.kind === G.kind).length;
+      if (n) { G.got = Math.min(G.need, G.got + n); UI.updateGoal(G, 'hit'); }
+    } else if (G.type === 'boss' && G.hp > 0) {
+      const dmg = (removed.length / 2) * (this.combo >= 3 ? 2 : 1) * mult;
+      G.hp = Math.max(0, G.hp - dmg); UI.updateGoal(G, 'hit'); Sound.play('bossHit');
+      const bf = $('#goalRow .gi').getBoundingClientRect();
+      Renderer.floatText('-' + dmg, bf.left + bf.width / 2 + 20, bf.top + 10, 'score', 900);
+    }
+
     const delay = isBomb ? 60 : A.lineDraw + (last ? A.lastPair : A.lineHold);   // 最后一对：慢镜头
     setTimeout(() => {
       if (tok !== this.token) return;
-      Renderer.pop([a.id, b.id], isBomb || last); Sound.play(last ? 'bomb' : 'pop');
+      Renderer.pop(ids, isBomb || last || extra > 0); Sound.play(last ? 'bomb' : 'pop');
+      if (thawed.length) { Renderer.setIce(thawed.map(t => t.id), false); Sound.play('thaw'); }
       if (last) { Renderer.flash(); Renderer.shake(); }
       if (moves.length) Renderer.move(moves, A.move);
       setTimeout(() => { if (tok !== this.token) return; if (moves.length) this.busy = false; this.check(); }, moves.length ? A.move + 30 : 30);
@@ -1142,17 +1379,40 @@ const Game = {
 
   check() {
     if (!this.running) return;
-    if (this.tiles.size === 0) return this.win();
-    if (!Logic.findAnyPair(this.grid)) { UI.toast('没有能消的啦，自动重新排列~'); this.doShuffle(); }
+    if (this.tiles.size === 0 || this.goalDone()) return this.win();
+    if (Logic.findAnyPair(this.grid)) return;
+    const thawed = Logic.thawAll(this.grid);
+    if (thawed.length) {
+      UI.toast('冰块全部碎掉啦！'); Renderer.setIce(thawed.map(t => t.id), false); Sound.play('thaw');
+      if (Logic.findAnyPair(this.grid)) return;
+    }
+    UI.toast('没有能消的啦，自动重新排列~'); this.doShuffle(true);
   },
 
-  doShuffle() {
+  doShuffle(recheck) {
     const tok = this.token;
     this.busy = true; this.clearSel(); this.clearHint();
     const moves = Logic.shuffleBoard(this.grid, this.cfg.rule);
     Sound.play('shuffle');
     Renderer.move(moves, CONFIG.anim.shuffle, true);
-    setTimeout(() => { if (tok === this.token) this.busy = false; }, CONFIG.anim.shuffle + 40);
+    setTimeout(() => {
+      if (tok !== this.token) return;
+      this.busy = false;
+      if (recheck && ++this.shuffles < 5) this.check();
+    }, CONFIG.anim.shuffle + 40);
+  },
+
+  /** Boss 攻击：随机冰冻几个方块 */
+  bossAttack() {
+    const G = this.goal;
+    if (this.busy) { G.t = 1; return; }
+    const cands = shuffleArr([...this.tiles.values()].filter(t => !t.ice)).slice(0, G.freeze);
+    cands.forEach(t => { t.ice = true; if (t === this.sel) this.clearSel(); });
+    if (this.hint.length) this.clearHint();
+    Renderer.setIce(cands.map(t => t.id), true);
+    UI.updateGoal(G, 'atk'); Sound.play('freeze'); Renderer.shake();
+    UI.toast('蛋糕大魔王：冻住你！❄️');
+    this.check();
   },
 
   useItem(name) {
@@ -1193,6 +1453,12 @@ const Game = {
       $('#feverBar').style.transform = `scaleX(${Math.max(0, this.fever / CONFIG.fever.duration)})`;
       if (this.fever <= 0) this.setFever(false);
     }
+    const G = this.goal;
+    if (G && G.type === 'boss' && G.hp > 0) {
+      G.t -= dt;
+      const face = $('#goalRow .gi'); if (face) face.classList.toggle('warn', G.t < 2);
+      if (G.t <= 0) { G.t = G.every; this.bossAttack(); }
+    }
     this.timeLeft -= dt;
     if (this.timeLeft <= 0) { this.timeLeft = 0; this.updateTime(); this.lose(); return; }
     this.updateTime();
@@ -1224,6 +1490,8 @@ const Game = {
 
   win() {
     this.running = false; this.busy = true; this.setFever(false); this.updateTime();
+    if (this.goal.type === 'boss') { Renderer.candyRain(40); Renderer.floatText('🎉 打败蛋糕大魔王！', innerWidth / 2, innerHeight * 0.35, 'feverT', 1500); }
+    else if (this.goal.type === 'collect') Renderer.floatText('🎯 收集完成！', innerWidth / 2, innerHeight * 0.35, 'feverT', 1500);
     const remain = Math.ceil(this.timeLeft), bonus = remain * CONFIG.timeScore, total = this.score + bonus;
     const ratio = this.timeLeft / this.timeTotal;
     const stars = ratio >= CONFIG.stars[0] ? 3 : ratio >= CONFIG.stars[1] ? 2 : 1;
@@ -1263,7 +1531,10 @@ const Game = {
     this.running = false; this.busy = true; this.setFever(false); this.clearSel(); this.clearHint();
     Sound.play('lose'); Renderer.loseFx();
     const tok = this.token;
-    $('#loseText').textContent = `还剩 ${this.tiles.size / 2} 对没消掉，布丁都化掉了…`;
+    const G = this.goal;
+    $('#loseText').textContent = G.type === 'collect' ? `还差 ${G.need - G.got} 个 ${THEME.tiles[G.kind][0]}，再快一点点！`
+      : G.type === 'boss' ? `蛋糕大魔王还剩 ${Math.ceil(G.hp)} 点血，下次一定！`
+      : `还剩 ${this.tiles.size / 2} 对没消掉，布丁都化掉了…`;
     setTimeout(() => { if (tok === this.token) UI.overlay('ovLose', true); }, 700);
   },
 
@@ -1379,6 +1650,20 @@ const Tests = (() => {
     ok('生成：有解', [0, 1, 2, 3, 4, 5].some(() => Logic.isSolvable(g, 'none')));   // 贪心模拟带随机性，多试几次
     const before = Logic.countTiles(g); Logic.shuffleBoard(g, 'none');
     ok('重列：数量不变且有可消对', Logic.countTiles(g) === before && !!Logic.findAnyPair(g));
+    g = G(['A.A']); g[1][2] = { id: uid++, kind: 'W', wall: true, r: 1, c: 2 };
+    ok('巧克力墙挡住直连（改绕外圈）', turns(Logic.canLink(g, P(0, 0), P(0, 2))) === 2);
+    g = G(['AB', 'AB']); g[1][1].ice = true;
+    ok('冰冻方块不能连', Logic.canLink(g, P(0, 0), P(1, 0)) === null);
+    Logic.resolveRemoval(g, P(0, 1), P(1, 1));
+    ok('消掉相邻方块会解冻', g[1][1].ice === false && !!Logic.canLink(g, P(0, 0), P(1, 0)));
+    g = G(['AAB', 'B.A', 'A..']); g[1][1].mod = 'spark';
+    const sr = Logic.resolveRemoval(g, P(0, 0), P(0, 1));
+    ok('闪光：同款全消', sr.removed.length === 4 && Logic.countClearable(g) === 2);
+    g = Logic.generate(10, 7, [...Array(16).keys()], 'down', { walls: 4, ice: 8, timeCandy: 2, spark: 2 });
+    const cnt = { wall: 0, ice: 0, time: 0, spark: 0 };
+    Logic.forEachTile(g, t => { if (t.wall) cnt.wall++; if (t.ice) cnt.ice++; if (t.mod) cnt[t.mod]++; });
+    ok('生成：特殊方块数量正确', cnt.wall === 4 && cnt.ice === 8 && cnt.time === 2 && cnt.spark === 2);
+    ok('生成：带特殊方块也有解', [0, 1, 2, 3, 4, 5].some(() => Logic.isSolvable(g, 'down')));
     const code = Backup.encode();
     ok('存档码：可解析且校验正确', !!Backup.decode(code) && !Backup.decode(code.slice(0, -1) + (code.slice(-1) === 'a' ? 'b' : 'a')));
 
@@ -1470,6 +1755,14 @@ function init() {
   $$('[data-music]').forEach(b => b.addEventListener('click', () => {
     Sound.setMusic(!Sound.musicOn); Store.d.music = Sound.musicOn; Store.save(); UI.updateMute(); Sound.play('tap');
   }));
+  $('#chPrev').addEventListener('click', () => { Sound.play('tap'); UI.renderLevels(UI.ch - 1); });
+  $('#chNext').addEventListener('click', () => { Sound.play('tap'); UI.renderLevels(UI.ch + 1); });
+  let swipeX = null;
+  $('#lvGrid').addEventListener('pointerdown', e => { swipeX = e.clientX; });
+  $('#lvGrid').addEventListener('pointerup', e => {
+    if (swipeX == null) return; const dx = e.clientX - swipeX; swipeX = null;
+    if (Math.abs(dx) > 50) { UI._swipedAt = performance.now(); Sound.play('tap'); UI.renderLevels(UI.ch + (dx < 0 ? 1 : -1)); }
+  });
   $('#btnSave').addEventListener('click', () => { Sound.play('tap'); $('#saveCode').value = Backup.encode(); $('#loadCode').value = ''; UI.overlay('ovSave', true); });
   $('#btnPlay').addEventListener('click', () => { Sound.play('tap'); const i = Math.min(Store.d.unlocked, CONFIG.levels.length) - 1; UI.go('game', () => Game.start(i)); });
   $('#btnLevels').addEventListener('click', () => { Sound.play('tap'); UI.go('levels', () => UI.renderLevels()); });
@@ -1484,6 +1777,7 @@ function init() {
     levels: () => { UI.hideOverlays(); Game.quit(); UI.go('levels', () => UI.renderLevels()); },
     closeHelp: () => UI.overlay('ovHelp', false),
     closeSave: () => UI.overlay('ovSave', false),
+    introGo: () => { UI.overlay('ovIntro', false); const d = UI._introDone; UI._introDone = null; if (d) d(); },
     copySave: () => {
       const ta = $('#saveCode'), ok = () => UI.toast('已复制！去备忘录粘贴保存吧');
       const fallback = () => {
