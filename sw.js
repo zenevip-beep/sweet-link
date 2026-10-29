@@ -1,5 +1,5 @@
-// 甜品连连看 Service Worker v2：离线缓存 + 新版本提示（与 index.html 放在同一目录）
-const CACHE = 'sweet-link-v2';
+// 甜品连连看 Service Worker v3：离线缓存 + 新版本提示（与 index.html 放在同一目录）
+const CACHE = 'sweet-link-v3';
 const ASSETS = ['./', './index.html', './sw.js'];
 let updateReady = false;
 
@@ -30,7 +30,9 @@ self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
   e.respondWith(caches.open(CACHE).then(async cache => {
-    const cached = await cache.match(req, { ignoreSearch: true });
+    // 统一用去掉 ?参数 的地址做缓存键，避免同一页面存出多份旧副本
+    const u = new URL(req.url); u.search = ''; const key = u.href;
+    const cached = await cache.match(key);
     // 先读出旧页面内容（cached 交给页面后就不能再读了）
     const oldTextP = cached && req.mode === 'navigate' ? cached.clone().text() : null;
     // 导航请求不能直接带参数重发，改用 URL 新建请求，并绕过 HTTP 缓存做校验
@@ -40,10 +42,10 @@ self.addEventListener('fetch', e => {
         const toCache = res.clone();
         if (oldTextP) {
           const [oldText, newText] = await Promise.all([oldTextP, res.clone().text()]);
-          await cache.put(req, toCache);
+          await cache.put(key, toCache);
           if (oldText !== newText) notifyUpdate();
         } else {
-          await cache.put(req, toCache);
+          await cache.put(key, toCache);
         }
       }
       return res;
