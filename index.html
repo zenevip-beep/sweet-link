@@ -93,7 +93,7 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
 /* ---------- 关卡选择 ---------- */
 .topbar{width:100%;display:flex;align-items:center;justify-content:space-between;padding:10px 14px}
 .topbar h2{font-size:24px;font-weight:900;color:#fff;text-shadow:0 2px 0 #ff6fa8,0 4px 0 #e0508c}
-.lvgrid{flex:1;display:grid;grid-template-columns:repeat(3,var(--card,100px));grid-auto-rows:var(--card,100px);gap:14px;align-content:center}
+.lvgrid{flex:none;display:grid;grid-template-columns:repeat(3,var(--card,100px));grid-auto-rows:var(--card,100px);gap:14px;align-content:center}
 .lv{position:relative;border-radius:24px;border:3px solid #fff;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;
   background:linear-gradient(170deg,rgba(255,255,255,.45),transparent 60%),var(--lc);box-shadow:0 5px 0 var(--ld),0 8px 14px rgba(0,0,0,.08);
   animation:cardIn .5s cubic-bezier(.2,1.5,.4,1) both;animation-delay:var(--d)}
@@ -249,7 +249,7 @@ body.fever .fever-badge{transform:translate(-50%,-35%) scale(1)}
 .ftext.feverT{font-size:42px;color:#fff;letter-spacing:2px;
   text-shadow:0 3px 0 #ff6fa8,0 6px 0 #b59cff,0 0 18px rgba(255,111,168,.9);animation:comboUp 1.4s cubic-bezier(.2,1.4,.4,1) forwards}
 .ftext.feverT small{display:block;text-align:center;font-size:16px}
-#updatePill{position:fixed;left:50%;top:calc(var(--sat) + 8px);z-index:70;transform:translate(-50%,-90px);
+#updatePill{position:fixed;left:50%;top:calc(var(--sat) + 8px);z-index:70;transform:translate(-50%,calc(-100% - var(--sat) - 30px));
   transition:transform .45s cubic-bezier(.2,1.5,.4,1);white-space:nowrap;color:#fff;font-weight:900;font-size:15px;
   padding:9px 18px;border-radius:99px;border:3px solid #fff;background:linear-gradient(#8ff0d2,#3fc49d);box-shadow:0 4px 0 #2a9b79}
 #updatePill.show{transform:translate(-50%,0)}
@@ -320,7 +320,9 @@ body.fever .fever-badge{transform:translate(-50%,-35%) scale(1)}
 .rate{display:none;align-items:center;justify-content:center;gap:8px;margin-top:12px;font-size:14px;font-weight:800;color:#a35a78}
 body.in-lab .rate{display:flex}
 body.in-lab #btnNext{display:none!important}
-.rate button{font-family:var(--emoji),sans-serif;font-size:14px;font-weight:800;color:#a35a78;background:#fff;border:2px solid #ffc4dc;border-radius:99px;padding:6px 12px}
+.rate{flex-wrap:wrap;row-gap:6px}
+.rate span{flex-basis:100%;text-align:center}
+.rate button{white-space:nowrap;font-size:14px;font-weight:800;color:#a35a78;background:#fff;border:2px solid #ffc4dc;border-radius:99px;padding:6px 12px}
 .rate button.on{background:var(--pink);border-color:var(--pink);color:#fff}
 /* 封住外圈 */
 #board.closed::before{content:"";position:absolute;inset:4px;border:3px dashed #ff6fa8;border-radius:16px;pointer-events:none;opacity:.85}
@@ -346,6 +348,58 @@ body.in-lab #btnNext{display:none!important}
 .jam.dry{opacity:0;transition:opacity .3s}
 @keyframes jamIn{from{transform:translate(-50%,-50%) scale(.2)}}
 .ftext.penalty{font-size:18px;color:#fff;text-shadow:0 2px 0 #ff3d64,0 0 6px #ff7a9a;animation:fup .9s ease-out forwards}
+/* ---------- v1.4 多机型适配 ---------- */
+/* 平板/横屏：界面限制为手机宽度的一列并居中 */
+.screen{left:max(var(--sal),calc(50% - 280px));right:max(var(--sar),calc(50% - 280px))}
+/* 界面元素随屏幕整体缩放（--s 由 JS 计算） */
+.hud>*,.topbar>*,.chapter>*,.goal-row>.gi,.goal-row>small,.goal-row>b{zoom:var(--s,1)}
+.items,.menu-top,.menu-btns,.menu-foot,.ver,.ch-dots,.lab-tip{zoom:var(--s,1)}
+.items{padding:4px 0 10px}
+.timebar{height:calc(18px * var(--s,1))}
+.timebar span{font-size:calc(11px * var(--s,1))}
+#scr-menu{gap:calc(4vh / var(--s,1))}
+/* 选关：章节标题、卡片、页码点作为一组上下居中 */
+.lv-center{flex:1;min-height:0;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(10px * var(--s,1))}
+.lv .st{font-size:calc(15px * var(--s,1))}
+.lv .ft{font-size:calc(12px * var(--s,1))}
+.lv .rl{font-size:calc(11px * var(--s,1))}
+/* ---------- v1.5 糖果狂欢 & 新机制 ---------- */
+.ftext.crit{font-size:32px;color:#fff;letter-spacing:1px;text-shadow:0 3px 0 #ff4d6d,0 6px 0 #b8173f,0 0 16px rgba(255,204,51,.95);animation:comboUp .9s cubic-bezier(.2,1.4,.4,1) forwards}
+.goal-row.meter .gbar i{transition:transform .12s linear}
+.goal-row.heat .gbar i{background:linear-gradient(90deg,#ffd35c,#ff9e57,#ff4d6d,#b59cff)}
+.goal-row.rise .gbar i{background:linear-gradient(90deg,#6cc8ff,#9a7bff)}
+.goal-row.heat .gi{animation:bob 1s ease-in-out infinite}
+body.heat1 #board{box-shadow:inset 0 0 0 3px rgba(255,255,255,.9),0 0 0 3px #ffd35c,0 0 18px 4px rgba(255,180,60,.5)}
+body.heat2 #board{box-shadow:inset 0 0 0 3px rgba(255,255,255,.9),0 0 0 4px #ff9e57,0 0 26px 8px rgba(255,110,60,.6)}
+body.heat2 #bg{filter:saturate(1.35)}
+body.heat3 #board,body.party #board{animation:heatPulse .55s ease-in-out infinite alternate}
+@keyframes heatPulse{from{box-shadow:inset 0 0 0 3px #fff,0 0 0 4px #ff4d6d,0 0 22px 6px rgba(255,77,109,.6)}to{box-shadow:inset 0 0 0 3px #fff,0 0 0 5px #b59cff,0 0 34px 12px rgba(181,156,255,.75)}}
+body.heat3 #bg,body.party #bg{animation:rainbow 1.6s linear infinite}
+.tile.spawn .face{animation:spawnIn .3s ease-out}
+@keyframes spawnIn{from{opacity:0;transform:scale(.6)}}
+/* 迷雾翻牌 */
+.tile.fog .face::before{content:"?";position:absolute;inset:-1px;border-radius:inherit;z-index:2;display:flex;align-items:center;justify-content:center;
+  font-family:-apple-system,sans-serif;font-weight:900;font-size:calc(var(--T)*.5);color:#fff;text-shadow:0 2px 0 rgba(120,80,160,.35);
+  background:radial-gradient(rgba(255,255,255,.35) 2px,transparent 2.5px) 0 0/9px 9px,linear-gradient(160deg,#d9c8ff,#a98ae6);
+  box-shadow:inset 0 0 0 2px #fff;transition:opacity .2s}
+.tile.fog.peek .face::before{opacity:0}
+/* 霉菌 */
+.tile.mold .face::before{content:"";position:absolute;inset:-1px;border-radius:inherit;z-index:2;pointer-events:none;
+  background:radial-gradient(circle at 28% 30%,rgba(110,160,40,.85) 0 13%,transparent 14%),radial-gradient(circle at 70% 62%,rgba(95,145,35,.8) 0 17%,transparent 18%),
+    radial-gradient(circle at 40% 78%,rgba(130,180,60,.85) 0 11%,transparent 12%),radial-gradient(circle at 78% 22%,rgba(120,170,50,.75) 0 9%,transparent 10%),rgba(160,205,100,.38);
+  box-shadow:inset 0 0 0 2px rgba(120,170,60,.8)}
+.tile.mold .em{filter:sepia(.6) hue-rotate(40deg) saturate(.8)}
+/* 手电筒 */
+.darkness{position:absolute;inset:0;border-radius:20px;pointer-events:none;z-index:7;
+  background:radial-gradient(circle at var(--lx,50%) var(--ly,50%),rgba(25,10,35,0) 0,rgba(25,10,35,0) var(--lr,100px),rgba(25,10,35,.93) calc(var(--lr,100px) + 36px))}
+/* 传送带 */
+.belt{position:absolute;pointer-events:none;z-index:0;border-radius:10px;opacity:.6;
+  background:repeating-linear-gradient(90deg,rgba(255,158,199,.55) 0 14px,rgba(255,255,255,.4) 14px 28px);animation:beltR 1s linear infinite}
+.belt.l{animation-name:beltL}
+@keyframes beltR{to{background-position:28px 0}}
+@keyframes beltL{to{background-position:-28px 0}}
+/* 底部上涨：顶部危险提示 */
+#board.topwarn{box-shadow:inset 0 0 0 3px #fff,0 -6px 20px 2px rgba(255,61,100,.65)}
 </style>
 </head>
 <body>
@@ -381,11 +435,13 @@ body.in-lab #btnNext{display:none!important}
       <h2>选择关卡</h2>
       <button class="icon-btn" data-mute aria-label="静音">🔊</button>
     </div>
+    <div class="lv-center" id="lvCenter">
     <div class="chapter"><button class="icon-btn" id="chPrev" aria-label="上一章"><svg viewBox="0 0 24 24"><path d="M15.5 4 7.5 12l8 8 2-2-6-6 6-6z"/></svg></button>
       <div class="ch-title" id="chTitle"></div>
       <button class="icon-btn" id="chNext" aria-label="下一章"><svg viewBox="0 0 24 24"><path d="M8.5 4l8 8-8 8-2-2 6-6-6-6z"/></svg></button></div>
     <div class="lvgrid" id="lvGrid"></div>
     <div class="ch-dots" id="chDots"></div>
+    </div>
   </section>
 
   <!-- 甜品实验室 -->
@@ -441,13 +497,13 @@ body.in-lab #btnNext{display:none!important}
   <div class="ribbon" id="winTitle">过关啦!</div>
   <div class="stars" id="winStars"><span>★</span><span>★</span><span>★</span></div>
   <div class="score-lines">
-    <div><span>消除得分</span><span id="wScore">0</span></div>
-    <div><span>剩余时间奖励</span><span id="wBonus">0</span></div>
-    <div><span>最高连击</span><span id="wCombo">0</span></div>
+    <div><span id="wScoreL">消除得分</span><span id="wScore">0</span></div>
+    <div><span id="wBonusL">剩余时间奖励</span><span id="wBonus">0</span></div>
+    <div><span id="wComboL">最高连击</span><span id="wCombo">0</span></div>
     <div class="total"><span>总分</span><span id="wTotal">0</span></div>
   </div>
   <div id="wBest"></div>
-  <div class="rate">这个机制好玩吗？<button data-act="rateUp">👍 好玩</button><button data-act="rateDown">👎 一般</button></div>
+  <div class="rate"><span>这个机制好玩吗？</span><button data-act="rateUp">👍 好玩</button><button data-act="rateDown">👎 一般</button></div>
   <div class="btns">
     <button class="btn" data-act="next" id="btnNext">下一关</button>
     <div class="row"><button class="btn mint small" data-act="restart">再玩一次</button><button class="btn lemon small" data-act="levels">关卡列表</button></div>
@@ -459,7 +515,7 @@ body.in-lab #btnNext{display:none!important}
   <div class="ribbon gray">时间到啦</div>
   <div class="big-emoji">🍮</div>
   <p id="loseText">布丁都化掉了…</p>
-  <div class="rate">这个机制好玩吗？<button data-act="rateUp">👍 好玩</button><button data-act="rateDown">👎 一般</button></div>
+  <div class="rate"><span>这个机制好玩吗？</span><button data-act="rateUp">👍 好玩</button><button data-act="rateDown">👎 一般</button></div>
   <div class="btns">
     <button class="btn" data-act="restart">再试一次</button>
     <button class="btn lemon small" data-act="levels">关卡列表</button>
@@ -478,6 +534,8 @@ body.in-lab #btnNext{display:none!important}
       <li>特殊方块：❄️冰冻（消掉旁边的才能解冻）· 🍫巧克力墙（挡路）· ⏰时间糖（+5 秒）· ✨闪光（同款全消）。</li>
       <li>特殊关卡：🎯收集指定甜品 · 👑打败蛋糕大魔王（它会定时冰冻你的方块）。</li>
       <li>🧪 甜品实验室：试玩还在研发中的新机制，玩完给个 👍/👎。</li>
+      <li>🍬 糖果狂欢：无尽模式。越快越热，热度越高倍率越高，满热度进入甜品派对！</li>
+      <li>💥 暴击：每次消除都有几率暴击得分 ×3，连击越高几率越大。</li>
       <li>第 4 关起，消除后剩余方块会按规则<b>移动</b>（下落、左靠、聚拢、散开…）。</li>
       <li>连击到 5 次进入<b>🔥狂热模式</b>：8 秒内得分翻倍，音乐也会加速！</li>
       <li>剩余时间越多，星星越多 ★★★</li>
@@ -523,7 +581,7 @@ body.in-lab #btnNext{display:none!important}
    1. 配置：所有关键参数集中在这里
    ===================================================================== */
 const CONFIG = {
-  version: '1.3',
+  version: '1.5',
   rows: 10, cols: 7,             // 默认棋盘行列（rows*cols 必须为偶数；每关可单独设置 rows/cols）
   maxTile: 64,                   // 方块最大边长(px)
   ringRatio: 0.32,               // 外圈留白 = 方块边长 * ringRatio（连线可走外圈）
@@ -531,7 +589,7 @@ const CONFIG = {
     lineDraw: 140, lineHold: 300, lineFade: 180,
     pop: 300, move: 260, shuffle: 520, wipe: 340, banner: 1400, lastPair: 650, fireworks: 2400
   },
-  combo: { window: 3000, baseScore: 10, bonusPerCombo: 5, timeBonusPer: 1, timeBonusMax: 3 },
+  combo: { window: 3000, baseScore: 10, bonusPerCombo: 5, timeBonusPer: 1, timeBonusMax: 3, scoreCap: 40 },   // 连击加分最多算到 40 连
   fever: { every: 5, duration: 8, mult: 2 },        // 连击到 5 的倍数进入狂热，持续 8 秒，得分×2
   comboFx: { flash: 3, shake: 5, rain: 8 },          // 连击特效分档：闪光 / 震屏 / 糖果雨
   music: { volume: 0.16, bpm: { normal: 112, danger: 138, fever: 152 } },
@@ -540,15 +598,20 @@ const CONFIG = {
   chapterSize: 6,
   // 甜品实验室：每个机制一个试玩关（mods = 启用的机制及参数）
   lab: [
-    { id: 'turns',    feat: 'turns',    kinds: 10, time: 180, mods: { turns: 1 } },
-    { id: 'ring',     feat: 'ring',     kinds: 12, time: 170, mods: { closedRing: true } },
+    { id: 'rush', feat: 'rush', wide: true, kinds: 12, time: 60, rule: 'down', items: { hint: 3, shuffle: 3, bomb: 3 },
+      mods: { rush: { accel: 150, decay: 3, heatPer: 9, comboWindow: 4500, tiers: [30, 60, 90], mult: [1, 2, 3, 5], timePer: 0.6, adjacent: 0.25,
+                      jackpots: [20, 50, 100, 150, 200, 300], jackpotTime: 8, partyTime: 10, partyKinds: 4, afterParty: 25, maxChain: 3, stars: [10000, 100000, 500000] } } },
     { id: 'misclick', feat: 'misclick', kinds: 15, time: 150, mods: { misclick: 2 } },
     { id: 'longline', feat: 'longline', kinds: 14, time: 120, mods: { longline: { min: 8, per: 3, score: 10 } } },
     { id: 'jam',      feat: 'jam',      kinds: 13, time: 170, mods: { jam: 4 } },
-    { id: 'portal',   feat: 'portal',   kinds: 14, time: 170, mods: { portals: 2 } },
     { id: 'cham',     feat: 'cham',     kinds: 14, time: 170, mods: { cham: { count: 8, every: 6 } } },
     { id: 'fuse',     feat: 'fuse',     kinds: 14, time: 170, mods: { fuse: { count: 4, base: 15, step: 7, penalty: 5, bonus: 30 } } },
     { id: 'adaptive', feat: 'adaptive', kinds: 15, time: 150, mods: { adaptive: true } },
+    { id: 'fog',      feat: 'fog',      kinds: 14, time: 170, mods: { fog: { count: 22 } } },
+    { id: 'dark',     feat: 'dark',     kinds: 14, time: 180, mods: { dark: { radius: 2.4 } } },
+    { id: 'conveyor', feat: 'conveyor', kinds: 14, time: 170, mods: { conveyor: { rows: [3, 6, 9], every: 4 } } },
+    { id: 'mold',     feat: 'mold',     kinds: 14, time: 170, mods: { mold: { start: 3, every: 4, spread: 2 } } },
+    { id: 'rise',     feat: 'rise',     kinds: 12, time: 90, rule: 'down', mods: { rise: { start: 5, every: 7, min: 3, accel: 25 } } },
     { id: 'random',   random: true },
   ],
   chapters: [
@@ -614,7 +677,8 @@ const FEATURES = {
   boss:    { icon: '🎂', name: '蛋糕大魔王', desc: '每次消除都会打掉它的血，它会定时冻住你的方块！' },
 };
 /** 机制（mods 的键）→ 介绍条目 */
-const MOD_FEAT = { turns: 'turns', closedRing: 'ring', misclick: 'misclick', longline: 'longline', jam: 'jam', portals: 'portal', cham: 'cham', fuse: 'fuse', adaptive: 'adaptive' };
+const MOD_FEAT = { turns: 'turns', closedRing: 'ring', misclick: 'misclick', longline: 'longline', jam: 'jam', portals: 'portal', cham: 'cham', fuse: 'fuse', adaptive: 'adaptive',
+                   fog: 'fog', dark: 'dark', conveyor: 'conveyor', mold: 'mold', rise: 'rise', rush: 'rush' };
 Object.assign(FEATURES, {
   turns:    { icon: '↪️', name: '拐弯限制',   desc: '连线最多只能拐 1 次弯，路线要想清楚。' },
   ring:     { icon: '🚧', name: '封住外圈',   desc: '棋盘外围被糖霜围栏封住，连线不能再从外面绕。' },
@@ -625,6 +689,12 @@ Object.assign(FEATURES, {
   cham:     { icon: '🦎', name: '变色龙',     desc: '带小蜥蜴的方块每隔几秒会互相交换图案，抓准时机！' },
   fuse:     { icon: '💣', name: '倒计时方块', desc: '数字归零就爆炸：扣 5 秒并冻住周围方块。赶在爆炸前消掉它有奖励。' },
   adaptive: { icon: '⚡', name: '动态节奏',   desc: '消得越快，时间流逝得越快；手慢就放慢一点。左上角显示当前节奏。' },
+  rush:     { icon: '🍬', name: '糖果狂欢',   desc: '无尽模式：消掉的位置会补上新甜品。越快越热，热度越高倍率越高；满热度进入「甜品派对」！连击 20、50、100 有大奖。' },
+  fog:      { icon: '🌫️', name: '迷雾翻牌',   desc: '紫色问号是盖着的方块，点一下能偷看 1 秒；消掉它旁边的方块就会翻开。' },
+  dark:     { icon: '🔦', name: '手电筒',     desc: '棋盘一片漆黑，只有手指点过的地方被照亮。记住看过的位置！' },
+  conveyor: { icon: '🛤️', name: '传送带',     desc: '带条纹的几行每隔几秒整体平移一格（首尾相接），看好的路线随时会变。' },
+  mold:     { icon: '🦠', name: '霉菌蔓延',   desc: '发霉的方块不能点，而且会慢慢传染给旁边的方块。消掉它旁边的方块就能清理霉菌。' },
+  rise:     { icon: '⬆️', name: '底部上涨',   desc: '每隔几秒从底部推上来一排新方块，越来越快。坚持 90 秒就赢，顶到最上面就输！' },
 });
 function levelFeatures(c) {
   const f = [];
@@ -762,7 +832,7 @@ const Logic = (() => {
   function forEachTile(g, fn) { for (let r = 1; r < g.length - 1; r++) for (let c = 1; c < g[0].length - 1; c++) if (g[r][c]) fn(g[r][c], r, c); }
   function countTiles(g) { let n = 0; forEachTile(g, () => n++); return n; }
   /** 可以点选的方块：不是巧克力墙、没有被冰冻 */
-  const selectable = t => !!t && !t.wall && !t.ice && !t.portal;
+  const selectable = t => !!t && !t.wall && !t.ice && !t.portal && !t.fog && !t.mold;
   /** 固定物：巧克力墙、传送门（不会被移动、重列，也不算可消方块） */
   const isFixed = t => !!t && (t.wall || t.portal);
   function groupByKind(g) { const m = new Map(); forEachTile(g, (t, r, c) => { if (!selectable(t)) return; if (!m.has(t.kind)) m.set(t.kind, []); m.get(t.kind).push({ r, c }); }); return m; }
@@ -783,7 +853,7 @@ const Logic = (() => {
 
   function removePair(g, a, b) { g[a.r][a.c] = null; g[b.r][b.c] = null; }
 
-  function clone(g) { return g.map(row => row.map(t => t && { id: t.id, kind: t.kind, r: t.r, c: t.c, ice: t.ice, wall: t.wall, mod: t.mod, portal: t.portal })); }
+  function clone(g) { return g.map(row => row.map(t => t && { id: t.id, kind: t.kind, r: t.r, c: t.c, ice: t.ice, wall: t.wall, mod: t.mod, portal: t.portal, fog: t.fog, mold: t.mold })); }
 
   /** 把一条格子序列上的方块向序列开头压紧；巧克力墙固定不动，把序列分成几段各自压紧 */
   function compactLine(g, cells, moves) {
@@ -837,11 +907,50 @@ const Logic = (() => {
     const thawed = [];
     for (const t of removed) for (const [dr, dc] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
       const n = g[t.r + dr] && g[t.r + dr][t.c + dc];
-      if (n && n.ice) { n.ice = false; thawed.push(n); }
+      if (n && (n.ice || n.fog || n.mold)) { n.ice = false; n.fog = false; n.mold = false; thawed.push(n); }   // 解冻 / 翻开 / 清理霉菌
     }
     return { removed, thawed };
   }
-  function thawAll(g) { const out = []; forEachTile(g, t => { if (t.ice) { t.ice = false; out.push(t); } }); return out; }
+  function thawAll(g) { const out = []; forEachTile(g, t => { if (t.ice || t.fog || t.mold) { t.ice = false; t.fog = false; t.mold = false; out.push(t); } }); return out; }
+  /** 新方块（无尽模式、底部上涨用） */
+  function newTile(kind, r, c) { return { id: nextId++, kind, r, c }; }
+  /** 无尽模式补充：把空格成对补满（同款成对，保证每种数量为偶数）；pAdj 为两块挨着出现的概率 */
+  function refill(g, pickKind, pAdj) {
+    const empty = [];
+    for (let r = 1; r < g.length - 1; r++) for (let c = 1; c < g[0].length - 1; c++) if (!g[r][c]) empty.push({ r, c });
+    shuffleArr(empty);
+    const free = new Set(empty.map(p => p.r * 100 + p.c)), out = [];
+    for (const p of empty) {
+      if (!free.has(p.r * 100 + p.c)) continue;
+      free.delete(p.r * 100 + p.c);
+      let q = null;
+      if (Math.random() < pAdj) for (const [dr, dc] of shuffleArr([[1, 0], [-1, 0], [0, 1], [0, -1]])) { const k = (p.r + dr) * 100 + p.c + dc; if (free.has(k)) { q = { r: p.r + dr, c: p.c + dc }; break; } }
+      if (!q) { const k = free.values().next().value; if (k == null) break; q = { r: Math.floor(k / 100), c: k % 100 }; }
+      free.delete(q.r * 100 + q.c);
+      const kind = pickKind();
+      for (const X of [p, q]) { const t = newTile(kind, X.r, X.c); g[X.r][X.c] = t; out.push(t); }
+    }
+    return out;
+  }
+  /** 传送带：一整行平移一格（首尾相接）；含固定物的行不动 */
+  function shiftRow(g, r, dir) {
+    const C = innerCols(g), row = [];
+    for (let c = 1; c <= C; c++) row.push(g[r][c]);
+    if (row.some(isFixed)) return [];
+    const out = dir > 0 ? [row[C - 1], ...row.slice(0, C - 1)] : [...row.slice(1), row[0]];
+    const moves = [];
+    out.forEach((t, i) => { const c = i + 1; g[r][c] = t; if (t) { moves.push({ tile: t, from: { r, c: t.c }, to: { r, c }, wrap: Math.abs(t.c - c) > 1 }); t.c = c; } });
+    return moves;
+  }
+  /** 底部上涨：整体上移一行，新的一排从底部进来；第一行已有方块则返回 null（顶到了） */
+  function pushUp(g, newRow) {
+    const R = innerRows(g), C = innerCols(g);
+    for (let c = 1; c <= C; c++) if (g[1][c]) return null;
+    const moves = [];
+    for (let r = 1; r < R; r++) for (let c = 1; c <= C; c++) { const t = g[r + 1][c]; g[r][c] = t; if (t) { t.r = r; moves.push({ tile: t, from: { r: r + 1, c }, to: { r, c } }); } }
+    newRow.forEach((t, i) => { const c = i + 1; t.r = R; t.c = c; g[R][c] = t; });
+    return moves;
+  }
   function countClearable(g) { let n = 0; forEachTile(g, t => { if (!isFixed(t)) n++; }); return n; }
 
   /** 随机贪心模拟能否消完（包含移动规则、冰冻、闪光）；换几种消除顺序各试一次，有一次能消完就算有解 */
@@ -896,6 +1005,8 @@ const Logic = (() => {
       for (let n = 0; n < (spec.spark || 0); n++) tiles[j++].mod = 'spark';
       for (let n = 0; n < (spec.timeCandy || 0); n++) tiles[j++].mod = 'time';
       for (let n = 0; n < (spec.ice || 0); n++) tiles[j++].ice = true;
+      const fogN = (spec.mods && spec.mods.fog && spec.mods.fog.count) || 0;
+      for (let n = 0; n < fogN; n++) tiles[j++].fog = true;
       if (isSolvable(g, rule, 2, opts)) { g.verified = true; return g; }
     }
     return g;   // 极少数情况：没验证到完整解，游戏里卡住时会自动碎冰/重列兜底
@@ -916,7 +1027,8 @@ const Logic = (() => {
   }
 
   return { makeGrid, isFree, lineClear, findPath, canLink, findAnyPair, removePair, resolveRemoval, thawAll, applyRule, isSolvable, generate,
-           shuffleBoard, clone, countTiles, countClearable, groupByKind, forEachTile, selectable, isFixed, turnsOf, pathLength, pathCells };
+           shuffleBoard, clone, countTiles, countClearable, groupByKind, forEachTile, selectable, isFixed, turnsOf, pathLength, pathCells,
+           newTile, refill, shiftRow, pushUp };
 })();
 
 /* =====================================================================
@@ -927,7 +1039,7 @@ const Store = {
   load() {
     let d = {};
     try { d = JSON.parse(localStorage.getItem(this.key)) || {}; } catch (e) {}
-    this.d = Object.assign({ unlocked: 1, stars: [], best: [], muted: false, music: true, seen: {}, lab: {} }, d);
+    this.d = Object.assign({ unlocked: 1, stars: [], best: [], muted: false, music: true, seen: {}, lab: {}, rush: { best: 0, combo: 0 } }, d);
   },
   save() { try { localStorage.setItem(this.key, JSON.stringify(this.d)); } catch (e) {} },
   totalStars() { return this.d.stars.reduce((s, v) => s + (v || 0), 0); },
@@ -1003,6 +1115,12 @@ const Sound = (() => {
     spark: t => notes(t, [1047, 1319, 1568, 2093, 2637], 0.035, { type: 'triangle', vol: 0.1, dur: 0.15 }),
     cham: t => { tone(t, 900, 0.12, { type: 'sine', vol: 0.12, to: 500 }); tone(t + 0.1, 500, 0.12, { type: 'sine', vol: 0.12, to: 1100 }); },
     miss: t => { tone(t, 200, 0.18, { type: 'square', vol: 0.08, to: 140 }); },
+    crit: t => { tone(t, 1568, 0.08, { type: 'square', vol: 0.09 }); tone(t + 0.05, 2093, 0.18, { type: 'triangle', vol: 0.14 }); noise(t, 0.2, { vol: 0.18, freq: 5000, q: 1.5 }); },
+    jackpot: t => { notes(t, [523, 659, 784, 1047, 1319, 1568, 2093], 0.06, { type: 'square', vol: 0.09, dur: 0.18 }); [1047, 1319, 1568, 2093].forEach(f => tone(t + 0.45, f, 0.7, { type: 'sine', vol: 0.1 })); },
+    peek: t => tone(t, 1200, 0.08, { type: 'sine', vol: 0.12, to: 1600 }),
+    mold: t => { noise(t, 0.3, { vol: 0.12, freq: 400, to: 200, q: 3 }); tone(t, 180, 0.25, { type: 'sine', vol: 0.08, to: 120 }); },
+    belt: t => { noise(t, 0.25, { vol: 0.1, freq: 900, to: 1400, q: 2 }); },
+    rise: t => { tone(t, 220, 0.2, { type: 'triangle', vol: 0.14, to: 330 }); noise(t, 0.2, { vol: 0.1, freq: 300, q: 1 }); },
     bossHit: t => { tone(t, 220, 0.15, { type: 'square', vol: 0.1, to: 110 }); noise(t, 0.12, { vol: 0.18, freq: 900, q: 1 }); },
   };
 
@@ -1074,13 +1192,15 @@ const Renderer = (() => {
   function layout(rows, cols) {
     R = rows; C = cols;
     const w = wrap.clientWidth, h = wrap.clientHeight, k = CONFIG.ringRatio * 2;
-    T = Math.max(24, Math.floor(Math.min((w - 8) / (C + k), (h - 8) / (R + k), CONFIG.maxTile)));
+    T = Math.max(24, Math.floor(Math.min((w - 8) / (C + k), (h - 8) / (R + k), CONFIG.maxTile * (UI.scale || 1))));
     pad = Math.round(T * CONFIG.ringRatio);
     board.style.width = (C * T + pad * 2) + 'px';
     board.style.height = (R * T + pad * 2) + 'px';
     document.documentElement.style.setProperty('--T', T + 'px');
     for (const el of els.values()) { el.classList.add('noanim'); posEl(el, el._r, el._c); }
     for (const d of jams.values()) placeJam(d);
+    belts.forEach(placeBelt);
+    if (darkEl) darkEl.style.setProperty('--lr', (darkR * T) + 'px');
     void board.offsetWidth;
     for (const el of els.values()) el.classList.remove('noanim');
   }
@@ -1093,33 +1213,95 @@ const Renderer = (() => {
   }
   function centerVP(r, c) { const b = board.getBoundingClientRect(), p = center(r, c); return { x: b.left + p.x, y: b.top + p.y }; }
 
+  /** 生成一个方块元素 */
+  function makeEl(t) {
+    const el = document.createElement('div');
+    el.dataset.id = t.id;
+    el.style.setProperty('--d', ((t.r + t.c) * 26) + 'ms');
+    if (t.portal) {
+      el.className = 'tile portal p' + t.portal;
+      el.innerHTML = '<div class="face"><span class="em">🌀</span></div>';
+    } else if (t.wall) {
+      el.className = 'tile wall';
+      el.innerHTML = '<div class="face"></div>';
+    } else {
+      const [emoji, color] = THEME.tiles[t.kind];
+      el.className = 'tile' + (t.ice ? ' ice' : '') + (t.fog ? ' fog' : '') + (t.mold ? ' mold' : '') + (t.mod ? ' mod-' + t.mod : '');
+      el.style.setProperty('--c', color);
+      el.style.setProperty('--c2', shade(color, -0.2));
+      const badge = t.mod === 'time' ? '<span class="bd">⏰</span>' : t.mod === 'spark' ? '<span class="bd">✨</span>'
+        : t.fuse ? `<span class="bd fuse">${Math.ceil(t.fuse)}</span>` : t.cham ? '<span class="bd">🦎</span>' : '';
+      el.innerHTML = `<div class="face"><span class="em">${emoji}</span>${badge}</div>`;
+    }
+    return el;
+  }
   function build(grid) {
-    board.innerHTML = ''; els.clear(); jams.clear();
+    board.innerHTML = ''; els.clear(); jams.clear(); belts.length = 0; darkEl = null;
     Logic.forEachTile(grid, t => {
-      const el = document.createElement('div');
-      el.dataset.id = t.id;
-      el.style.setProperty('--d', ((t.r + t.c) * 26) + 'ms');
-      if (t.portal) {
-        el.className = 'tile portal p' + t.portal + ' enter';
-        el.innerHTML = '<div class="face"><span class="em">🌀</span></div>';
-      } else if (t.wall) {
-        el.className = 'tile wall enter';
-        el.innerHTML = '<div class="face"></div>';
-      } else {
-        const [emoji, color] = THEME.tiles[t.kind];
-        el.className = 'tile enter' + (t.ice ? ' ice' : '') + (t.mod ? ' mod-' + t.mod : '');
-        el.style.setProperty('--c', color);
-        el.style.setProperty('--c2', shade(color, -0.2));
-        const badge = t.mod === 'time' ? '<span class="bd">⏰</span>' : t.mod === 'spark' ? '<span class="bd">✨</span>'
-          : t.fuse ? `<span class="bd fuse">${Math.ceil(t.fuse)}</span>` : t.cham ? '<span class="bd">🦎</span>' : '';
-        el.innerHTML = `<div class="face"><span class="em">${emoji}</span>${badge}</div>`;
-      }
+      const el = makeEl(t);
+      el.classList.add('enter');
       posEl(el, t.r, t.c);
       board.appendChild(el);
       els.set(t.id, el);
     });
     setTimeout(() => els.forEach(e => e.classList.remove('enter')), 1100);
   }
+  /** 新方块入场：从棋盘上方落下（无尽模式）或从底部推上来（底部上涨） */
+  function spawn(tiles, from, dur) {
+    const perCol = {};
+    tiles.forEach(t => { perCol[t.c] = (perCol[t.c] || 0) + 1; });
+    const fresh = [];
+    tiles.forEach(t => {
+      const el = makeEl(t);
+      el.classList.add('noanim', 'spawn');
+      posEl(el, from === 'bottom' ? t.r + 1 : t.r - perCol[t.c], t.c);
+      board.appendChild(el); els.set(t.id, el); fresh.push([el, t]);
+    });
+    void board.offsetWidth;
+    fresh.forEach(([el, t]) => {
+      el.classList.remove('noanim'); el.style.transitionDuration = dur + 'ms'; posEl(el, t.r, t.c);
+      setTimeout(() => { el.style.transitionDuration = ''; el.classList.remove('spawn'); }, dur + 60);
+    });
+  }
+  /** 状态：迷雾 / 霉菌 / 冰冻 开关（带小特效） */
+  const STATE_COLOR = { ice: '#cdeeff', fog: '#d9c8ff', mold: '#a8d26a' };
+  function setState(ids, cls, on) {
+    ids.forEach(id => {
+      const el = els.get(id); if (!el) return;
+      el.classList.toggle(cls, on);
+      const b = el.getBoundingClientRect();
+      burst(b.left + b.width / 2, b.top + b.height / 2, STATE_COLOR[cls] || '#fff', false);
+    });
+  }
+  /** 解除所有遮挡状态（冰、雾、霉） */
+  function unblock(ids) {
+    ids.forEach(id => {
+      const el = els.get(id); if (!el) return;
+      const cls = ['ice', 'fog', 'mold'].find(c => el.classList.contains(c)) || 'ice';
+      el.classList.remove('ice', 'fog', 'mold');
+      const b = el.getBoundingClientRect();
+      burst(b.left + b.width / 2, b.top + b.height / 2, STATE_COLOR[cls], false);
+    });
+  }
+  function peek(id, ms) { const el = els.get(id); if (!el) return; el.classList.add('peek'); clearTimeout(el._pk); el._pk = setTimeout(() => el.classList.remove('peek'), ms); }
+  /** 手电筒 */
+  let darkEl = null, darkR = 2.4;
+  function setDark(radius) {
+    darkR = radius; darkEl = document.createElement('div'); darkEl.className = 'darkness';
+    board.appendChild(darkEl); darkEl.style.setProperty('--lr', (darkR * T) + 'px');
+  }
+  function moveLight(cx, cy) {
+    if (!darkEl) return;
+    const b = board.getBoundingClientRect();
+    darkEl.style.setProperty('--lx', (cx - b.left) + 'px'); darkEl.style.setProperty('--ly', (cy - b.top) + 'px');
+  }
+  /** 传送带条纹 */
+  const belts = [];
+  function placeBelt(d) { d.style.left = pad + 'px'; d.style.top = (pad + (d._r - 1) * T + T * 0.08) + 'px'; d.style.width = (C * T) + 'px'; d.style.height = (T * 0.84) + 'px'; }
+  function setBelts(list) {
+    list.forEach(({ r, dir }) => { const d = document.createElement('div'); d.className = 'belt' + (dir < 0 ? ' l' : ''); d._r = r; placeBelt(d); board.prepend(d); belts.push(d); });
+  }
+  function setTopWarn(on) { board.classList.toggle('topwarn', on); }
 
   /** 冰冻 / 解冻（带冰渣特效） */
   function setIce(ids, on) {
@@ -1182,7 +1364,10 @@ const Renderer = (() => {
       const el = els.get(m.tile.id); if (!el) return;
       el.style.transitionDuration = dur + 'ms';
       if (spin) { el.classList.remove('spin'); void el.offsetWidth; el.classList.add('spin'); }
-      posEl(el, m.to.r, m.to.c);
+      if (m.wrap) {                                         // 传送带首尾相接：直接跳过去
+        el.classList.add('noanim'); posEl(el, m.tile.r, m.tile.c); void el.offsetWidth; el.classList.remove('noanim');
+        el.classList.remove('flip'); void el.offsetWidth; el.classList.add('flip');
+      } else posEl(el, m.tile.r, m.tile.c);                 // 用方块当前位置，连续消除时不会错位
       setTimeout(() => { el.style.transitionDuration = ''; el.classList.remove('spin'); }, dur + 50);
     });
   }
@@ -1329,6 +1514,7 @@ const Renderer = (() => {
 
   return { resizeFx, layout, build, center, centerVP, setSelected, setHint, markDying, pop, move, link, burst, floatText, loseFx, clearFx,
            flash, shake, candyRain, fireworks, setIce, nudge, retheme, setFuse, jamAdd, jamRemove,
+           spawn, setState, unblock, peek, setDark, moveLight, setBelts, setTopWarn,
            get tileSize() { return T; } };
 })();
 
@@ -1362,11 +1548,25 @@ const UI = {
     $$('[data-music]').forEach(b => b.classList.toggle('off', !Sound.musicOn));
   },
   renderMenu() { $('#starTotal').textContent = `★ ${Store.totalStars()} / ${CONFIG.levels.length * 3}`; },
+  /** 选关卡片尽量大：按“章节标题 + 页码点”之外的剩余空间计算 */
   layoutLevels() {
-    const scr = $('#scr-levels'), h = scr.clientHeight - 200, w = scr.clientWidth - 60;
-    const rowsN = Math.ceil(CONFIG.chapterSize / 3);
-    const card = Math.floor(Math.min(w / 3, (h - 14 * (rowsN - 1)) / rowsN - 4, 130));
-    $('#lvGrid').style.setProperty('--card', Math.max(70, card) + 'px');
+    const box = $('#lvCenter'), s = this.scale || 1, gap = Math.round(14 * s);
+    // 在“3 列 × 2 行”和“2 列 × 3 行”里挑卡片更大的排法（高屏手机用 2 列更饱满）
+    const W = box.clientWidth - 32, H = box.clientHeight - 150 * s, n = CONFIG.chapterSize;
+    const size = cols => { const rows = Math.ceil(n / cols); return Math.min((W - gap * (cols - 1)) / cols, (H - gap * (rows - 1)) / rows, 150 * s); };
+    const cols = size(2) > size(3) * 1.08 ? 2 : 3;
+    const card = Math.floor(size(cols));
+    const g = $('#lvGrid');
+    g.style.setProperty('--card', Math.max(70, card) + 'px');
+    g.style.gridTemplateColumns = `repeat(${cols}, var(--card))`;
+    g.style.gap = gap + 'px';
+  },
+  /** 按屏幕大小算界面缩放：大屏放大、小屏缩小（棋盘本身另按剩余空间计算） */
+  fitUI() {
+    const scr = $('#scr-game'), W = scr.clientWidth, H = scr.clientHeight;
+    const k = Math.max(0.82, Math.min(1.3, Math.min(W / 390, H / 700)));
+    this.scale = Math.round(k * 100) / 100;
+    document.documentElement.style.setProperty('--s', this.scale);
   },
   /** 章节式选关：每章 6 关，左右翻页或滑动切换 */
   renderLevels(ch) {
@@ -1408,9 +1608,10 @@ const UI = {
       const f = L.random ? { icon: '🎲', name: '随机组合', desc: '随机抽 2～3 个机制混在一起，每次都不一样。' } : FEATURES[L.feat];
       const r = (Store.d.lab || {})[L.id];
       const b = document.createElement('button');
-      b.className = 'lab-card' + (L.random ? ' wide' : '');
+      b.className = 'lab-card' + (L.random || L.wide ? ' wide' : '');
       b.style.setProperty('--d', k * 40 + 'ms');
-      b.innerHTML = `<span class="lr">${r === 1 ? '👍' : r === -1 ? '👎' : ''}</span><div class="li">${f.icon}</div><b>${f.name}</b><p>${f.desc}</p>`;
+      const best = L.id === 'rush' && Store.d.rush && Store.d.rush.best ? `<br>🏆 最高 ${Store.d.rush.best} · 最高连击 x${Store.d.rush.combo}` : '';
+      b.innerHTML = `<span class="lr">${r === 1 ? '👍' : r === -1 ? '👎' : ''}</span><div class="li">${f.icon}</div><b>${f.name}</b><p>${f.desc}${best}</p>`;
       b.addEventListener('click', () => { Sound.play('tap'); UI.go('game', () => Game.start(k, Lab.make(k))); });
       g.appendChild(b);
     });
@@ -1418,16 +1619,17 @@ const UI = {
   /** 关卡目标栏（收集 / Boss） */
   renderGoal(G) {
     const row = $('#goalRow');
-    row.className = 'goal-row' + (G.type === 'collect' ? ' show' : G.type === 'boss' ? ' show boss' : '');
+    row.className = 'goal-row' + (G.type === 'collect' ? ' show' : G.type === 'boss' ? ' show boss' : G.type === 'meter' ? ' show meter ' + G.cls : '');
     row.innerHTML = G.type === 'collect' ? `<span class="gi">${THEME.tiles[G.kind][0]}</span><small>收集</small><div class="gbar"><i></i></div><b></b>`
-      : G.type === 'boss' ? `<span class="gi boss-face">🎂</span><small>蛋糕大魔王</small><div class="gbar"><i></i></div><b></b>` : '';
+      : G.type === 'boss' ? `<span class="gi boss-face">🎂</span><small>蛋糕大魔王</small><div class="gbar"><i></i></div><b></b>`
+      : G.type === 'meter' ? `<span class="gi">${G.icon}</span><small>${G.name}</small><div class="gbar"><i></i></div><b></b>` : '';
     this.updateGoal(G);
   },
   updateGoal(G, anim) {
     const row = $('#goalRow'); if (!row.firstChild) return;
-    const ratio = G.type === 'collect' ? G.got / G.need : G.hp / G.max;
+    const ratio = G.type === 'collect' ? G.got / G.need : G.type === 'meter' ? G.v / G.max : G.hp / G.max;
     row.querySelector('.gbar i').style.transform = `scaleX(${Math.max(0, Math.min(1, ratio))})`;
-    row.querySelector('b').textContent = G.type === 'collect' ? `${G.got}/${G.need}` : `HP ${Math.ceil(G.hp)}`;
+    row.querySelector('b').textContent = G.type === 'collect' ? `${G.got}/${G.need}` : G.type === 'meter' ? G.label : `HP ${Math.ceil(G.hp)}`;
     if (anim) { const f = row.querySelector('.gi'); f.classList.remove('hit', 'atk'); void f.offsetWidth; f.classList.add(anim); }
   },
   showIntro(feats, done) {
@@ -1497,7 +1699,7 @@ const MODS = {
         const frozen = [];
         for (const [dr, dc] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
           const n = G.grid[t.r + dr] && G.grid[t.r + dr][t.c + dc];
-          if (n && G.tiles.has(n.id) && !n.ice) { n.ice = true; frozen.push(n); if (n === G.sel) G.clearSel(); }
+          if (n && G.tiles.has(n.id) && !n.ice && !n.fog && !n.mold) { n.ice = true; frozen.push(n); if (n === G.sel) G.clearSel(); }
         }
         Renderer.setIce(frozen.map(n => n.id), true);
         const p = Renderer.centerVP(t.r, t.c);
@@ -1525,15 +1727,172 @@ const MODS = {
   },
 };
 
+/* ---- v1.5 新机制 ---- */
+const DIRS4 = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+const nb4 = (G, t) => DIRS4.map(([dr, dc]) => G.grid[t.r + dr] && G.grid[t.r + dr][t.c + dc]).filter(n => n && G.tiles.has(n.id));
+Object.assign(MODS, {
+  /** 手电筒：只照亮手指点过的地方 */
+  dark: { built(G, cfg) { Renderer.setDark(cfg.radius); } },
+  /** 传送带：几行定时平移 */
+  conveyor: {
+    setup(G, cfg) { G.beltT = cfg.every; },
+    built(G, cfg) { Renderer.setBelts(cfg.rows.map((r, i) => ({ r, dir: i % 2 ? -1 : 1 }))); },
+    tick(G, cfg, dt) {
+      G.beltT -= dt; if (G.beltT > 0) return;
+      if (G.busy) { G.beltT = 0.4; return; }
+      G.beltT = cfg.every;
+      let moves = [];
+      cfg.rows.forEach((r, i) => { moves = moves.concat(Logic.shiftRow(G.grid, r, i % 2 ? -1 : 1)); });
+      Renderer.move(moves, 380); Sound.play('belt');
+      if (G.hint.length) G.clearHint();
+      setTimeout(() => G.check(), 420);
+    },
+  },
+  /** 霉菌：定时传染给旁边的普通方块 */
+  mold: {
+    setup(G, cfg, pool) { pool.splice(0, cfg.start).forEach(t => { t.mold = true; }); G.moldT = cfg.every; },
+    tick(G, cfg, dt) {
+      G.moldT -= dt; if (G.moldT > 0) return;
+      G.moldT = cfg.every;
+      const src = shuffleArr([...G.tiles.values()].filter(t => t.mold)), hit = [];
+      for (const t of src) {
+        if (hit.length >= cfg.spread) break;
+        const n = shuffleArr(nb4(G, t).filter(n => !n.mold && !n.ice && !n.fog && !hit.includes(n)))[0];
+        if (n) hit.push(n);
+      }
+      if (!hit.length) return;
+      hit.forEach(n => { n.mold = true; if (n === G.sel) G.clearSel(); });
+      Renderer.setState(hit.map(n => n.id), 'mold', true); Sound.play('mold');
+      if (G.hint.length) G.clearHint();
+      G.check();
+    },
+  },
+  /** 底部上涨：定时推上来一排，坚持到时间结束就赢 */
+  rise: {
+    row(G) {
+      const C = G.C;
+      while (G.riseQ.length < C) { const k = G.kinds[(Math.random() * G.kinds.length) | 0], j = G.kinds[(Math.random() * G.kinds.length) | 0]; G.riseQ.push(...shuffleArr([k, k, j, j])); }
+      return G.riseQ.splice(0, C).map(k => Logic.newTile(k, 0, 0));
+    },
+    interval(G, cfg) { return Math.max(cfg.min, cfg.every - G.gameT / cfg.accel); },
+    setup(G, cfg) {
+      Logic.forEachTile(G.grid, (t, r, c) => { G.grid[r][c] = null; });
+      G.tiles.clear(); G.riseQ = [];
+      for (let k = 0; k < cfg.start; k++) Logic.pushUp(G.grid, MODS.rise.row(G));
+      Logic.forEachTile(G.grid, t => G.tiles.set(t.id, t));
+      G.riseT = cfg.every;
+      G.meter = { type: 'meter', icon: '⬆️', name: '下一行', v: cfg.every, max: cfg.every, label: '', cls: 'rise' };
+      UI.renderGoal(G.meter);
+      $('#hudRule').textContent = `⬆️ 坚持 ${G.timeTotal} 秒`;
+    },
+    tick(G, cfg, dt) {
+      G.riseT -= dt;
+      const iv = MODS.rise.interval(G, cfg);
+      G.meter.v = Math.max(0, G.riseT); G.meter.max = iv; G.meter.label = Math.ceil(Math.max(0, G.riseT)) + 's'; UI.updateGoal(G.meter);
+      if (G.riseT > 0) return;
+      if (G.busy) { G.riseT = 0.3; return; }
+      const row = MODS.rise.row(G), moves = Logic.pushUp(G.grid, row);
+      if (!moves) { G.loseMsg = '方块顶到最上面啦！'; G.timeLeft = 0; G.updateTime(); G.lose(); return; }
+      row.forEach(t => G.tiles.set(t.id, t));
+      Renderer.move(moves, 300); Renderer.spawn(row, 'bottom', 300); Sound.play('rise');
+      G.riseT = MODS.rise.interval(G, cfg);
+      let top = false; for (let c = 1; c <= G.C; c++) if (G.grid[1][c] || G.grid[2][c]) top = true;
+      Renderer.setTopWarn(top);
+      if (G.hint.length) G.clearHint();
+      setTimeout(() => G.check(), 320);
+    },
+    onStuck(G) { G.riseT = Math.min(G.riseT, 0.8); UI.toast('没得消了，下一排马上来！'); return true; },
+  },
+  /** 糖果狂欢：无尽模式（热度、倍率、同款连击、甜品派对、连锁、大奖） */
+  rush: {
+    setup(G, cfg) {
+      Object.assign(G, { heat: 0, tier: 0, party: 0, streak: 0, lastKind: null, chainLv: 0, nextJackpot: 0, parties: 0, maxTier: 0 });
+      G.meter = { type: 'meter', icon: '🔥', name: '热度', v: 0, max: 100, label: '×1', cls: 'heat' };
+      UI.renderGoal(G.meter);
+      const R = Store.d.rush || {}; $('#hudRule').textContent = `🏆 最高 ${R.best || 0}`;
+      $('#hudLevel').textContent = '🍬 狂欢';
+    },
+    tick(G, cfg, dt) {
+      G.paceF = 1 + G.gameT / cfg.accel;                      // 越玩时间流得越快
+      if (G.party > 0) { G.party -= dt; if (G.party <= 0) MODS.rush.endParty(G, cfg); }
+      else G.heat = Math.max(0, G.heat - dt * (cfg.decay + G.tier * 3.5));   // 热度越高掉得越快
+      MODS.rush.syncTier(G, cfg);
+      G.meter.v = G.party > 0 ? G.party / cfg.partyTime * 100 : G.heat;
+      G.meter.label = G.party > 0 ? `🎉 ${Math.ceil(G.party)}s` : '×' + cfg.mult[G.tier];
+      UI.updateGoal(G.meter);
+    },
+    syncTier(G, cfg) {
+      const t = G.party > 0 ? 3 : cfg.tiers.filter(x => G.heat >= x).length;
+      if (t === G.tier) return;
+      const up = t > G.tier; G.tier = t; G.maxTier = Math.max(G.maxTier, t);
+      document.body.classList.remove('heat1', 'heat2', 'heat3'); if (t) document.body.classList.add('heat' + t);
+      G.musicOverride = t >= 3 ? 'fever' : t >= 1 ? 'danger' : null; G.syncMusic();
+      if (up && t && G.party <= 0) { Renderer.floatText(`🔥 热度 Lv${t}<small>得分 ×${cfg.mult[t]}</small>`, innerWidth / 2, innerHeight * 0.3, 'feverT', 1100); Sound.play('fever'); }
+    },
+    onMatch(G, cfg, ctx) {
+      if (ctx.isBomb) return;
+      if (G.combo <= 1) G.nextJackpot = 0;
+      G.heat = Math.min(100, G.heat + (ctx.isChain ? 3 : cfg.heatPer) + (ctx.crit ? 5 : 0));   // 连锁只加一点热度
+      const m = cfg.mult[G.tier]; if (m > 1) G.score += ctx.gain * (m - 1);
+      const kind = ctx.removed[0].kind;                       // 同款连击
+      G.streak = kind === G.lastKind ? G.streak + 1 : 1; G.lastKind = kind;
+      if (G.streak >= 2) { const b = G.streak * 15 * m; G.score += b; Renderer.floatText(`${THEME.tiles[kind][0]} 同款 ${G.streak} 连 +${b}`, ctx.mid.x, ctx.mid.y + 38, 'time', 1000); Sound.play('bonus'); }
+      if (G.chainLv > 0) { const b = G.chainLv * 20 * m; G.score += b; Renderer.floatText(`⛓ 连锁 ×${G.chainLv + 1} +${b}`, ctx.mid.x, ctx.mid.y - 62, 'time', 900); }
+      if (!ctx.isChain) G.timeLeft = Math.min(G.timeTotal, G.timeLeft + cfg.timePer * (1 + G.tier * 0.25));   // 连锁不加时间
+      const J = cfg.jackpots;                                 // 连击大奖
+      if (G.nextJackpot < J.length && G.combo >= J[G.nextJackpot]) {
+        G.nextJackpot++;
+        G.timeLeft = Math.min(G.timeTotal, G.timeLeft + cfg.jackpotTime); G.score += G.combo * 20;
+        Renderer.candyRain(36); Renderer.flash(); Sound.play('jackpot');
+        Renderer.floatText(`🎰 大奖！连击 ${G.combo}<small>+${cfg.jackpotTime} 秒 · +${G.combo * 20} 分</small>`, innerWidth / 2, innerHeight * 0.38, 'feverT', 1500);
+      }
+      if (G.heat >= 100 && G.party <= 0) MODS.rush.startParty(G, cfg);
+    },
+    afterRemove(G, cfg, moves, spawned) {
+      const kinds = G.party > 0 ? G.partyKinds : G.kinds;
+      const p = Math.min(0.85, cfg.adjacent + G.tier * 0.1 + (G.party > 0 ? 0.3 : 0));
+      Logic.refill(G.grid, () => kinds[(Math.random() * kinds.length) | 0], p).forEach(t => { G.tiles.set(t.id, t); spawned.push(t); });
+    },
+    settled(G, cfg, moves) {
+      // 连锁：掉下来的方块和旁边的同款挨在一起，就自动跟着消掉
+      if (!G.running || G.chainLv >= cfg.maxChain) { G.chainLv = 0; return; }   // 每次手动消除最多带出 3 段连锁
+      for (const mv of moves) {
+        const t = mv.tile; if (!G.tiles.has(t.id) || !Logic.selectable(t)) continue;
+        const n = nb4(G, t).find(n => Logic.selectable(n) && n.kind === t.kind);
+        if (n) { G.chainLv = Math.min(G.chainLv + 1, 9); G.resolve(t, n, [{ r: t.r, c: t.c }, { r: n.r, c: n.c }], false, true); return; }
+      }
+      G.chainLv = 0;
+    },
+    startParty(G, cfg) {
+      G.party = cfg.partyTime; G.parties++;
+      G.partyKinds = G.kinds.slice(0, cfg.partyKinds);
+      const map = new Map(); let i = 0;                       // 每种图案映射到 4 种派对图案（数量仍是偶数）
+      for (const t of G.tiles.values()) if (!map.has(t.kind)) map.set(t.kind, G.partyKinds[i++ % cfg.partyKinds]);
+      for (const t of G.tiles.values()) { const k = map.get(t.kind); if (k !== t.kind) { t.kind = k; Renderer.retheme(t.id, k); } }
+      document.body.classList.add('party'); G.clearSel(); G.clearHint();
+      Renderer.floatText('🎉 甜品派对！<small>满屏都是对子，快连！</small>', innerWidth / 2, innerHeight * 0.32, 'feverT', 1600);
+      Renderer.candyRain(24); Sound.play('jackpot');
+      MODS.rush.syncTier(G, cfg);
+    },
+    endParty(G, cfg) {
+      G.party = 0; G.heat = cfg.afterParty; document.body.classList.remove('party');
+      const list = shuffleArr([...G.tiles.values()]);          // 派对结束：成对换回正常图案
+      for (let i = 0; i + 1 < list.length; i += 2) { const k = G.kinds[(Math.random() * G.kinds.length) | 0]; for (const t of [list[i], list[i + 1]]) if (t.kind !== k) { t.kind = k; Renderer.retheme(t.id, k); } }
+      G.clearSel(); G.clearHint(); UI.toast('派对结束，甜品换装！');
+      MODS.rush.syncTier(G, cfg); G.check();
+    },
+  },
+});
+
 /** 甜品实验室：生成试玩关 */
 const Lab = {
   make(k) {
     const L = CONFIG.lab[k];
     if (!L.random) {
       const F = FEATURES[L.feat];
-      return { id: L.id, name: F.name, icon: F.icon, level: { kinds: L.kinds, time: L.time, rule: 'none', mods: L.mods } };
+      return { id: L.id, name: F.name, icon: F.icon, level: { kinds: L.kinds, time: L.time, rule: L.rule || 'none', items: L.items, mods: L.mods } };
     }
-    const pool = shuffleArr(CONFIG.lab.filter(x => !x.random && x.id !== 'adaptive'));
+    const pool = shuffleArr(CONFIG.lab.filter(x => !x.random && !['adaptive', 'rush', 'rise'].includes(x.id)));
     const want = Math.random() < 0.5 ? 2 : 3, pick = [];
     for (const x of pool) {
       if (pick.length >= want) break;
@@ -1574,6 +1933,9 @@ const Game = {
     // 有巧克力墙的关卡不用 🍫 图案，免得看混
     const pool = THEME.tiles.map((_, k) => k).filter(k => !(this.cfg.walls && THEME.tiles[k][0] === '🍫'));
     const kinds = shuffleArr(pool).slice(0, this.cfg.kinds);
+    this.kinds = kinds;
+    this.musicOverride = null; this.meter = null; this.loseMsg = null; this.chainLv = 0;
+    document.body.classList.remove('party', 'heat1', 'heat2', 'heat3');
     const GC = this.cfg.goal || { type: 'clear' };
     // 收集关：目标甜品多分配几份，保证数量够
     const kindList = GC.type === 'collect' ? [kinds[0], kinds[0], ...kinds] : kinds;
@@ -1598,9 +1960,11 @@ const Game = {
     const modPool = shuffleArr([...this.tiles.values()].filter(t => !t.mod && !t.ice));
     this.hook('setup', modPool);
     $('#board').classList.toggle('closed', !!this.mods.closedRing);
+    $('#board').classList.remove('topwarn');
     this.updateHud(); this.updateTime();
     Renderer.layout(this.R, this.C);
     Renderer.build(this.grid);
+    this.hook('built');
     const feats = levelFeatures(this.cfg).filter(f => !Store.d.seen[f]);
     setTimeout(() => {
       if (tok !== this.token) return;
@@ -1624,7 +1988,7 @@ const Game = {
   canAct() { return this.running && !this.paused && !this.busy; },
 
   /** 调用所有启用机制的某个环节 */
-  hook(name, ...args) { for (const k in this.mods) { const h = MODS[k] && MODS[k][name]; if (h) h(this, this.mods[k], ...args); } },
+  hook(name, ...args) { let any = false; for (const k in this.mods) { const h = MODS[k] && MODS[k][name]; if (h && h(this, this.mods[k], ...args)) any = true; } return any; },
   /** 机制带来的寻路限制 */
   baseOpts() { const m = this.mods, o = {}; if (m.turns != null) o.maxTurns = m.turns; if (m.closedRing) o.ring = false; return Object.keys(o).length ? o : undefined; },
   /** 当前寻路选项：静态限制 + 果酱（禁行格） */
@@ -1638,10 +2002,16 @@ const Game = {
       if (!this._iceTip) { this._iceTip = 1; UI.toast('冻住啦！先消掉它旁边的方块'); }
       return;
     }
+    if (t.fog) { Renderer.peek(t.id, 1000); Sound.play('peek'); return; }          // 迷雾：偷看 1 秒
+    if (t.mold) {
+      Sound.play('deny'); Renderer.nudge(t.id);
+      if (!this._moldTip) { this._moldTip = 1; UI.toast('发霉了！消掉它旁边的方块来清理'); }
+      return;
+    }
     if (this.sel === t) { Renderer.setSelected(t.id, false); this.sel = null; Sound.play('unselect'); return; }
     if (!this.sel) { this.select(t); return; }
     const path = Logic.canLink(this.grid, this.sel, t, this.opts());
-    if (path) { const a = this.sel; Renderer.setSelected(a.id, false); this.sel = null; this.resolve(a, t, path, false); }
+    if (path) { const a = this.sel; Renderer.setSelected(a.id, false); this.sel = null; this.chainLv = 0; this.resolve(a, t, path, false); }
     else { Renderer.setSelected(this.sel.id, false); this.hook('onMiss', t); this.select(t); }
   },
   select(t) { this.sel = t; Renderer.setSelected(t.id, true); Sound.play('select'); },
@@ -1649,12 +2019,13 @@ const Game = {
   clearHint() { this.hint = []; Renderer.setHint([]); },
 
   /** 消除一对（普通连线或炸弹），并处理闪光、冰冻、时间糖、目标进度 */
-  resolve(a, b, path, isBomb) {
+  resolve(a, b, path, isBomb, isChain) {
     const tok = this.token, A = CONFIG.anim, CB = CONFIG.combo, F = CONFIG.fever, SP = CONFIG.special;
     this.clearHint(); this.shuffles = 0;
     const now = performance.now();
-    if (!isBomb) { this.combo = (now - this.lastMatch <= CB.window) ? this.combo + 1 : 1; this.lastMatch = now; this.maxCombo = Math.max(this.maxCombo, this.combo); }
-    const feverStart = !isBomb && this.combo >= F.every && this.combo % F.every === 0 && this.fever <= 0;
+    const win = (this.mods.rush && this.mods.rush.comboWindow) || CB.window;   // 狂欢模式连击窗口更宽
+    if (!isBomb) { this.combo = (now - this.lastMatch <= win) ? this.combo + 1 : 1; this.lastMatch = now; this.maxCombo = Math.max(this.maxCombo, this.combo); }
+    const feverStart = !isBomb && !this.mods.rush && this.combo >= F.every && this.combo % F.every === 0 && this.fever <= 0;   // 狂欢模式用热度代替狂热
     if (feverStart) this.setFever(true);
     const mult = this.fever > 0 ? F.mult : 1;
     const pa = Renderer.centerVP(a.r, a.c), pb = Renderer.centerVP(b.r, b.c);
@@ -1664,13 +2035,22 @@ const Game = {
     removed.forEach(t => this.tiles.delete(t.id));
     const ids = removed.map(t => t.id), extra = removed.length - 2;
     const last = this.tiles.size === 0;
-    const gain = (CB.baseScore + (isBomb ? 0 : (this.combo - 1) * CB.bonusPerCombo) + extra * SP.sparkScore) * mult;
+    // 暴击：连击越高几率越大（糖果狂欢里更高）
+    const critP = this.mods.rush ? Math.min(0.45, 0.06 + this.combo * 0.015 + (this.tier || 0) * 0.05) : Math.min(0.2, 0.02 + this.combo * 0.01);
+    const crit = !isBomb && Math.random() < critP;
+    const gain = (CB.baseScore + (isBomb ? 0 : (Math.min(this.combo, CB.scoreCap) - 1) * CB.bonusPerCombo) + extra * SP.sparkScore) * mult * (crit ? 3 : 1);
+    if (removed.includes(this.sel)) this.clearSel();
+    if (crit) { Renderer.floatText('💥 暴击 ×3', mid.x, mid.y - 92, 'crit', 900); Renderer.burst(mid.x, mid.y, '#ffcc33', true); Sound.play('crit'); }
     this.score += gain;
-    this.hook('onMatch', { a, b, path, removed, mid, isBomb });
+    this.hook('onMatch', { a, b, path, removed, mid, isBomb, crit, gain, isChain });
     this.updateHud(true);
     Renderer.markDying(ids);
     const moves = Logic.applyRule(this.grid, this.cfg.rule);
-    if (moves.length) this.busy = true;
+    const spawned = [];
+    this.hook('afterRemove', moves, spawned);                 // 无尽模式：补新方块
+    const anim = moves.length || spawned.length;
+    const lock = anim && !this.mods.rush;                     // 无尽模式不锁操作，手指不停
+    if (lock) this.busy = true;
 
     if (isBomb) Sound.play('bomb');
     else { Renderer.link(path); Sound.play('match', this.combo); }
@@ -1683,14 +2063,19 @@ const Game = {
       Renderer.floatText(`⏰ +${add}秒`, mid.x, mid.y + 34, 'time', 1100); Sound.play('bonus');
     }
     if (!isBomb && this.combo >= 2) {
-      const tb = Math.min(CB.timeBonusMax, CB.timeBonusPer * (this.combo - 1));
+      const tb = this.mods.rush ? 0 : Math.min(CB.timeBonusMax, CB.timeBonusPer * (this.combo - 1));   // 狂欢模式的时间只按自己的规则给
       this.timeLeft = Math.min(this.timeTotal, this.timeLeft + tb);
-      Renderer.floatText(`连击 x${this.combo}!<small>+${tb}秒</small>`, mid.x, mid.y - 30, 'combo');
+      Renderer.floatText(`连击 x${this.combo}!` + (tb ? `<small>+${tb}秒</small>` : ''), mid.x, mid.y - 30, 'combo');
       Sound.play('combo', this.combo);
       const FX = CONFIG.comboFx;
-      if (this.combo >= FX.flash) Renderer.flash();
-      if (this.combo >= FX.shake) Renderer.shake();
-      if (this.combo === FX.rain || (this.combo > FX.rain && this.combo % 4 === 0)) Renderer.candyRain();
+      if (this.mods.rush) {                                   // 狂欢模式连击很长：特效降频，糖果雨只留给大奖和派对
+        if (this.combo % 5 === 0) Renderer.flash();
+        if (this.combo % 10 === 0) Renderer.shake();
+      } else {
+        if (this.combo >= FX.flash) Renderer.flash();
+        if (this.combo >= FX.shake) Renderer.shake();
+        if (this.combo === FX.rain || (this.combo > FX.rain && this.combo % 4 === 0)) Renderer.candyRain();
+      }
     }
     if (feverStart) Renderer.floatText(`🔥 FEVER!<small>${F.duration} 秒内得分×${F.mult}</small>`, innerWidth / 2, innerHeight * 0.32, 'feverT', 1500);
 
@@ -1706,14 +2091,15 @@ const Game = {
       Renderer.floatText('-' + dmg, bf.left + bf.width / 2 + 20, bf.top + 10, 'score', 900);
     }
 
-    const delay = isBomb ? 60 : A.lineDraw + (last ? A.lastPair : A.lineHold);   // 最后一对：慢镜头
+    const delay = isBomb ? 60 : this.mods.rush ? A.lineDraw + 110 : A.lineDraw + (last ? A.lastPair : A.lineHold);   // 最后一对：慢镜头
     setTimeout(() => {
       if (tok !== this.token) return;
       Renderer.pop(ids, isBomb || last || extra > 0); Sound.play(last ? 'bomb' : 'pop');
-      if (thawed.length) { Renderer.setIce(thawed.map(t => t.id), false); Sound.play('thaw'); }
+      if (thawed.length) { Renderer.unblock(thawed.map(t => t.id)); Sound.play('thaw'); }
       if (last) { Renderer.flash(); Renderer.shake(); }
       if (moves.length) Renderer.move(moves, A.move);
-      setTimeout(() => { if (tok !== this.token) return; if (moves.length) this.busy = false; this.check(); }, moves.length ? A.move + 30 : 30);
+      if (spawned.length) Renderer.spawn(spawned, 'top', A.move + 80);
+      setTimeout(() => { if (tok !== this.token) return; if (lock) this.busy = false; this.hook('settled', moves); this.check(); }, anim ? A.move + 90 : 30);
     }, delay);
   },
 
@@ -1721,9 +2107,10 @@ const Game = {
     if (!this.running) return;
     if (this.tiles.size === 0 || this.goalDone()) return this.win();
     if (Logic.findAnyPair(this.grid, false, this.sOpts)) return;     // 果酱会自己干，不算卡死
+    if (this.hook('onStuck')) return;                                // 例如底部上涨：直接推下一排
     const thawed = Logic.thawAll(this.grid);
     if (thawed.length) {
-      UI.toast('冰块全部碎掉啦！'); Renderer.setIce(thawed.map(t => t.id), false); Sound.play('thaw');
+      UI.toast('障碍全部解除啦！'); Renderer.unblock(thawed.map(t => t.id)); Sound.play('thaw');
       if (Logic.findAnyPair(this.grid, false, this.sOpts)) return;
     }
     UI.toast('没有能消的啦，自动重新排列~'); this.doShuffle(true);
@@ -1746,7 +2133,7 @@ const Game = {
   bossAttack() {
     const G = this.goal;
     if (this.busy) { G.t = 1; return; }
-    const cands = shuffleArr([...this.tiles.values()].filter(t => !t.ice)).slice(0, G.freeze);
+    const cands = shuffleArr([...this.tiles.values()].filter(t => !t.ice && !t.fog && !t.mold)).slice(0, G.freeze);
     cands.forEach(t => { t.ice = true; if (t === this.sel) this.clearSel(); });
     if (this.hint.length) this.clearHint();
     Renderer.setIce(cands.map(t => t.id), true);
@@ -1787,7 +2174,7 @@ const Game = {
     if (on) Sound.play('fever');
     this.syncMusic();
   },
-  syncMusic() { Sound.setMusicMode(this.fever > 0 ? 'fever' : (this.running && this._danger) ? 'danger' : 'normal'); },
+  syncMusic() { Sound.setMusicMode(this.musicOverride && this.running ? this.musicOverride : this.fever > 0 ? 'fever' : (this.running && this._danger) ? 'danger' : 'normal'); },
 
   update(dt) {
     if (!this.running || this.paused) return;
@@ -1806,7 +2193,7 @@ const Game = {
     this.hook('tick', dt);
     if (!this.running) return;
     this.timeLeft -= dt * (this.paceF || 1);
-    if (this.timeLeft <= 0) { this.timeLeft = 0; this.updateTime(); this.lose(); return; }
+    if (this.timeLeft <= 0) { this.timeLeft = 0; this.updateTime(); if (this.mods.rise) this.win(); else this.lose(); return; }
     this.updateTime();
   },
   updateTime() {
@@ -1840,7 +2227,8 @@ const Game = {
     else if (this.goal.type === 'collect') Renderer.floatText('🎯 收集完成！', innerWidth / 2, innerHeight * 0.35, 'feverT', 1500);
     const remain = Math.ceil(this.timeLeft), bonus = remain * CONFIG.timeScore, total = this.score + bonus;
     const ratio = this.timeLeft / this.timeTotal;
-    const stars = ratio >= CONFIG.stars[0] ? 3 : ratio >= CONFIG.stars[1] ? 2 : 1;
+    const stars = this.mods.rise ? 3 : ratio >= CONFIG.stars[0] ? 3 : ratio >= CONFIG.stars[1] ? 2 : 1;
+    if (this.mods.rise) Renderer.floatText('⬆️ 坚持住了！', innerWidth / 2, innerHeight * 0.35, 'feverT', 1500);
     const i = this.level, d = Store.d, lab = this.lab;
     const isBest = !lab && total > (d.best[i] || 0);
     if (!lab) {                                        // 实验关不计入关卡进度
@@ -1853,6 +2241,7 @@ const Game = {
     setTimeout(() => {
       if (tok !== this.token) return;
       Sound.play('win');
+      $('#wScoreL').textContent = '消除得分'; $('#wBonusL').textContent = '剩余时间奖励'; $('#wComboL').textContent = '最高连击';
       $('#wScore').textContent = this.score; $('#wBonus').textContent = '+' + bonus; $('#wCombo').textContent = 'x' + this.maxCombo;
       $('#wTotal').textContent = '0';
       $('#wBest').innerHTML = lab ? '' : isBest ? '<span class="newbest">新纪录!</span>' : `<p>最高分 ${d.best[i]}</p>`;
@@ -1875,18 +2264,52 @@ const Game = {
     }, 550);
   },
 
-  lose() {
+  /** 糖果狂欢结束：按得分给星，记录最高分 */
+  rushEnd() {
     this.running = false; this.busy = true; this.setFever(false); this.clearSel(); this.clearHint();
+    this.musicOverride = null; this.syncMusic();
+    document.body.classList.remove('party', 'heat1', 'heat2', 'heat3');
+    const cfg = this.mods.rush, R = Store.d.rush = Store.d.rush || { best: 0, combo: 0 };
+    const isBest = this.score > R.best;
+    R.best = Math.max(R.best, this.score); R.combo = Math.max(R.combo, this.maxCombo); Store.save();
+    const th = cfg.stars, stars = this.score >= th[2] ? 3 : this.score >= th[1] ? 2 : this.score >= th[0] ? 1 : 0;
+    const tok = this.token, total = this.score;
+    Sound.play('win');
+    setTimeout(() => {
+      if (tok !== this.token) return;
+      Renderer.clearFx();
+      $('#wScoreL').textContent = '最高热度'; $('#wBonusL').textContent = '甜品派对'; $('#wComboL').textContent = '最高连击';
+      $('#wScore').textContent = 'Lv' + this.maxTier; $('#wBonus').textContent = this.parties + ' 次'; $('#wCombo').textContent = 'x' + this.maxCombo;
+      $('#wTotal').textContent = '0';
+      $('#wBest').innerHTML = isBest ? '<span class="newbest">新纪录!</span>' : `<p>最高分 ${R.best}</p>`;
+      $('#winTitle').textContent = '狂欢结束!';
+      const ss = $$('#winStars span'); ss.forEach(s => s.className = '');
+      UI.overlay('ovWin', true);
+      Renderer.fireworks(CONFIG.anim.fireworks, () => Sound.play('boom'));
+      ss.forEach((s, k) => setTimeout(() => { if (tok !== this.token) return; s.className = 'show' + (k < stars ? ' on' : ''); if (k < stars) Sound.play('star', k); }, 450 + k * 280));
+      const t0 = performance.now();
+      const roll = now => { const k = Math.min(1, (now - t0) / 900); $('#wTotal').textContent = Math.round(total * (1 - Math.pow(1 - k, 3))); if (k < 1 && tok === this.token) requestAnimationFrame(roll); };
+      requestAnimationFrame(roll);
+    }, 500);
+  },
+
+  lose() {
+    if (this.mods.rush) return this.rushEnd();
+    this.running = false; this.busy = true; this.setFever(false); this.clearSel(); this.clearHint();
+    this.musicOverride = null; Renderer.setTopWarn(false);
     Sound.play('lose'); Renderer.loseFx();
     const tok = this.token;
     const G = this.goal;
     $('#loseText').textContent = G.type === 'collect' ? `还差 ${G.need - G.got} 个 ${THEME.tiles[G.kind][0]}，再快一点点！`
       : G.type === 'boss' ? `蛋糕大魔王还剩 ${Math.ceil(G.hp)} 点血，下次一定！`
-      : `还剩 ${this.tiles.size / 2} 对没消掉，布丁都化掉了…`;
+      : this.loseMsg || `还剩 ${this.tiles.size / 2} 对没消掉，布丁都化掉了…`;
     setTimeout(() => { if (tok === this.token) UI.overlay('ovLose', true); }, 700);
   },
 
-  quit() { this.token++; this.running = false; this.busy = true; this.setFever(false); Sound.duck(false); Renderer.clearFx(); },
+  quit() {
+    this.token++; this.running = false; this.busy = true; this.setFever(false); Sound.duck(false); Renderer.clearFx();
+    this.musicOverride = null; this.syncMusic(); document.body.classList.remove('party', 'heat1', 'heat2', 'heat3');
+  },
 };
 
 /* =====================================================================
@@ -2049,6 +2472,27 @@ const Tests = (() => {
     g = Logic.generate(10, 7, [...Array(14).keys()], 'none', { mods: { portals: 2 } });
     let np = 0; Logic.forEachTile(g, t => { if (t.portal) np++; });
     ok('生成：传送门成对且找到完整解', np === 4 && g.verified === true && Logic.countClearable(g) % 2 === 0);
+    // ---- v1.5 新机制 ----
+    g = G(['AB', 'AB']); g[1][1].fog = true;
+    ok('迷雾方块不能连', Logic.canLink(g, P(0, 0), P(1, 0)) === null);
+    Logic.resolveRemoval(g, P(0, 1), P(1, 1));
+    ok('消掉旁边的会翻开迷雾', !g[1][1].fog && !!Logic.canLink(g, P(0, 0), P(1, 0)));
+    g = G(['AB', 'AB']); g[1][1].mold = true;
+    ok('霉菌方块不能连', Logic.canLink(g, P(0, 0), P(1, 0)) === null);
+    Logic.resolveRemoval(g, P(0, 1), P(1, 1));
+    ok('消掉旁边的会清理霉菌', !g[1][1].mold);
+    g = G(['ABC.']); const sm = Logic.shiftRow(g, 1, 1);
+    ok('传送带：整行右移一格（首尾相接）', g[1][1] === null && g[1][2]?.kind === 'A' && g[1][4]?.kind === 'C' && sm.length === 3);
+    Logic.shiftRow(g, 1, -1);
+    ok('传送带：再左移回原位', g[1][1]?.kind === 'A' && g[1][4] === null);
+    g = G(['..', '..', 'AB']);
+    const pu = Logic.pushUp(g, [Logic.newTile('C', 0, 0), Logic.newTile('D', 0, 0)]);
+    ok('底部上涨：整体上移、新排在底部', !!pu && g[2][1]?.kind === 'A' && g[3][1]?.kind === 'C' && g[3][2]?.kind === 'D');
+    g = G(['A.', '..']); ok('底部上涨：顶到最上面会判输', Logic.pushUp(g, [Logic.newTile('C', 0, 0), Logic.newTile('C', 0, 0)]) === null);
+    g = G(['A..B', '....', 'BA..']);
+    const nf = Logic.refill(g, () => 'Z', 0.5);
+    const kc = {}; Logic.forEachTile(g, t => { kc[t.kind] = (kc[t.kind] || 0) + 1; });
+    ok('无尽补充：补满空格且每种数量为偶数', nf.length === 8 && Logic.countTiles(g) === 12 && Object.values(kc).every(n => n % 2 === 0));
     const code = Backup.encode();
     ok('存档码：可解析且校验正确', !!Backup.decode(code) && !Backup.decode(code.slice(0, -1) + (code.slice(-1) === 'a' ? 'b' : 'a')));
 
@@ -2127,7 +2571,9 @@ function init() {
   $('#fruitRing').innerHTML = THEME.menuFruits.map((e, i) => `<span style="animation-delay:${i * 0.15}s">${e}</span>`).join('');
 
   // 方块点击（事件委托，pointerdown 响应更快）
+  $('#board').addEventListener('pointermove', e => { if (Game.mods && Game.mods.dark) Renderer.moveLight(e.clientX, e.clientY); });
   $('#board').addEventListener('pointerdown', e => {
+    if (Game.mods && Game.mods.dark) Renderer.moveLight(e.clientX, e.clientY);
     const el = e.target.closest('.tile'); if (!el) return;
     e.preventDefault();
     Game.tap(+el.dataset.id);
@@ -2212,12 +2658,14 @@ function init() {
 
   // 尺寸变化
   const onResize = () => {
+    UI.fitUI();
     Renderer.resizeFx();
     if (UI.cur === 'game' && Game.grid) Renderer.layout(Game.R, Game.C);
     if (UI.cur === 'levels') UI.layoutLevels();
   };
   window.addEventListener('resize', onResize);
   window.addEventListener('orientationchange', () => setTimeout(onResize, 300));
+  UI.fitUI();
   Renderer.resizeFx();
 
   // 主循环：只负责计时
