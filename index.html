@@ -302,6 +302,50 @@ body.fever .fever-badge{transform:translate(-50%,-35%) scale(1)}
 .intro-item .ii{font-family:var(--emoji);font-size:34px;line-height:1}
 .intro-item b{color:var(--pink);font-size:16px}
 .panel .intro-item p{margin:2px 0 0;font-size:13px;text-align:left}
+/* ---------- v1.3 甜品实验室 & 新机制 ---------- */
+.menu-btns{gap:14px}
+.btn.grape{background:linear-gradient(180deg,#d4c2ff,#9a7bff);box-shadow:0 5px 0 #7556d6,0 9px 18px rgba(117,86,214,.3)}
+.btn.grape:active{box-shadow:0 1px 0 #7556d6}
+#scr-lab .lab-tip{font-size:13px;font-weight:800;color:#c45584;padding:0 18px 8px;text-align:center;line-height:1.5}
+.labgrid{flex:1;min-height:0;width:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;display:grid;grid-template-columns:1fr 1fr;gap:12px;
+  padding:6px 14px 20px;align-content:start}
+.lab-card{position:relative;text-align:left;border-radius:20px;border:3px solid #fff;padding:10px 12px 12px;background:linear-gradient(170deg,#fff,#fff1f7);
+  box-shadow:0 4px 0 #f3b5cc,0 8px 14px rgba(220,90,140,.12);animation:cardIn .45s cubic-bezier(.2,1.5,.4,1) both;animation-delay:var(--d)}
+.lab-card:active{transform:translateY(3px);box-shadow:0 1px 0 #f3b5cc}
+.lab-card .li{font-family:var(--emoji);font-size:30px;line-height:1.15}
+.lab-card b{display:block;font-size:16px;color:var(--pink);margin-top:2px}
+.lab-card p{font-size:12px;font-weight:600;color:#9a5a74;line-height:1.45;margin-top:3px}
+.lab-card .lr{position:absolute;top:8px;right:10px;font-size:20px;font-family:var(--emoji)}
+.lab-card.wide{grid-column:span 2;background:linear-gradient(170deg,#fff7d6,#ffe3f0)}
+.rate{display:none;align-items:center;justify-content:center;gap:8px;margin-top:12px;font-size:14px;font-weight:800;color:#a35a78}
+body.in-lab .rate{display:flex}
+body.in-lab #btnNext{display:none!important}
+.rate button{font-family:var(--emoji),sans-serif;font-size:14px;font-weight:800;color:#a35a78;background:#fff;border:2px solid #ffc4dc;border-radius:99px;padding:6px 12px}
+.rate button.on{background:var(--pink);border-color:var(--pink);color:#fff}
+/* 封住外圈 */
+#board.closed::before{content:"";position:absolute;inset:4px;border:3px dashed #ff6fa8;border-radius:16px;pointer-events:none;opacity:.85}
+/* 传送门 */
+.tile.portal{pointer-events:none}
+.tile.p1{--pc:#9a7bff}.tile.p2{--pc:#3fc49d}.tile.p3{--pc:#ff9e57}
+.tile.portal .face{border-radius:50%;background:radial-gradient(circle,#fff 0 16%,var(--pc) 17% 44%,#fff 45% 50%,var(--pc) 51% 70%,transparent 71%);
+  box-shadow:0 0 14px 4px var(--pc)}
+.tile.portal .face::after{display:none}
+.tile.portal .em{font-size:calc(var(--T)*.45);animation:spinP 2.2s linear infinite;filter:none}
+@keyframes spinP{to{transform:rotate(360deg)}}
+/* 倒计时方块 */
+.face .bd.fuse{font-family:-apple-system,"PingFang SC",sans-serif;font-weight:900;font-size:calc(var(--T)*.25);color:#fff;background:#ff7a3c;border:2px solid #fff;
+  border-radius:99px;min-width:1.7em;height:1.7em;display:flex;align-items:center;justify-content:center;animation:none;right:-5px;top:-6px}
+.face .bd.fuse.hot{background:#ff2d55;animation:fuseHot .35s ease-in-out infinite alternate}
+@keyframes fuseHot{to{transform:scale(1.25)}}
+/* 变色龙翻面 */
+.tile.flip .face{animation:flipT .45s ease-in-out}
+@keyframes flipT{50%{transform:rotateY(90deg) scale(.9)}}
+/* 果酱 */
+.jam{position:absolute;width:calc(var(--T)*.62);height:calc(var(--T)*.62);transform:translate(-50%,-50%);border-radius:52% 44% 56% 42%;pointer-events:none;z-index:3;
+  background:radial-gradient(circle at 35% 30%,#ffb3c9 0 12%,#f0507e 40%,#c2214f 100%);box-shadow:0 2px 4px rgba(160,20,60,.35);opacity:.9;animation:jamIn .25s ease-out}
+.jam.dry{opacity:0;transition:opacity .3s}
+@keyframes jamIn{from{transform:translate(-50%,-50%) scale(.2)}}
+.ftext.penalty{font-size:18px;color:#fff;text-shadow:0 2px 0 #ff3d64,0 0 6px #ff7a9a;animation:fup .9s ease-out forwards}
 </style>
 </head>
 <body>
@@ -318,6 +362,7 @@ body.fever .fever-badge{transform:translate(-50%,-35%) scale(1)}
     <div class="menu-btns">
       <button class="btn" id="btnPlay">开始游戏</button>
       <button class="btn mint" id="btnLevels">选择关卡</button>
+      <button class="btn grape" id="btnLab">🧪 甜品实验室</button>
       <button class="btn lemon" id="btnHelp">玩法说明</button>
     </div>
     <div class="menu-foot">
@@ -341,6 +386,17 @@ body.fever .fever-badge{transform:translate(-50%,-35%) scale(1)}
       <button class="icon-btn" id="chNext" aria-label="下一章"><svg viewBox="0 0 24 24"><path d="M8.5 4l8 8-8 8-2-2 6-6-6-6z"/></svg></button></div>
     <div class="lvgrid" id="lvGrid"></div>
     <div class="ch-dots" id="chDots"></div>
+  </section>
+
+  <!-- 甜品实验室 -->
+  <section class="screen" id="scr-lab">
+    <div class="topbar">
+      <button class="icon-btn" id="labBack" aria-label="返回"><svg viewBox="0 0 24 24"><path d="M15.5 4 7.5 12l8 8 2-2-6-6 6-6z"/></svg></button>
+      <h2>甜品实验室</h2>
+      <button class="icon-btn" id="labCopy" aria-label="复制评分">📋</button>
+    </div>
+    <p class="lab-tip">新机制试玩区 · 玩完给个 👍 / 👎<br>好玩的会做进正式关卡（实验关不影响关卡进度）</p>
+    <div class="labgrid" id="labGrid"></div>
   </section>
 
   <!-- 游戏 -->
@@ -391,6 +447,7 @@ body.fever .fever-badge{transform:translate(-50%,-35%) scale(1)}
     <div class="total"><span>总分</span><span id="wTotal">0</span></div>
   </div>
   <div id="wBest"></div>
+  <div class="rate">这个机制好玩吗？<button data-act="rateUp">👍 好玩</button><button data-act="rateDown">👎 一般</button></div>
   <div class="btns">
     <button class="btn" data-act="next" id="btnNext">下一关</button>
     <div class="row"><button class="btn mint small" data-act="restart">再玩一次</button><button class="btn lemon small" data-act="levels">关卡列表</button></div>
@@ -402,6 +459,7 @@ body.fever .fever-badge{transform:translate(-50%,-35%) scale(1)}
   <div class="ribbon gray">时间到啦</div>
   <div class="big-emoji">🍮</div>
   <p id="loseText">布丁都化掉了…</p>
+  <div class="rate">这个机制好玩吗？<button data-act="rateUp">👍 好玩</button><button data-act="rateDown">👎 一般</button></div>
   <div class="btns">
     <button class="btn" data-act="restart">再试一次</button>
     <button class="btn lemon small" data-act="levels">关卡列表</button>
@@ -419,6 +477,7 @@ body.fever .fever-badge{transform:translate(-50%,-35%) scale(1)}
       <li>道具：💡提示一对 · 🔀重新排列 · 💣直接炸掉一对。</li>
       <li>特殊方块：❄️冰冻（消掉旁边的才能解冻）· 🍫巧克力墙（挡路）· ⏰时间糖（+5 秒）· ✨闪光（同款全消）。</li>
       <li>特殊关卡：🎯收集指定甜品 · 👑打败蛋糕大魔王（它会定时冰冻你的方块）。</li>
+      <li>🧪 甜品实验室：试玩还在研发中的新机制，玩完给个 👍/👎。</li>
       <li>第 4 关起，消除后剩余方块会按规则<b>移动</b>（下落、左靠、聚拢、散开…）。</li>
       <li>连击到 5 次进入<b>🔥狂热模式</b>：8 秒内得分翻倍，音乐也会加速！</li>
       <li>剩余时间越多，星星越多 ★★★</li>
@@ -464,7 +523,7 @@ body.fever .fever-badge{transform:translate(-50%,-35%) scale(1)}
    1. 配置：所有关键参数集中在这里
    ===================================================================== */
 const CONFIG = {
-  version: '1.2.1',
+  version: '1.3',
   rows: 10, cols: 7,             // 默认棋盘行列（rows*cols 必须为偶数；每关可单独设置 rows/cols）
   maxTile: 64,                   // 方块最大边长(px)
   ringRatio: 0.32,               // 外圈留白 = 方块边长 * ringRatio（连线可走外圈）
@@ -479,6 +538,19 @@ const CONFIG = {
   items: { hint: 3, shuffle: 2, bomb: 2 },
   special: { timeCandy: 5, sparkScore: 10 },        // 时间糖 +5 秒；闪光额外每块 +10 分
   chapterSize: 6,
+  // 甜品实验室：每个机制一个试玩关（mods = 启用的机制及参数）
+  lab: [
+    { id: 'turns',    feat: 'turns',    kinds: 10, time: 180, mods: { turns: 1 } },
+    { id: 'ring',     feat: 'ring',     kinds: 12, time: 170, mods: { closedRing: true } },
+    { id: 'misclick', feat: 'misclick', kinds: 15, time: 150, mods: { misclick: 2 } },
+    { id: 'longline', feat: 'longline', kinds: 14, time: 120, mods: { longline: { min: 8, per: 3, score: 10 } } },
+    { id: 'jam',      feat: 'jam',      kinds: 13, time: 170, mods: { jam: 4 } },
+    { id: 'portal',   feat: 'portal',   kinds: 14, time: 170, mods: { portals: 2 } },
+    { id: 'cham',     feat: 'cham',     kinds: 14, time: 170, mods: { cham: { count: 8, every: 6 } } },
+    { id: 'fuse',     feat: 'fuse',     kinds: 14, time: 170, mods: { fuse: { count: 4, base: 15, step: 7, penalty: 5, bonus: 30 } } },
+    { id: 'adaptive', feat: 'adaptive', kinds: 15, time: 150, mods: { adaptive: true } },
+    { id: 'random',   random: true },
+  ],
   chapters: [
     { name: '草莓农场', icon: '🍓' }, { name: '柠檬工坊', icon: '🍋' },
     { name: '巧克力城堡', icon: '🍫' }, { name: '彩虹糖宫', icon: '🍭' },
@@ -541,8 +613,22 @@ const FEATURES = {
   wall:    { icon: '🍫', name: '巧克力墙',   desc: '不能消除，会挡住连线，想办法绕过去。' },
   boss:    { icon: '🎂', name: '蛋糕大魔王', desc: '每次消除都会打掉它的血，它会定时冻住你的方块！' },
 };
+/** 机制（mods 的键）→ 介绍条目 */
+const MOD_FEAT = { turns: 'turns', closedRing: 'ring', misclick: 'misclick', longline: 'longline', jam: 'jam', portals: 'portal', cham: 'cham', fuse: 'fuse', adaptive: 'adaptive' };
+Object.assign(FEATURES, {
+  turns:    { icon: '↪️', name: '拐弯限制',   desc: '连线最多只能拐 1 次弯，路线要想清楚。' },
+  ring:     { icon: '🚧', name: '封住外圈',   desc: '棋盘外围被糖霜围栏封住，连线不能再从外面绕。' },
+  misclick: { icon: '❌', name: '点错惩罚',   desc: '选中后点了连不上的方块，扣 2 秒并打断连击。想换选就先点一下取消。' },
+  longline: { icon: '🏹', name: '长线奖励',   desc: '连线超过 8 格就奖励时间和分数，越长越多，值得绕远路。' },
+  jam:      { icon: '🍯', name: '果酱痕迹',   desc: '连线经过的空格会留下果酱，4 秒内其他连线不能通过。' },
+  portal:   { icon: '🌀', name: '传送门',     desc: '连线可以钻进传送门、从同色的另一个钻出来，进出不算拐弯。' },
+  cham:     { icon: '🦎', name: '变色龙',     desc: '带小蜥蜴的方块每隔几秒会互相交换图案，抓准时机！' },
+  fuse:     { icon: '💣', name: '倒计时方块', desc: '数字归零就爆炸：扣 5 秒并冻住周围方块。赶在爆炸前消掉它有奖励。' },
+  adaptive: { icon: '⚡', name: '动态节奏',   desc: '消得越快，时间流逝得越快；手慢就放慢一点。左上角显示当前节奏。' },
+});
 function levelFeatures(c) {
   const f = [];
+  if (c.mods) for (const k in c.mods) if (MOD_FEAT[k]) f.push(MOD_FEAT[k]);
   if (c.timeCandy) f.push('time'); if (c.spark) f.push('spark'); if (c.ice) f.push('ice'); if (c.walls) f.push('wall');
   if (c.goal) f.push(c.goal.type);
   return f;
@@ -587,68 +673,108 @@ const Logic = (() => {
   function makeGrid(R, C) { const g = []; for (let r = 0; r < R + 2; r++) g.push(new Array(C + 2).fill(null)); return g; }
   const innerRows = g => g.length - 2, innerCols = g => g[0].length - 2;
 
-  /** 两点同行/同列且之间（不含端点）全为空 */
-  function lineClear(g, r1, c1, r2, c2) {
-    if (r1 === r2) { const e = Math.max(c1, c2); for (let c = Math.min(c1, c2) + 1; c < e; c++) if (g[r1][c] !== null) return false; return true; }
-    if (c1 === c2) { const e = Math.max(r1, r2); for (let r = Math.min(r1, r2) + 1; r < e; r++) if (g[r][c1] !== null) return false; return true; }
+  /**
+   * 寻路选项 o（可省略，省略即经典规则）：
+   *   maxTurns 最多拐弯数（默认 2）· ring=false 封住外圈 · blocked 禁行空格 Set(r*100+c) · portals 传送门 [[P, Q], ...]
+   */
+  function isFree(g, r, c, o) {
+    if (g[r][c] !== null) return false;
+    if (!o) return true;
+    if (o.ring === false && (r === 0 || c === 0 || r === g.length - 1 || c === g[0].length - 1)) return false;
+    if (o.blocked && o.blocked.has(r * 100 + c)) return false;
+    return true;
+  }
+  /** 两点同行/同列且之间（不含端点）都可通行 */
+  function lineClear(g, r1, c1, r2, c2, o) {
+    if (r1 === r2) { const e = Math.max(c1, c2); for (let c = Math.min(c1, c2) + 1; c < e; c++) if (!isFree(g, r1, c, o)) return false; return true; }
+    if (c1 === c2) { const e = Math.max(r1, r2); for (let r = Math.min(r1, r2) + 1; r < e; r++) if (!isFree(g, r, c1, o)) return false; return true; }
     return false;
   }
 
   /**
-   * 寻路：判断 a、b 能否用 ≤2 个拐弯（≤3 段直线）连通。
-   * 分情况：0 拐弯 → 1 拐弯（两个拐点候选）→ 2 拐弯（扫描所有行/列，取最短）。
-   * 返回路径点数组 [a, 拐点..., b]，不可连返回 null。（不检查图案是否相同）
+   * 寻路：判断 a、b 能否用 ≤maxTurns 个拐弯连通。
+   * 分情况：0 拐弯 → 1 拐弯（两个拐点候选）→ 2 拐弯（扫描所有行/列，取最短）；有传送门时再试“a→入口，出口→b”。
+   * 返回路径点数组 [a, 拐点..., b]（经过传送门时中间插入 {jump:true}），不可连返回 null。（不检查图案是否相同）
    */
-  function findPath(g, a, b) {
+  function findPath(g, a, b, o) {
+    const maxT = o && o.maxTurns != null ? o.maxTurns : 2;
+    const direct = findPlain(g, a, b, o, maxT);
+    if (direct || !o || !o.portals || !o.portals.length) return direct;
+    let best = null, bestT = Infinity;
+    for (const [P, Q] of o.portals) for (const [X, Y] of [[P, Q], [Q, P]]) {
+      const p1 = findPlain(g, a, X, o, maxT); if (!p1) continue;
+      const t1 = p1.length - 2;
+      const p2 = findPlain(g, Y, b, o, maxT - t1); if (!p2) continue;
+      if (t1 + p2.length - 2 < bestT) { bestT = t1 + p2.length - 2; best = [...p1, { jump: true }, ...p2]; }
+    }
+    return best;
+  }
+  function findPlain(g, a, b, o, maxT) {
     if (a.r === b.r && a.c === b.c) return null;
     const A = { r: a.r, c: a.c }, B = { r: b.r, c: b.c };
     // 0 拐弯
-    if ((a.r === b.r || a.c === b.c) && lineClear(g, a.r, a.c, b.r, b.c)) return [A, B];
+    if ((a.r === b.r || a.c === b.c) && lineClear(g, a.r, a.c, b.r, b.c, o)) return [A, B];
+    if (maxT < 1) return null;
     // 1 拐弯
     for (const k of [{ r: a.r, c: b.c }, { r: b.r, c: a.c }]) {
-      if (g[k.r][k.c] === null && lineClear(g, a.r, a.c, k.r, k.c) && lineClear(g, k.r, k.c, b.r, b.c)) return [A, k, B];
+      if (isFree(g, k.r, k.c, o) && lineClear(g, a.r, a.c, k.r, k.c, o) && lineClear(g, k.r, k.c, b.r, b.c, o)) return [A, k, B];
     }
+    if (maxT < 2) return null;
     // 2 拐弯
     let best = null, bestLen = Infinity;
     const R = g.length, C = g[0].length;
     for (let r = 0; r < R; r++) {           // 先竖、再横、再竖
-      if (r === a.r || r === b.r || g[r][a.c] !== null || g[r][b.c] !== null) continue;
-      if (lineClear(g, a.r, a.c, r, a.c) && lineClear(g, r, a.c, r, b.c) && lineClear(g, r, b.c, b.r, b.c)) {
+      if (r === a.r || r === b.r || !isFree(g, r, a.c, o) || !isFree(g, r, b.c, o)) continue;
+      if (lineClear(g, a.r, a.c, r, a.c, o) && lineClear(g, r, a.c, r, b.c, o) && lineClear(g, r, b.c, b.r, b.c, o)) {
         const len = Math.abs(r - a.r) + Math.abs(a.c - b.c) + Math.abs(r - b.r);
         if (len < bestLen) { bestLen = len; best = [A, { r, c: a.c }, { r, c: b.c }, B]; }
       }
     }
     for (let c = 0; c < C; c++) {           // 先横、再竖、再横
-      if (c === a.c || c === b.c || g[a.r][c] !== null || g[b.r][c] !== null) continue;
-      if (lineClear(g, a.r, a.c, a.r, c) && lineClear(g, a.r, c, b.r, c) && lineClear(g, b.r, c, b.r, b.c)) {
+      if (c === a.c || c === b.c || !isFree(g, a.r, c, o) || !isFree(g, b.r, c, o)) continue;
+      if (lineClear(g, a.r, a.c, a.r, c, o) && lineClear(g, a.r, c, b.r, c, o) && lineClear(g, b.r, c, b.r, b.c, o)) {
         const len = Math.abs(c - a.c) + Math.abs(a.r - b.r) + Math.abs(c - b.c);
         if (len < bestLen) { bestLen = len; best = [A, { r: a.r, c }, { r: b.r, c }, B]; }
       }
     }
     return best;
   }
+  /** 路径辅助：拐弯数、格子数、经过的所有格子 */
+  function subPaths(path) { const subs = [[]]; for (const p of path) { if (p.jump) subs.push([]); else subs[subs.length - 1].push(p); } return subs; }
+  function turnsOf(path) { return subPaths(path).reduce((n, s) => n + s.length - 2, 0); }
+  function pathLength(path) { let n = 0; for (const s of subPaths(path)) for (let i = 1; i < s.length; i++) n += Math.abs(s[i].r - s[i - 1].r) + Math.abs(s[i].c - s[i - 1].c); return n; }
+  function pathCells(path) {
+    const out = [];
+    for (const s of subPaths(path)) for (let i = 1; i < s.length; i++) {
+      const a = s[i - 1], b = s[i], dr = Math.sign(b.r - a.r), dc = Math.sign(b.c - a.c);
+      for (let r = a.r, c = a.c; ; r += dr, c += dc) { out.push({ r, c }); if (r === b.r && c === b.c) break; }
+    }
+    return out;
+  }
 
   /** 图案相同且可连通 → 路径；否则 null */
-  function canLink(g, a, b) {
+  function canLink(g, a, b, o) {
     const ta = g[a.r][a.c], tb = g[b.r][b.c];
     if (!selectable(ta) || !selectable(tb) || ta === tb || ta.kind !== tb.kind) return null;
-    return findPath(g, a, b);
+    return findPath(g, a, b, o);
   }
 
   function forEachTile(g, fn) { for (let r = 1; r < g.length - 1; r++) for (let c = 1; c < g[0].length - 1; c++) if (g[r][c]) fn(g[r][c], r, c); }
   function countTiles(g) { let n = 0; forEachTile(g, () => n++); return n; }
   /** 可以点选的方块：不是巧克力墙、没有被冰冻 */
-  const selectable = t => !!t && !t.wall && !t.ice;
+  const selectable = t => !!t && !t.wall && !t.ice && !t.portal;
+  /** 固定物：巧克力墙、传送门（不会被移动、重列，也不算可消方块） */
+  const isFixed = t => !!t && (t.wall || t.portal);
   function groupByKind(g) { const m = new Map(); forEachTile(g, (t, r, c) => { if (!selectable(t)) return; if (!m.has(t.kind)) m.set(t.kind, []); m.get(t.kind).push({ r, c }); }); return m; }
 
   /** 找任意一对可消方块 */
-  function findAnyPair(g, random = false) {
+  function findAnyPair(g, random = false, o) {
     const lists = [...groupByKind(g).values()];
     if (random) shuffleArr(lists);
     for (const list0 of lists) {
       const L = random ? shuffleArr(list0.slice()) : list0;
       for (let i = 0; i < L.length; i++) for (let j = i + 1; j < L.length; j++) {
-        const p = findPath(g, L[i], L[j]);
+        const p = findPath(g, L[i], L[j], o);
         if (p) return { a: L[i], b: L[j], path: p };
       }
     }
@@ -657,14 +783,14 @@ const Logic = (() => {
 
   function removePair(g, a, b) { g[a.r][a.c] = null; g[b.r][b.c] = null; }
 
-  function clone(g) { return g.map(row => row.map(t => t && { id: t.id, kind: t.kind, r: t.r, c: t.c, ice: t.ice, wall: t.wall, mod: t.mod })); }
+  function clone(g) { return g.map(row => row.map(t => t && { id: t.id, kind: t.kind, r: t.r, c: t.c, ice: t.ice, wall: t.wall, mod: t.mod, portal: t.portal })); }
 
   /** 把一条格子序列上的方块向序列开头压紧；巧克力墙固定不动，把序列分成几段各自压紧 */
   function compactLine(g, cells, moves) {
     let seg = [];
     for (const p of cells) {
       const t = g[p.r][p.c];
-      if (t && t.wall) { compactSeg(g, seg, moves); seg = []; } else seg.push(p);
+      if (isFixed(t)) { compactSeg(g, seg, moves); seg = []; } else seg.push(p);
     }
     compactSeg(g, seg, moves);
   }
@@ -706,7 +832,7 @@ const Logic = (() => {
     const removed = [ta, tb];
     g[ta.r][ta.c] = null; g[tb.r][tb.c] = null;
     if (ta.mod === 'spark' || tb.mod === 'spark') {
-      forEachTile(g, (t, r, c) => { if (!t.wall && t.kind === ta.kind) { removed.push(t); g[r][c] = null; } });
+      forEachTile(g, (t, r, c) => { if (!isFixed(t) && t.kind === ta.kind) { removed.push(t); g[r][c] = null; } });
     }
     const thawed = [];
     for (const t of removed) for (const [dr, dc] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
@@ -716,18 +842,18 @@ const Logic = (() => {
     return { removed, thawed };
   }
   function thawAll(g) { const out = []; forEachTile(g, t => { if (t.ice) { t.ice = false; out.push(t); } }); return out; }
-  function countClearable(g) { let n = 0; forEachTile(g, t => { if (!t.wall) n++; }); return n; }
+  function countClearable(g) { let n = 0; forEachTile(g, t => { if (!isFixed(t)) n++; }); return n; }
 
   /** 随机贪心模拟能否消完（包含移动规则、冰冻、闪光）；换几种消除顺序各试一次，有一次能消完就算有解 */
-  function isSolvable(g, rule, tries = 4) {
-    for (let k = 0; k < tries; k++) if (simulateOnce(g, rule)) return true;
+  function isSolvable(g, rule, tries = 4, o) {
+    for (let k = 0; k < tries; k++) if (simulateOnce(g, rule, o)) return true;
     return false;
   }
-  function simulateOnce(g, rule) {
+  function simulateOnce(g, rule, o) {
     const s = clone(g);
     let n = countClearable(s), guard = 0;
     while (n > 0 && guard++ < 500) {
-      const p = findAnyPair(s, true);
+      const p = findAnyPair(s, true, o);
       if (!p) { if (thawAll(s).length) continue; return false; }   // 与游戏一致：卡住时冰块全部碎掉
       n -= resolveRemoval(s, p.a, p.b).removed.length;
       applyRule(s, rule);
@@ -737,7 +863,7 @@ const Logic = (() => {
 
   /** 生成棋盘：巧克力墙左右对称摆放；每种图案数量为偶数；再随机附加闪光/时间糖/冰冻；验证有解 */
   function generate(R, C, kindIds, rule, spec = {}) {
-    const walls = spec.walls || 0, cells = R * C - walls;
+    const walls = spec.walls || 0, portals = (spec.mods && spec.mods.portals) || 0, cells = R * C - walls - portals * 2;
     if (cells % 2 || walls % 2) throw new Error('巧克力墙和可消方块数量都必须为偶数');
     const bag = [];
     for (let i = 0; i < cells / 2; i++) { const k = kindIds[i % kindIds.length]; bag.push(k, k); }
@@ -749,6 +875,19 @@ const Logic = (() => {
       for (let r = 1; r <= R; r++) for (let c = 1; c <= Math.floor(C / 2); c++) half.push({ r, c });
       shuffleArr(half);
       for (let w = 0; w < walls / 2; w++) { const p = half[w]; for (const c of [p.c, C + 1 - p.c]) g[p.r][c] = { id: nextId++, kind: -1, wall: true, r: p.r, c }; }
+      // 传送门：成对随机摆放
+      const o = Object.assign({}, spec.pathOpts || {});
+      if (portals) {
+        const empty = []; for (let r = 1; r <= R; r++) for (let c = 1; c <= C; c++) if (!g[r][c]) empty.push({ r, c });
+        shuffleArr(empty); o.portals = [];
+        for (let k = 0; k < portals; k++) {
+          const P = empty[k * 2], Q = empty[k * 2 + 1];
+          for (const X of [P, Q]) g[X.r][X.c] = { id: nextId++, kind: -2, portal: k + 1, r: X.r, c: X.c };
+          o.portals.push([P, Q]);
+        }
+      }
+      const opts = Object.keys(o).length ? o : undefined;
+      g.pathOpts = opts;
       const tiles = [];
       let i = 0;
       for (let r = 1; r <= R; r++) for (let c = 1; c <= C; c++) if (!g[r][c]) { g[r][c] = { id: nextId++, kind: bag[i++], r, c }; tiles.push(g[r][c]); }
@@ -757,27 +896,27 @@ const Logic = (() => {
       for (let n = 0; n < (spec.spark || 0); n++) tiles[j++].mod = 'spark';
       for (let n = 0; n < (spec.timeCandy || 0); n++) tiles[j++].mod = 'time';
       for (let n = 0; n < (spec.ice || 0); n++) tiles[j++].ice = true;
-      if (isSolvable(g, rule, 2)) { g.verified = true; return g; }
+      if (isSolvable(g, rule, 2, opts)) { g.verified = true; return g; }
     }
     return g;   // 极少数情况：没验证到完整解，游戏里卡住时会自动碎冰/重列兜底
   }
 
   /** 重列：方块在已占用的位置间随机交换（巧克力墙不动），保证至少有一对可消（尽量保证可解） */
-  function shuffleBoard(g, rule) {
+  function shuffleBoard(g, rule, o) {
     const pos = [], tiles = [];
-    forEachTile(g, (t, r, c) => { if (t.wall) return; pos.push({ r, c }); tiles.push(t); });
+    forEachTile(g, (t, r, c) => { if (isFixed(t)) return; pos.push({ r, c }); tiles.push(t); });
     const old = new Map(tiles.map(t => [t.id, { r: t.r, c: t.c }]));
     for (let att = 0; att < 60; att++) {
       shuffleArr(tiles);
       tiles.forEach((t, i) => { const p = pos[i]; g[p.r][p.c] = t; t.r = p.r; t.c = p.c; });
-      if (findAnyPair(g) && (att >= 30 || isSolvable(g, rule))) break;
+      if (findAnyPair(g, false, o) && (att >= 30 || isSolvable(g, rule, 4, o))) break;
     }
     return tiles.filter(t => { const o = old.get(t.id); return o.r !== t.r || o.c !== t.c; })
       .map(t => ({ tile: t, from: old.get(t.id), to: { r: t.r, c: t.c } }));
   }
 
-  return { makeGrid, lineClear, findPath, canLink, findAnyPair, removePair, resolveRemoval, thawAll, applyRule, isSolvable, generate,
-           shuffleBoard, clone, countTiles, countClearable, groupByKind, forEachTile, selectable };
+  return { makeGrid, isFree, lineClear, findPath, canLink, findAnyPair, removePair, resolveRemoval, thawAll, applyRule, isSolvable, generate,
+           shuffleBoard, clone, countTiles, countClearable, groupByKind, forEachTile, selectable, isFixed, turnsOf, pathLength, pathCells };
 })();
 
 /* =====================================================================
@@ -788,7 +927,7 @@ const Store = {
   load() {
     let d = {};
     try { d = JSON.parse(localStorage.getItem(this.key)) || {}; } catch (e) {}
-    this.d = Object.assign({ unlocked: 1, stars: [], best: [], muted: false, music: true, seen: {} }, d);
+    this.d = Object.assign({ unlocked: 1, stars: [], best: [], muted: false, music: true, seen: {}, lab: {} }, d);
   },
   save() { try { localStorage.setItem(this.key, JSON.stringify(this.d)); } catch (e) {} },
   totalStars() { return this.d.stars.reduce((s, v) => s + (v || 0), 0); },
@@ -862,6 +1001,8 @@ const Sound = (() => {
     thaw: t => { noise(t, 0.18, { vol: 0.22, freq: 4000, to: 1500, q: 2 }); tone(t, 1760, 0.12, { type: 'triangle', vol: 0.08, to: 2600 }); },
     bonus: t => notes(t, [1568, 2093], 0.06, { type: 'sine', vol: 0.18, dur: 0.18 }),
     spark: t => notes(t, [1047, 1319, 1568, 2093, 2637], 0.035, { type: 'triangle', vol: 0.1, dur: 0.15 }),
+    cham: t => { tone(t, 900, 0.12, { type: 'sine', vol: 0.12, to: 500 }); tone(t + 0.1, 500, 0.12, { type: 'sine', vol: 0.12, to: 1100 }); },
+    miss: t => { tone(t, 200, 0.18, { type: 'square', vol: 0.08, to: 140 }); },
     bossHit: t => { tone(t, 220, 0.15, { type: 'square', vol: 0.1, to: 110 }); noise(t, 0.12, { vol: 0.18, freq: 900, q: 1 }); },
   };
 
@@ -939,6 +1080,7 @@ const Renderer = (() => {
     board.style.height = (R * T + pad * 2) + 'px';
     document.documentElement.style.setProperty('--T', T + 'px');
     for (const el of els.values()) { el.classList.add('noanim'); posEl(el, el._r, el._c); }
+    for (const d of jams.values()) placeJam(d);
     void board.offsetWidth;
     for (const el of els.values()) el.classList.remove('noanim');
   }
@@ -952,12 +1094,15 @@ const Renderer = (() => {
   function centerVP(r, c) { const b = board.getBoundingClientRect(), p = center(r, c); return { x: b.left + p.x, y: b.top + p.y }; }
 
   function build(grid) {
-    board.innerHTML = ''; els.clear();
+    board.innerHTML = ''; els.clear(); jams.clear();
     Logic.forEachTile(grid, t => {
       const el = document.createElement('div');
       el.dataset.id = t.id;
       el.style.setProperty('--d', ((t.r + t.c) * 26) + 'ms');
-      if (t.wall) {
+      if (t.portal) {
+        el.className = 'tile portal p' + t.portal + ' enter';
+        el.innerHTML = '<div class="face"><span class="em">🌀</span></div>';
+      } else if (t.wall) {
         el.className = 'tile wall enter';
         el.innerHTML = '<div class="face"></div>';
       } else {
@@ -965,7 +1110,8 @@ const Renderer = (() => {
         el.className = 'tile enter' + (t.ice ? ' ice' : '') + (t.mod ? ' mod-' + t.mod : '');
         el.style.setProperty('--c', color);
         el.style.setProperty('--c2', shade(color, -0.2));
-        const badge = t.mod === 'time' ? '<span class="bd">⏰</span>' : t.mod === 'spark' ? '<span class="bd">✨</span>' : '';
+        const badge = t.mod === 'time' ? '<span class="bd">⏰</span>' : t.mod === 'spark' ? '<span class="bd">✨</span>'
+          : t.fuse ? `<span class="bd fuse">${Math.ceil(t.fuse)}</span>` : t.cham ? '<span class="bd">🦎</span>' : '';
         el.innerHTML = `<div class="face"><span class="em">${emoji}</span>${badge}</div>`;
       }
       posEl(el, t.r, t.c);
@@ -984,6 +1130,32 @@ const Renderer = (() => {
       burst(b.left + b.width / 2, b.top + b.height / 2, '#cdeeff', false);
     });
   }
+  /** 变色龙：换图案（带翻面动画） */
+  function retheme(id, kind) {
+    const el = els.get(id); if (!el) return;
+    const [emoji, color] = THEME.tiles[kind];
+    el.style.setProperty('--c', color); el.style.setProperty('--c2', shade(color, -0.2));
+    el.querySelector('.em').textContent = emoji;
+    el.classList.remove('flip'); void el.offsetWidth; el.classList.add('flip');
+  }
+  /** 倒计时数字；n 为 null 时移除 */
+  function setFuse(id, n) {
+    const el = els.get(id); if (!el) return;
+    const b = el.querySelector('.fuse'); if (!b) return;
+    if (n == null) { b.remove(); return; }
+    b.textContent = n; b.classList.toggle('hot', n <= 3);
+  }
+  /** 果酱：在格子上放一团果酱（可以在外圈） */
+  const jams = new Map();
+  function placeJam(d) { const q = center(d._r, d._c); d.style.left = q.x + 'px'; d.style.top = q.y + 'px'; }
+  function jamAdd(cells) {
+    cells.forEach(p => {
+      const k = p.r * 100 + p.c; if (jams.has(k)) return;
+      const d = document.createElement('div'); d.className = 'jam'; d._r = p.r; d._c = p.c; placeJam(d);
+      board.appendChild(d); jams.set(k, d);
+    });
+  }
+  function jamRemove(k) { const d = jams.get(k); if (!d) return; jams.delete(k); d.classList.add('dry'); setTimeout(() => d.remove(), 320); }
   function nudge(id) { const el = els.get(id); if (!el) return; el.classList.remove('nudge'); void el.offsetWidth; el.classList.add('nudge'); setTimeout(() => el.classList.remove('nudge'), 320); }
 
   function setSelected(id, on) {
@@ -1020,10 +1192,15 @@ const Renderer = (() => {
   /* ---- Canvas 特效：连线 + 粒子 ---- */
   function link(path, color) {
     const b = board.getBoundingClientRect();
-    const pts = path.map(p => { const q = center(p.r, p.c); return { x: b.left + q.x, y: b.top + q.y }; });
-    const lens = []; let total = 0;
-    for (let i = 1; i < pts.length; i++) { const l = Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y); lens.push(l); total += l; }
-    lines.push({ pts, lens, total, born: performance.now(), color: color || THEME.lineColor });
+    const subs = [[]];
+    for (const p of path) {
+      if (p.jump) { subs.push([]); continue; }
+      const q = center(p.r, p.c); subs[subs.length - 1].push({ x: b.left + q.x, y: b.top + q.y });
+    }
+    const segs = []; let total = 0;          // 扁平化线段；经过传送门处断开
+    subs.forEach(s => { for (let i = 1; i < s.length; i++) { const l = Math.hypot(s[i].x - s[i - 1].x, s[i].y - s[i - 1].y); segs.push({ a: s[i - 1], b: s[i], l, start: i === 1 }); total += l; } });
+    const portals = subs.length > 1 ? subs.slice(0, -1).flatMap((s, k) => [s[s.length - 1], subs[k + 1][0]]) : [];
+    lines.push({ segs, total, portals, born: performance.now(), color: color || THEME.lineColor });
     kick();
   }
   function burst(x, y, color, big) {
@@ -1079,23 +1256,26 @@ const Renderer = (() => {
     const tf = age - A.lineDraw - A.lineHold;
     const alpha = tf > 0 ? 1 - tf / A.lineFade : 1;
     if (alpha <= 0) return false;
-    const want = L.total * prog, pts = [L.pts[0]];
-    let acc = 0, head = L.pts[0];
-    for (let i = 1; i < L.pts.length; i++) {
-      const s = L.lens[i - 1];
-      if (acc + s >= want) { const f = s ? (want - acc) / s : 1; head = { x: L.pts[i - 1].x + (L.pts[i].x - L.pts[i - 1].x) * f, y: L.pts[i - 1].y + (L.pts[i].y - L.pts[i - 1].y) * f }; pts.push(head); break; }
-      acc += s; pts.push(L.pts[i]); head = L.pts[i];
-    }
+    const want = L.total * prog, dots = [];
+    let acc = 0, head = null;
     const c = fctx;
     c.save(); c.lineCap = c.lineJoin = 'round';
-    c.beginPath(); pts.forEach((p, i) => i ? c.lineTo(p.x, p.y) : c.moveTo(p.x, p.y));
+    c.beginPath();
+    for (const s of L.segs) {
+      if (acc >= want) break;
+      if (s.start) c.moveTo(s.a.x, s.a.y); else dots.push(s.a);
+      const f = Math.min(1, (want - acc) / (s.l || 1));
+      head = { x: s.a.x + (s.b.x - s.a.x) * f, y: s.a.y + (s.b.y - s.a.y) * f };
+      c.lineTo(head.x, head.y); acc += s.l;
+    }
     c.strokeStyle = L.color; c.shadowColor = L.color;
     c.globalAlpha = alpha * 0.5; c.lineWidth = 11; c.shadowBlur = 18; c.stroke();
     c.globalAlpha = alpha; c.lineWidth = 5.5; c.shadowBlur = 8; c.stroke();
     c.shadowBlur = 0; c.lineWidth = 2.2; c.strokeStyle = '#fff'; c.stroke();
     c.fillStyle = '#fff';
-    for (let i = 1; i < pts.length - 1; i++) { c.beginPath(); c.arc(pts[i].x, pts[i].y, 3.5, 0, 7); c.fill(); }
-    if (prog < 1) { c.shadowColor = '#fff'; c.shadowBlur = 10; star4(head.x, head.y, 10); }
+    for (const d of dots) { c.beginPath(); c.arc(d.x, d.y, 3.5, 0, 7); c.fill(); }
+    for (const p of L.portals) { c.strokeStyle = '#fff'; c.lineWidth = 3; c.beginPath(); c.arc(p.x, p.y, 12 + 4 * Math.sin(now / 80), 0, 7); c.stroke(); }
+    if (prog < 1 && head) { c.shadowColor = '#fff'; c.shadowBlur = 10; star4(head.x, head.y, 10); }
     c.restore();
     return true;
   }
@@ -1148,7 +1328,7 @@ const Renderer = (() => {
   function clearFx() { lines.length = 0; parts.length = 0; floatLayer.innerHTML = ''; }
 
   return { resizeFx, layout, build, center, centerVP, setSelected, setHint, markDying, pop, move, link, burst, floatText, loseFx, clearFx,
-           flash, shake, candyRain, fireworks, setIce, nudge,
+           flash, shake, candyRain, fireworks, setIce, nudge, retheme, setFuse, jamAdd, jamRemove,
            get tileSize() { return T; } };
 })();
 
@@ -1221,6 +1401,20 @@ const UI = {
       g.appendChild(b);
     }
   },
+  /** 甜品实验室列表 */
+  renderLab() {
+    const g = $('#labGrid'); g.innerHTML = '';
+    CONFIG.lab.forEach((L, k) => {
+      const f = L.random ? { icon: '🎲', name: '随机组合', desc: '随机抽 2～3 个机制混在一起，每次都不一样。' } : FEATURES[L.feat];
+      const r = (Store.d.lab || {})[L.id];
+      const b = document.createElement('button');
+      b.className = 'lab-card' + (L.random ? ' wide' : '');
+      b.style.setProperty('--d', k * 40 + 'ms');
+      b.innerHTML = `<span class="lr">${r === 1 ? '👍' : r === -1 ? '👎' : ''}</span><div class="li">${f.icon}</div><b>${f.name}</b><p>${f.desc}</p>`;
+      b.addEventListener('click', () => { Sound.play('tap'); UI.go('game', () => Game.start(k, Lab.make(k))); });
+      g.appendChild(b);
+    });
+  },
   /** 关卡目标栏（收集 / Boss） */
   renderGoal(G) {
     const row = $('#goalRow');
@@ -1245,6 +1439,120 @@ const UI = {
 };
 
 /* =====================================================================
+   8.5 机制插件：每个机制是一个小模块，挂在游戏的固定环节上
+       setup(G, cfg)：开局摆放 · tick(G, cfg, dt)：每帧 · onMatch(G, cfg, ctx)：消除后 · onMiss(G, cfg, tile)：点错时
+       寻路相关的机制（拐弯限制 / 封外圈 / 传送门 / 果酱）通过 Game.opts() 交给寻路函数
+   ===================================================================== */
+const MODS = {
+  misclick: {
+    onMiss(G, sec, t) {
+      G.timeLeft = Math.max(0.5, G.timeLeft - sec); G.combo = 0;
+      Renderer.nudge(t.id); Sound.play('miss');
+      const p = Renderer.centerVP(t.r, t.c); Renderer.floatText(`❌ -${sec}秒`, p.x, p.y - 24, 'penalty', 900);
+    },
+  },
+  longline: {
+    onMatch(G, cfg, ctx) {
+      if (!ctx.path) return;
+      const L = Logic.pathLength(ctx.path); if (L < cfg.min) return;
+      const sec = Math.floor((L - cfg.min) / cfg.per) + 1;
+      G.timeLeft = Math.min(G.timeTotal, G.timeLeft + sec); G.score += sec * cfg.score;
+      Renderer.floatText(`🏹 长线 ${L} 格 +${sec}秒`, ctx.mid.x, ctx.mid.y + 36, 'time', 1200); Sound.play('bonus');
+    },
+  },
+  jam: {
+    onMatch(G, sec, ctx) {
+      if (!ctx.path) return;
+      const cells = Logic.pathCells(ctx.path).filter(p => !(p.r === ctx.a.r && p.c === ctx.a.c) && !(p.r === ctx.b.r && p.c === ctx.b.c) && !Logic.isFixed(G.grid[p.r][p.c]));
+      cells.forEach(p => G.jam.set(p.r * 100 + p.c, G.gameT + sec));
+      Renderer.jamAdd(cells);
+    },
+    tick(G) { for (const [k, t] of G.jam) if (t <= G.gameT) { G.jam.delete(k); Renderer.jamRemove(k); } },
+  },
+  cham: {
+    setup(G, cfg, pool) { pool.splice(0, cfg.count).forEach(t => { t.cham = true; }); G.chamT = cfg.every; },
+    tick(G, cfg, dt) {
+      G.chamT -= dt; if (G.chamT > 0) return;
+      G.chamT = cfg.every;
+      const list = [...G.tiles.values()].filter(t => t.cham && !t.ice);
+      if (list.length < 2) return;
+      const kinds = shuffleArr(list.map(t => t.kind));       // 只在变色龙之间互换图案，每种图案数量不变
+      let changed = false;
+      list.forEach((t, i) => { if (t.kind !== kinds[i]) { t.kind = kinds[i]; Renderer.retheme(t.id, t.kind); changed = true; if (t === G.sel) G.clearSel(); } });
+      if (!changed) return;
+      if (G.hint.length) G.clearHint();
+      Sound.play('cham'); G.check();
+    },
+  },
+  fuse: {
+    setup(G, cfg, pool) { pool.splice(0, cfg.count).forEach((t, k) => { t.fuse = cfg.base + k * cfg.step; }); },
+    tick(G, cfg, dt) {
+      for (const t of G.tiles.values()) {
+        if (!t.fuse) continue;
+        const before = Math.ceil(t.fuse); t.fuse -= dt;
+        if (t.fuse > 0) { const n = Math.ceil(t.fuse); if (n !== before) { Renderer.setFuse(t.id, n); if (n <= 3) Sound.play('tick'); } continue; }
+        // 爆炸：扣时间 + 冻住上下左右
+        t.fuse = 0; Renderer.setFuse(t.id, null);
+        G.timeLeft = Math.max(0.5, G.timeLeft - cfg.penalty);
+        const frozen = [];
+        for (const [dr, dc] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+          const n = G.grid[t.r + dr] && G.grid[t.r + dr][t.c + dc];
+          if (n && G.tiles.has(n.id) && !n.ice) { n.ice = true; frozen.push(n); if (n === G.sel) G.clearSel(); }
+        }
+        Renderer.setIce(frozen.map(n => n.id), true);
+        const p = Renderer.centerVP(t.r, t.c);
+        Renderer.burst(p.x, p.y, '#ff7a3c', true); Renderer.shake(); Sound.play('bomb');
+        Renderer.floatText(`💥 -${cfg.penalty}秒`, p.x, p.y - 24, 'penalty', 1000);
+        if (G.hint.length) G.clearHint();
+        G.check();
+      }
+    },
+    onMatch(G, cfg, ctx) {
+      const n = ctx.removed.filter(t => t.fuse > 0).length; if (!n) return;
+      G.score += n * cfg.bonus;
+      Renderer.floatText(`💣 拆弹成功 +${n * cfg.bonus}`, ctx.mid.x, ctx.mid.y - 60, 'time', 1100); Sound.play('bonus');
+    },
+  },
+  adaptive: {
+    setup(G) { G.paceF = 1; G.pace = null; G.lastPairT = 0; G.pairs0 = G.tiles.size / 2; $('#hudRule').textContent = '⚡ 节奏 ×1.0'; },
+    onMatch(G) {
+      const gap = G.gameT - G.lastPairT; G.lastPairT = G.gameT;
+      G.pace = G.pace == null ? gap : G.pace * 0.7 + gap * 0.3;
+      const target = (G.timeTotal / G.pairs0) * 0.6;            // 期望的从容节奏：每对用掉 60% 的平均时间
+      G.paceF = Math.max(0.75, Math.min(1.5, target / Math.max(0.3, G.pace)));
+      $('#hudRule').textContent = `⚡ 节奏 ×${G.paceF.toFixed(1)}`;
+    },
+  },
+};
+
+/** 甜品实验室：生成试玩关 */
+const Lab = {
+  make(k) {
+    const L = CONFIG.lab[k];
+    if (!L.random) {
+      const F = FEATURES[L.feat];
+      return { id: L.id, name: F.name, icon: F.icon, level: { kinds: L.kinds, time: L.time, rule: 'none', mods: L.mods } };
+    }
+    const pool = shuffleArr(CONFIG.lab.filter(x => !x.random && x.id !== 'adaptive'));
+    const want = Math.random() < 0.5 ? 2 : 3, pick = [];
+    for (const x of pool) {
+      if (pick.length >= want) break;
+      if ((x.id === 'turns' && pick.some(q => q.id === 'ring')) || (x.id === 'ring' && pick.some(q => q.id === 'turns'))) continue;   // 两个都限路线太难，二选一
+      pick.push(x);
+    }
+    return { id: 'random', name: pick.map(x => FEATURES[x.feat].name).join(' + '), icon: '🎲',
+             level: { kinds: 14, time: 170, rule: 'none', mods: Object.assign({}, ...pick.map(x => x.mods)) } };
+  },
+  summary() {
+    const d = Store.d.lab || {};
+    return '甜品实验室评分：\n' + CONFIG.lab.map(L => {
+      const name = L.random ? '随机组合' : FEATURES[L.feat].name;
+      return `${d[L.id] === 1 ? '👍' : d[L.id] === -1 ? '👎' : '—'} ${name}`;
+    }).join('\n');
+  },
+};
+
+/* =====================================================================
    9. 游戏控制器：把输入 → 逻辑 → 渲染 串起来
    ===================================================================== */
 const Game = {
@@ -1252,11 +1560,16 @@ const Game = {
   score: 0, combo: 0, maxCombo: 0, lastMatch: 0, timeLeft: 0, timeTotal: 0, items: {},
   running: false, paused: false, busy: true, lastTick: 0,
 
-  start(i) {
+  start(i, lab) {
     this.token++;
     const tok = this.token;
     UI.hideOverlays(); Renderer.clearFx();
-    this.level = i; this.cfg = CONFIG.levels[i];
+    this.lab = lab || null;
+    document.body.classList.toggle('in-lab', !!this.lab);
+    $$('[data-act=levels]').forEach(b => { b.textContent = this.lab ? '返回实验室' : '关卡列表'; });
+    $$('.rate button').forEach(b => b.classList.remove('on'));
+    this.level = i; this.cfg = this.lab ? this.lab.level : CONFIG.levels[i];
+    this.mods = this.cfg.mods || {};
     this.R = this.cfg.rows || CONFIG.rows; this.C = this.cfg.cols || CONFIG.cols;
     // 有巧克力墙的关卡不用 🍫 图案，免得看混
     const pool = THEME.tiles.map((_, k) => k).filter(k => !(this.cfg.walls && THEME.tiles[k][0] === '🍫'));
@@ -1264,7 +1577,9 @@ const Game = {
     const GC = this.cfg.goal || { type: 'clear' };
     // 收集关：目标甜品多分配几份，保证数量够
     const kindList = GC.type === 'collect' ? [kinds[0], kinds[0], ...kinds] : kinds;
-    this.grid = Logic.generate(this.R, this.C, kindList, this.cfg.rule, this.cfg);
+    this.grid = Logic.generate(this.R, this.C, kindList, this.cfg.rule, Object.assign({}, this.cfg, { pathOpts: this.baseOpts() }));
+    this.sOpts = this.grid.pathOpts;                  // 静态寻路选项（拐弯限制 / 封外圈 / 传送门）
+    this.jam = new Map(); this.gameT = 0; this.paceF = 1;
     this.goal = { type: GC.type };
     if (GC.type === 'collect') {
       let n = 0; Logic.forEachTile(this.grid, t => { if (t.kind === kinds[0]) n++; });
@@ -1272,13 +1587,17 @@ const Game = {
     }
     if (GC.type === 'boss') Object.assign(this.goal, { hp: GC.hp, max: GC.hp, every: GC.every, freeze: GC.freeze, t: GC.every });
     UI.renderGoal(this.goal);
-    this.tiles = new Map(); Logic.forEachTile(this.grid, t => { if (!t.wall) this.tiles.set(t.id, t); });
+    this.tiles = new Map(); Logic.forEachTile(this.grid, t => { if (!Logic.isFixed(t)) this.tiles.set(t.id, t); });
     Object.assign(this, { sel: null, hint: [], score: 0, combo: 0, maxCombo: 0, lastMatch: 0, running: false, paused: false, busy: true, lastTick: 0, _danger: false, shuffles: 0 });
     this.setFever(false); Sound.duck(false);
     this.timeLeft = this.timeTotal = this.cfg.time;
     this.items = Object.assign({}, CONFIG.items, this.cfg.items || {});
-    $('#hudLevel').textContent = `第 ${i + 1} 关`;
-    $('#hudRule').textContent = RULES[this.cfg.rule].name;
+    $('#hudLevel').textContent = this.lab ? '🧪 实验' : `第 ${i + 1} 关`;
+    $('#hudRule').textContent = this.lab ? this.lab.icon + ' ' + this.lab.name : RULES[this.cfg.rule].name;
+    // 机制开局摆放（变色龙、倒计时等挑普通方块）
+    const modPool = shuffleArr([...this.tiles.values()].filter(t => !t.mod && !t.ice));
+    this.hook('setup', modPool);
+    $('#board').classList.toggle('closed', !!this.mods.closedRing);
     this.updateHud(); this.updateTime();
     Renderer.layout(this.R, this.C);
     Renderer.build(this.grid);
@@ -1291,7 +1610,7 @@ const Game = {
   },
   go(tok) {
     if (tok !== this.token) return;
-    UI.banner(`第 ${this.level + 1} 关`, this.goalText()); Sound.play('banner');
+    UI.banner(this.lab ? `🧪 ${this.lab.icon}` : `第 ${this.level + 1} 关`, this.lab ? this.lab.name : this.goalText()); Sound.play('banner');
     setTimeout(() => { if (tok !== this.token) return; this.running = true; this.busy = false; }, CONFIG.anim.banner - 300);
   },
   goalText() {
@@ -1304,6 +1623,13 @@ const Game = {
 
   canAct() { return this.running && !this.paused && !this.busy; },
 
+  /** 调用所有启用机制的某个环节 */
+  hook(name, ...args) { for (const k in this.mods) { const h = MODS[k] && MODS[k][name]; if (h) h(this, this.mods[k], ...args); } },
+  /** 机制带来的寻路限制 */
+  baseOpts() { const m = this.mods, o = {}; if (m.turns != null) o.maxTurns = m.turns; if (m.closedRing) o.ring = false; return Object.keys(o).length ? o : undefined; },
+  /** 当前寻路选项：静态限制 + 果酱（禁行格） */
+  opts() { return this.jam && this.jam.size ? Object.assign({}, this.sOpts, { blocked: new Set(this.jam.keys()) }) : this.sOpts; },
+
   tap(id) {
     if (!this.canAct()) return;
     const t = this.tiles.get(id); if (!t) return;
@@ -1314,9 +1640,9 @@ const Game = {
     }
     if (this.sel === t) { Renderer.setSelected(t.id, false); this.sel = null; Sound.play('unselect'); return; }
     if (!this.sel) { this.select(t); return; }
-    const path = Logic.canLink(this.grid, this.sel, t);
+    const path = Logic.canLink(this.grid, this.sel, t, this.opts());
     if (path) { const a = this.sel; Renderer.setSelected(a.id, false); this.sel = null; this.resolve(a, t, path, false); }
-    else { Renderer.setSelected(this.sel.id, false); this.select(t); }
+    else { Renderer.setSelected(this.sel.id, false); this.hook('onMiss', t); this.select(t); }
   },
   select(t) { this.sel = t; Renderer.setSelected(t.id, true); Sound.play('select'); },
   clearSel() { if (this.sel) Renderer.setSelected(this.sel.id, false); this.sel = null; },
@@ -1339,7 +1665,9 @@ const Game = {
     const ids = removed.map(t => t.id), extra = removed.length - 2;
     const last = this.tiles.size === 0;
     const gain = (CB.baseScore + (isBomb ? 0 : (this.combo - 1) * CB.bonusPerCombo) + extra * SP.sparkScore) * mult;
-    this.score += gain; this.updateHud(true);
+    this.score += gain;
+    this.hook('onMatch', { a, b, path, removed, mid, isBomb });
+    this.updateHud(true);
     Renderer.markDying(ids);
     const moves = Logic.applyRule(this.grid, this.cfg.rule);
     if (moves.length) this.busy = true;
@@ -1392,11 +1720,11 @@ const Game = {
   check() {
     if (!this.running) return;
     if (this.tiles.size === 0 || this.goalDone()) return this.win();
-    if (Logic.findAnyPair(this.grid)) return;
+    if (Logic.findAnyPair(this.grid, false, this.sOpts)) return;     // 果酱会自己干，不算卡死
     const thawed = Logic.thawAll(this.grid);
     if (thawed.length) {
       UI.toast('冰块全部碎掉啦！'); Renderer.setIce(thawed.map(t => t.id), false); Sound.play('thaw');
-      if (Logic.findAnyPair(this.grid)) return;
+      if (Logic.findAnyPair(this.grid, false, this.sOpts)) return;
     }
     UI.toast('没有能消的啦，自动重新排列~'); this.doShuffle(true);
   },
@@ -1404,7 +1732,7 @@ const Game = {
   doShuffle(recheck) {
     const tok = this.token;
     this.busy = true; this.clearSel(); this.clearHint();
-    const moves = Logic.shuffleBoard(this.grid, this.cfg.rule);
+    const moves = Logic.shuffleBoard(this.grid, this.cfg.rule, this.sOpts);
     Sound.play('shuffle');
     Renderer.move(moves, CONFIG.anim.shuffle, true);
     setTimeout(() => {
@@ -1431,8 +1759,11 @@ const Game = {
     if (!this.canAct()) return;
     if (this.items[name] <= 0) { Sound.play('deny'); UI.toast('这个道具用完啦'); return; }
     if (name === 'hint') {
-      const p = Logic.findAnyPair(this.grid, true);
-      if (!p) { this.doShuffle(); return; }
+      const p = Logic.findAnyPair(this.grid, true, this.opts());
+      if (!p) {
+        if (this.jam.size && Logic.findAnyPair(this.grid, false, this.sOpts)) { UI.toast('果酱挡住了，等它干一下~'); return; }
+        this.doShuffle(); return;
+      }
       this.items.hint--;
       this.hint = [this.grid[p.a.r][p.a.c].id, this.grid[p.b.r][p.b.c].id];
       Renderer.setHint(this.hint); Sound.play('hint');
@@ -1471,7 +1802,10 @@ const Game = {
       const face = $('#goalRow .gi'); if (face) face.classList.toggle('warn', G.t < 2);
       if (G.t <= 0) { G.t = G.every; this.bossAttack(); }
     }
-    this.timeLeft -= dt;
+    this.gameT += dt;
+    this.hook('tick', dt);
+    if (!this.running) return;
+    this.timeLeft -= dt * (this.paceF || 1);
     if (this.timeLeft <= 0) { this.timeLeft = 0; this.updateTime(); this.lose(); return; }
     this.updateTime();
   },
@@ -1507,21 +1841,23 @@ const Game = {
     const remain = Math.ceil(this.timeLeft), bonus = remain * CONFIG.timeScore, total = this.score + bonus;
     const ratio = this.timeLeft / this.timeTotal;
     const stars = ratio >= CONFIG.stars[0] ? 3 : ratio >= CONFIG.stars[1] ? 2 : 1;
-    const i = this.level, d = Store.d;
-    const isBest = total > (d.best[i] || 0);
-    d.stars[i] = Math.max(d.stars[i] || 0, stars);
-    d.best[i] = Math.max(d.best[i] || 0, total);
-    d.unlocked = Math.min(CONFIG.levels.length, Math.max(d.unlocked, i + 2));
-    Store.save();
+    const i = this.level, d = Store.d, lab = this.lab;
+    const isBest = !lab && total > (d.best[i] || 0);
+    if (!lab) {                                        // 实验关不计入关卡进度
+      d.stars[i] = Math.max(d.stars[i] || 0, stars);
+      d.best[i] = Math.max(d.best[i] || 0, total);
+      d.unlocked = Math.min(CONFIG.levels.length, Math.max(d.unlocked, i + 2));
+      Store.save();
+    }
     const tok = this.token;
     setTimeout(() => {
       if (tok !== this.token) return;
       Sound.play('win');
       $('#wScore').textContent = this.score; $('#wBonus').textContent = '+' + bonus; $('#wCombo').textContent = 'x' + this.maxCombo;
       $('#wTotal').textContent = '0';
-      $('#wBest').innerHTML = isBest ? '<span class="newbest">新纪录!</span>' : `<p>最高分 ${d.best[i]}</p>`;
-      const last = i === CONFIG.levels.length - 1;
-      $('#winTitle').textContent = last ? '全部通关!' : '过关啦!';
+      $('#wBest').innerHTML = lab ? '' : isBest ? '<span class="newbest">新纪录!</span>' : `<p>最高分 ${d.best[i]}</p>`;
+      const last = !lab && i === CONFIG.levels.length - 1;
+      $('#winTitle').textContent = lab ? '实验成功!' : last ? '全部通关!' : '过关啦!';
       $('#btnNext').style.display = last ? 'none' : '';
       const ss = $$('#winStars span');
       ss.forEach(s => s.className = '');
@@ -1559,7 +1895,7 @@ const Game = {
 const Backup = {
   sum(s) { let h = 7; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 1679616; return h.toString(36).padStart(4, '0'); },
   encode() {
-    const d = Store.d, json = JSON.stringify({ v: 1, u: d.unlocked, s: d.stars, b: d.best });
+    const d = Store.d, json = JSON.stringify({ v: 1, u: d.unlocked, s: d.stars, b: d.best, l: d.lab });
     const b64 = btoa(unescape(encodeURIComponent(json))).replace(/=+$/, '');
     return 'SWEET-' + b64 + '-' + this.sum(b64);
   },
@@ -1577,6 +1913,7 @@ const Backup = {
       d.stars[i] = Math.max(d.stars[i] || 0, Math.min(3, (o.s || [])[i] | 0));
       d.best[i] = Math.max(d.best[i] || 0, (o.b || [])[i] | 0);
     }
+    if (o.l && typeof o.l === 'object') d.lab = Object.assign({}, o.l, d.lab);
     Store.save(); return true;
   },
 };
@@ -1594,7 +1931,7 @@ const Tests = (() => {
   }
   const P = (r, c) => ({ r: r + 1, c: c + 1 }); // 测试用 0 基内部坐标
   /** 对照组：0-1 BFS 求最少拐弯数 */
-  function bfsTurns(g, a, b) {
+  function bfsTurns(g, a, b, o) {
     const R = g.length, C = g[0].length, D = [[-1, 0], [1, 0], [0, -1], [0, 1]];
     const dist = new Array(R * C * 4).fill(Infinity), key = (r, c, d) => (r * C + c) * 4 + d;
     const dq = [];
@@ -1605,17 +1942,18 @@ const Tests = (() => {
       const nr = r + D[d][0], nc = c + D[d][1];
       if (nr >= 0 && nc >= 0 && nr < R && nc < C) {
         if (nr === b.r && nc === b.c) return t;
-        if (g[nr][nc] === null && dist[key(nr, nc, d)] > t) { dist[key(nr, nc, d)] = t; dq.unshift([nr, nc, d, t]); }
+        if (Logic.isFree(g, nr, nc, o) && dist[key(nr, nc, d)] > t) { dist[key(nr, nc, d)] = t; dq.unshift([nr, nc, d, t]); }
       }
       for (let d2 = 0; d2 < 4; d2++) if (d2 !== d && dist[key(r, c, d2)] > t + 1) { dist[key(r, c, d2)] = t + 1; dq.push([r, c, d2, t + 1]); }
     }
     return Infinity;
   }
-  function validPath(g, a, b, p) {
-    if (!p || p.length < 2 || p.length > 4) return false;
+  function validPath(g, a, b, p, o) {
+    const maxT = o && o.maxTurns != null ? o.maxTurns : 2;
+    if (!p || p.length < 2 || p.length > maxT + 2) return false;
     if (p[0].r !== a.r || p[0].c !== a.c || p[p.length - 1].r !== b.r || p[p.length - 1].c !== b.c) return false;
-    for (let i = 1; i < p.length - 1; i++) if (g[p[i].r][p[i].c] !== null) return false;
-    for (let i = 0; i < p.length - 1; i++) if (!Logic.lineClear(g, p[i].r, p[i].c, p[i + 1].r, p[i + 1].c)) return false;
+    for (let i = 1; i < p.length - 1; i++) if (!Logic.isFree(g, p[i].r, p[i].c, o)) return false;
+    for (let i = 0; i < p.length - 1; i++) if (!Logic.lineClear(g, p[i].r, p[i].c, p[i + 1].r, p[i + 1].c, o)) return false;
     return true;
   }
   function run() {
@@ -1678,6 +2016,39 @@ const Tests = (() => {
     Logic.forEachTile(g, t => { if (t.wall) cnt.wall++; if (t.ice) cnt.ice++; if (t.mod) cnt[t.mod]++; });
     ok('生成：特殊方块数量正确', cnt.wall === 4 && cnt.ice === 8 && cnt.time === 2 && cnt.spark === 2);
     ok('生成：带特殊方块也找到了完整解', g.verified === true);
+    // ---- v1.3 寻路选项 ----
+    g = G(['A.', 'BA']);                   ok('最多拐 1 次：L 形可连', turns(Logic.findPath(g, P(0, 0), P(1, 1), { maxTurns: 1 })) === 1);
+    g = G(['ABA', 'BBB', 'BBB']);          ok('最多拐 1 次：需 2 拐弯的不可连', Logic.findPath(g, P(0, 0), P(0, 2), { maxTurns: 1 }) === null);
+    ok('封住外圈：不能再绕外面', Logic.findPath(g, P(0, 0), P(0, 2), { ring: false }) === null);
+    g = G(['A.A']);                        ok('果酱挡路：改绕外圈', turns(Logic.findPath(g, P(0, 0), P(0, 2), { blocked: new Set([1 * 100 + 2]) })) === 2);
+    ok('路径格子数', Logic.pathCells([P(0, 0), P(0, 2)]).length === 3 && Logic.pathLength([P(0, 0), P(0, 2)]) === 2);
+    g = G(['A.BBB', 'BBBBB', 'BBB.A']);
+    const X = P(0, 1), Y = P(2, 3);
+    for (const [Z, k] of [[X, 1], [Y, 1]]) g[Z.r][Z.c] = { id: uid++, kind: -2, portal: k, r: Z.r, c: Z.c };
+    const pp = Logic.findPath(g, P(0, 0), P(2, 4), { ring: false, portals: [[X, Y]] });
+    ok('传送门：穿过去连通', !!pp && pp.some(q => q.jump) && Logic.turnsOf(pp) === 0);
+    ok('传送门：没有传送门就连不上', Logic.findPath(g, P(0, 0), P(2, 4), { ring: false }) === null);
+    g = G(['A', '.', '.']); g[2][1] = { id: uid++, kind: -2, portal: 1, r: 2, c: 1 }; Logic.applyRule(g, 'down');
+    ok('传送门固定不动', g[2][1]?.portal && g[1][1]?.kind === 'A');
+    // 随机对拍（带选项）：与 BFS 结果一致
+    let agree2 = true, valid2 = true, cases2 = 0;
+    for (let n = 0; n < 120; n++) {
+      const R = 3 + (Math.random() * 5 | 0), C = 3 + (Math.random() * 5 | 0);
+      const rows = []; for (let r = 0; r < R; r++) { let s = ''; for (let c = 0; c < C; c++) s += Math.random() < 0.5 ? '.' : 'AB'[Math.random() * 2 | 0]; rows.push(s); }
+      g = G(rows);
+      const o = { maxTurns: Math.random() * 3 | 0, ring: Math.random() < 0.5 ? false : undefined, blocked: new Set() };
+      for (let r = 0; r < R + 2; r++) for (let c = 0; c < C + 2; c++) if (g[r][c] === null && Math.random() < 0.15) o.blocked.add(r * 100 + c);
+      for (const L of Logic.groupByKind(g).values()) for (let i = 0; i < L.length; i++) for (let j = i + 1; j < L.length; j++) {
+        cases2++;
+        const p = Logic.findPath(g, L[i], L[j], o), t = bfsTurns(g, L[i], L[j], o);
+        if (!!p !== (t <= o.maxTurns)) agree2 = false;
+        if (p && !validPath(g, L[i], L[j], p, o)) valid2 = false;
+      }
+    }
+    ok(`随机对拍（拐弯限制/封外圈/果酱，${cases2} 对）`, agree2 && valid2);
+    g = Logic.generate(10, 7, [...Array(14).keys()], 'none', { mods: { portals: 2 } });
+    let np = 0; Logic.forEachTile(g, t => { if (t.portal) np++; });
+    ok('生成：传送门成对且找到完整解', np === 4 && g.verified === true && Logic.countClearable(g) % 2 === 0);
     const code = Backup.encode();
     ok('存档码：可解析且校验正确', !!Backup.decode(code) && !Backup.decode(code.slice(0, -1) + (code.slice(-1) === 'a' ? 'b' : 'a')));
 
@@ -1739,7 +2110,7 @@ function init() {
   setupPWA();
 
   // iOS：禁止页面回弹、双指缩放、双击缩放、长按菜单
-  document.addEventListener('touchmove', e => { if (!e.target.closest('.help, textarea')) e.preventDefault(); }, { passive: false });
+  document.addEventListener('touchmove', e => { if (!e.target.closest('.help, textarea, .labgrid')) e.preventDefault(); }, { passive: false });
   ['gesturestart', 'gesturechange', 'dblclick', 'contextmenu'].forEach(ev => document.addEventListener(ev, e => e.preventDefault(), { passive: false }));
   // 第一次触摸解锁音频
   const unlock = () => Sound.unlock();
@@ -1781,14 +2152,33 @@ function init() {
   $('#btnPlay').addEventListener('click', () => { Sound.play('tap'); const i = Math.min(Store.d.unlocked, CONFIG.levels.length) - 1; UI.go('game', () => Game.start(i)); });
   $('#btnLevels').addEventListener('click', () => { Sound.play('tap'); UI.go('levels', () => UI.renderLevels()); });
   $('#btnHelp').addEventListener('click', () => { Sound.play('tap'); UI.overlay('ovHelp', true); });
+  $('#btnLab').addEventListener('click', () => { Sound.play('tap'); UI.go('lab', () => UI.renderLab()); });
+  $('#labBack').addEventListener('click', () => { Sound.play('tap'); UI.go('menu', () => UI.renderMenu()); });
+  $('#labCopy').addEventListener('click', () => {
+    Sound.play('tap');
+    const text = Lab.summary(), ok = () => UI.toast('评分已复制，可以直接发给 Claude');
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(ok, () => UI.toast(text.replace(/\n/g, ' ')));
+    else UI.toast(text.replace(/\n/g, ' '));
+  });
   $('#lvBack').addEventListener('click', () => { Sound.play('tap'); UI.go('menu', () => UI.renderMenu()); });
   $('#btnPause').addEventListener('click', () => Game.pause());
 
   const acts = {
     resume: () => Game.resume(),
-    restart: () => { UI.hideOverlays(); UI.go('game', () => Game.start(Game.level)); },
+    restart: () => { UI.hideOverlays(); const lab = Game.lab, i = Game.level; UI.go('game', () => Game.start(i, lab && lab.id === 'random' ? Lab.make(i) : lab)); },
     next: () => { UI.hideOverlays(); UI.go('game', () => Game.start(Math.min(Game.level + 1, CONFIG.levels.length - 1))); },
-    levels: () => { UI.hideOverlays(); Game.quit(); UI.go('levels', () => UI.renderLevels()); },
+    levels: () => {
+      UI.hideOverlays(); const lab = Game.lab; Game.quit();
+      if (lab) UI.go('lab', () => UI.renderLab()); else UI.go('levels', () => UI.renderLevels());
+    },
+    rateUp: () => acts.rate(1),
+    rateDown: () => acts.rate(-1),
+    rate: v => {
+      if (!Game.lab) return;
+      Store.d.lab = Store.d.lab || {}; Store.d.lab[Game.lab.id] = v; Store.save();
+      $$('.rate button').forEach(b => b.classList.toggle('on', (b.dataset.act === 'rateUp') === (v === 1)));
+      UI.toast(v === 1 ? '收到！这个机制 👍' : '收到！这个机制 👎');
+    },
     closeHelp: () => UI.overlay('ovHelp', false),
     closeSave: () => UI.overlay('ovSave', false),
     introGo: () => { UI.overlay('ovIntro', false); const d = UI._introDone; UI._introDone = null; if (d) d(); },
