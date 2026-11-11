@@ -617,6 +617,9 @@ const CONFIG = {
   chapters: [
     { name: '草莓农场', icon: '🍓' }, { name: '柠檬工坊', icon: '🍋' },
     { name: '巧克力城堡', icon: '🍫' }, { name: '彩虹糖宫', icon: '🍭' },
+    { name: '迷雾花园', icon: '🌫️' }, { name: '夜光森林', icon: '🔦' },
+    { name: '糖果列车', icon: '🛤️' }, { name: '霉菌沼泽', icon: '🦠' },
+    { name: '云端糖山', icon: '⬆️' },
   ],
   warn: { ratio: 0.12, minSeconds: 10, tickFrom: 5 },  // 进度条闪红阈值
   stars: [0.45, 0.2],            // 剩余时间比例 ≥0.45 三星，≥0.2 两星，否则一星
@@ -653,6 +656,29 @@ const CONFIG = {
     { kinds: 20, time: 165, rule: 'down', walls: 4, ice: 4, spark: 2, timeCandy: 2, goal: { type: 'boss', hp: 36, every: 10, freeze: 4 }, items: { hint: 2, shuffle: 2, bomb: 2 } },
   ],
 };
+
+// 第 25 关起按章节循环生成；机制分章解锁，之后逐步加量并有限度地叠加。
+function ensureLevels(count) {
+  const mechanics = [
+    { fog: { count: 10 } }, { dark: { radius: 2.4 } },
+    { conveyor: { rows: [3, 6, 9], every: 5 } },
+    { mold: { start: 2, every: 6, spread: 1 } },
+    { rise: { start: 2, every: 9, min: 5, accel: 10 } },
+  ];
+  const rules = ['none','down','left','up','right','centerX','splitX','centerY','splitY','zigzag'];
+  while (CONFIG.levels.length < count) {
+    const n = CONFIG.levels.length + 1, endless = n - 24;
+    const chapter = Math.floor((n - 1) / CONFIG.chapterSize);
+    const mechIndex = Math.floor((n - 25) / CONFIG.chapterSize) % mechanics.length;
+    const cfg = { kinds: Math.min(20, 14 + Math.floor(endless / 5)), time: Math.max(95, 170 - Math.floor(endless / 3)),
+      rule: rules[Math.floor((n - 25) / 2) % rules.length], timeCandy: endless % 3 === 0 ? 2 : 0,
+      spark: endless % 4 === 0 ? 1 : 0 };
+    cfg.mods = JSON.parse(JSON.stringify(mechanics[mechIndex]));
+    if (mechIndex !== 4 && chapter >= 5 && n % 3 === 0) cfg.ice = Math.min(10, 2 + Math.floor(endless / 8));
+    if (mechIndex === 4) { cfg.time = 90; cfg.rule = 'down'; }
+    CONFIG.levels.push(cfg);
+  }
+}
 
 const RULES = {
   none:    { name: '经典',     desc: '找到相同甜品连起来' },
@@ -1040,6 +1066,12 @@ const Store = {
     let d = {};
     try { d = JSON.parse(localStorage.getItem(this.key)) || {}; } catch (e) {}
     this.d = Object.assign({ unlocked: 1, stars: [], best: [], muted: false, music: true, seen: {}, lab: {}, rush: { best: 0, combo: 0 } }, d);
+    // 一次性开放前 24 关，方便直接试玩第 25 关；不改写已有成绩。
+    if (!this.d.preview24Unlocked) {
+      this.d.unlocked = Math.max(this.d.unlocked || 1, 25);
+      this.d.preview24Unlocked = true;
+      this.save();
+    }
   },
   save() { try { localStorage.setItem(this.key, JSON.stringify(this.d)); } catch (e) {} },
   totalStars() { return this.d.stars.reduce((s, v) => s + (v || 0), 0); },
@@ -1547,7 +1579,7 @@ const UI = {
     $$('[data-mute]').forEach(b => b.textContent = Sound.muted ? '🔇' : '🔊');
     $$('[data-music]').forEach(b => b.classList.toggle('off', !Sound.musicOn));
   },
-  renderMenu() { $('#starTotal').textContent = `★ ${Store.totalStars()} / ${CONFIG.levels.length * 3}`; },
+  renderMenu() { $('#starTotal').textContent = `★ ${Store.totalStars()} · 已解锁 ${Store.d.unlocked} 关`; },
   /** 选关卡片尽量大：按“章节标题 + 页码点”之外的剩余空间计算 */
   layoutLevels() {
     const box = $('#lvCenter'), s = this.scale || 1, gap = Math.round(14 * s);
@@ -1570,17 +1602,19 @@ const UI = {
   },
   /** 章节式选关：每章 6 关，左右翻页或滑动切换 */
   renderLevels(ch) {
-    const per = CONFIG.chapterSize, total = CONFIG.levels.length, nCh = Math.ceil(total / per);
+    const per = CONFIG.chapterSize;
+    ensureLevels(Math.max(24, Store.d.unlocked + per));
+    const total = CONFIG.levels.length, nCh = Math.ceil(total / per);
     if (ch == null) ch = Math.floor((Math.min(Store.d.unlocked, total) - 1) / per);
     this.ch = ch = Math.max(0, Math.min(nCh - 1, ch));
     this.layoutLevels();
-    const C = CONFIG.chapters[ch] || { name: '', icon: '🍬' }, from = ch * per, to = Math.min(total, from + per);
+    const C = CONFIG.chapters[ch] || { name: `无尽挑战 ${ch - CONFIG.chapters.length + 1}`, icon: '🍬' }, from = ch * per, to = Math.min(total, from + per);
     let stars = 0; for (let i = from; i < to; i++) stars += Store.d.stars[i] || 0;
     $('#chTitle').innerHTML = `<span class="ce">${C.icon}</span>第 ${ch + 1} 章 · ${C.name}<small>★ ${stars} / ${(to - from) * 3}</small>`;
     $('#chPrev').style.visibility = ch > 0 ? 'visible' : 'hidden';
     $('#chNext').style.visibility = ch < nCh - 1 ? 'visible' : 'hidden';
     $('#chDots').innerHTML = Array.from({ length: nCh }, (_, k) => `<i class="${k === ch ? 'on' : ''}"></i>`).join('');
-    const FI = { time: '⏰', spark: '✨', ice: '❄️', wall: '🍫', collect: '🎯', boss: '👑' };
+    const FI = { time: '⏰', spark: '✨', ice: '❄️', wall: '🍫', collect: '🎯', boss: '👑', fog: '🌫️', dark: '🔦', conveyor: '🛤️', mold: '🦠', rise: '⬆️' };
     const g = $('#lvGrid'); g.innerHTML = '';
     for (let i = from; i < to; i++) {
       const lv = CONFIG.levels[i];
@@ -1927,6 +1961,7 @@ const Game = {
     document.body.classList.toggle('in-lab', !!this.lab);
     $$('[data-act=levels]').forEach(b => { b.textContent = this.lab ? '返回实验室' : '关卡列表'; });
     $$('.rate button').forEach(b => b.classList.remove('on'));
+    if (!lab) ensureLevels(i + 1);
     this.level = i; this.cfg = this.lab ? this.lab.level : CONFIG.levels[i];
     this.mods = this.cfg.mods || {};
     this.R = this.cfg.rows || CONFIG.rows; this.C = this.cfg.cols || CONFIG.cols;
@@ -2234,7 +2269,8 @@ const Game = {
     if (!lab) {                                        // 实验关不计入关卡进度
       d.stars[i] = Math.max(d.stars[i] || 0, stars);
       d.best[i] = Math.max(d.best[i] || 0, total);
-      d.unlocked = Math.min(CONFIG.levels.length, Math.max(d.unlocked, i + 2));
+      d.unlocked = Math.max(d.unlocked, i + 2);
+      ensureLevels(d.unlocked + CONFIG.chapterSize);
       Store.save();
     }
     const tok = this.token;
@@ -2245,12 +2281,23 @@ const Game = {
       $('#wScore').textContent = this.score; $('#wBonus').textContent = '+' + bonus; $('#wCombo').textContent = 'x' + this.maxCombo;
       $('#wTotal').textContent = '0';
       $('#wBest').innerHTML = lab ? '' : isBest ? '<span class="newbest">新纪录!</span>' : `<p>最高分 ${d.best[i]}</p>`;
-      const last = !lab && i === CONFIG.levels.length - 1;
-      $('#winTitle').textContent = lab ? '实验成功!' : last ? '全部通关!' : '过关啦!';
+      const last = !!lab;
+      $('#winTitle').textContent = lab ? '实验成功!' : '过关啦!';
       $('#btnNext').style.display = last ? 'none' : '';
       const ss = $$('#winStars span');
       ss.forEach(s => s.className = '');
       UI.overlay('ovWin', true);
+      clearInterval(this.autoNextTimer);
+      if (!lab) {
+        let seconds = 5;
+        const nextButton = $('#btnNext'); nextButton.textContent = `下一关（${seconds}）`;
+        this.autoNextTimer = setInterval(() => {
+          if (tok !== this.token) { clearInterval(this.autoNextTimer); return; }
+          seconds--;
+          if (seconds <= 0) { clearInterval(this.autoNextTimer); nextButton.textContent = '下一关'; acts.next(); }
+          else nextButton.textContent = `下一关（${seconds}）`;
+        }, 1000);
+      } else $('#btnNext').textContent = '下一关';
       Renderer.fireworks(CONFIG.anim.fireworks, () => Sound.play('boom'));
       ss.forEach((s, k) => setTimeout(() => {
         if (tok !== this.token) return;
@@ -2285,6 +2332,7 @@ const Game = {
       $('#winTitle').textContent = '狂欢结束!';
       const ss = $$('#winStars span'); ss.forEach(s => s.className = '');
       UI.overlay('ovWin', true);
+      $('#btnNext').style.display = 'none';
       Renderer.fireworks(CONFIG.anim.fireworks, () => Sound.play('boom'));
       ss.forEach((s, k) => setTimeout(() => { if (tok !== this.token) return; s.className = 'show' + (k < stars ? ' on' : ''); if (k < stars) Sound.play('star', k); }, 450 + k * 280));
       const t0 = performance.now();
@@ -2330,9 +2378,10 @@ const Backup = {
   },
   restore(code) {
     const o = this.decode(code); if (!o) return false;
-    const d = Store.d, n = CONFIG.levels.length;
-    d.unlocked = Math.min(n, Math.max(d.unlocked || 1, (o.u | 0) || 1));
-    for (let i = 0; i < n; i++) {
+    const d = Store.d, n = Math.max(CONFIG.levels.length, (o.u | 0) + CONFIG.chapterSize);
+    ensureLevels(n);
+    d.unlocked = Math.max(d.unlocked || 1, (o.u | 0) || 1);
+    for (let i = 0; i < Math.max((o.s || []).length, (o.b || []).length); i++) {
       d.stars[i] = Math.max(d.stars[i] || 0, Math.min(3, (o.s || [])[i] | 0));
       d.best[i] = Math.max(d.best[i] || 0, (o.b || [])[i] | 0);
     }
@@ -2595,7 +2644,7 @@ function init() {
     if (Math.abs(dx) > 50) { UI._swipedAt = performance.now(); Sound.play('tap'); UI.renderLevels(UI.ch + (dx < 0 ? 1 : -1)); }
   });
   $('#btnSave').addEventListener('click', () => { Sound.play('tap'); $('#saveCode').value = Backup.encode(); $('#loadCode').value = ''; UI.overlay('ovSave', true); });
-  $('#btnPlay').addEventListener('click', () => { Sound.play('tap'); const i = Math.min(Store.d.unlocked, CONFIG.levels.length) - 1; UI.go('game', () => Game.start(i)); });
+  $('#btnPlay').addEventListener('click', () => { Sound.play('tap'); const i = Math.max(0, Store.d.unlocked - 1); ensureLevels(i + 1); UI.go('game', () => Game.start(i)); });
   $('#btnLevels').addEventListener('click', () => { Sound.play('tap'); UI.go('levels', () => UI.renderLevels()); });
   $('#btnHelp').addEventListener('click', () => { Sound.play('tap'); UI.overlay('ovHelp', true); });
   $('#btnLab').addEventListener('click', () => { Sound.play('tap'); UI.go('lab', () => UI.renderLab()); });
@@ -2611,9 +2660,10 @@ function init() {
 
   const acts = {
     resume: () => Game.resume(),
-    restart: () => { UI.hideOverlays(); const lab = Game.lab, i = Game.level; UI.go('game', () => Game.start(i, lab && lab.id === 'random' ? Lab.make(i) : lab)); },
-    next: () => { UI.hideOverlays(); UI.go('game', () => Game.start(Math.min(Game.level + 1, CONFIG.levels.length - 1))); },
+    restart: () => { clearInterval(Game.autoNextTimer); $('#btnNext').textContent = '下一关'; UI.hideOverlays(); const lab = Game.lab, i = Game.level; UI.go('game', () => Game.start(i, lab && lab.id === 'random' ? Lab.make(i) : lab)); },
+    next: () => { clearInterval(Game.autoNextTimer); $('#btnNext').textContent = '下一关'; UI.hideOverlays(); const i = Game.level + 1; ensureLevels(i + 1); UI.go('game', () => Game.start(i)); },
     levels: () => {
+      clearInterval(Game.autoNextTimer); $('#btnNext').textContent = '下一关';
       UI.hideOverlays(); const lab = Game.lab; Game.quit();
       if (lab) UI.go('lab', () => UI.renderLab()); else UI.go('levels', () => UI.renderLevels());
     },
