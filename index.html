@@ -680,6 +680,27 @@ function ensureLevels(count) {
   }
 }
 
+function adaptedLevel(base, skill) {
+  const cfg = JSON.parse(JSON.stringify(base));
+  const s = Math.max(-4, Math.min(4, Number(skill) || 0));
+  // 能力分每级只改变少量参数，时间变化封顶约 ±14%。
+  cfg.time = Math.round(cfg.time * (1 - s * 0.035));
+  cfg.kinds = Math.max(10, Math.min(THEME.tiles.length, cfg.kinds + Math.round(s * 0.5)));
+  const m = cfg.mods || {};
+  if (m.fog) m.fog.count = Math.max(4, Math.min(18, m.fog.count + s * 2));
+  if (m.dark) m.dark.radius = Math.max(1.8, Math.min(3.2, m.dark.radius - s * 0.12));
+  if (m.conveyor) m.conveyor.every = Math.max(3, Math.min(9, m.conveyor.every - s * 0.6));
+  if (m.mold) { m.mold.every = Math.max(3, Math.min(10, m.mold.every - s * 0.6)); m.start = Math.max(1, Math.min(5, m.start + Math.round(s * 0.25))); }
+  if (m.rise) { m.rise.every = Math.max(5, Math.min(13, m.rise.every - s * 0.6)); m.rise.min = Math.max(3, Math.min(8, m.rise.min - s * 0.4)); }
+  return cfg;
+}
+function updateAdaptiveSkill(delta) {
+  const old = Number(Store.d.adaptSkill) || 0;
+  Store.d.adaptSkill = Math.max(-4, Math.min(4, old + delta));
+  Store.save();
+  return Store.d.adaptSkill - old;
+}
+
 const RULES = {
   none:    { name: '经典',     desc: '找到相同甜品连起来' },
   down:    { name: '⬇ 下落',   desc: '消除后方块向下掉落' },
@@ -1065,7 +1086,7 @@ const Store = {
   load() {
     let d = {};
     try { d = JSON.parse(localStorage.getItem(this.key)) || {}; } catch (e) {}
-    this.d = Object.assign({ unlocked: 1, stars: [], best: [], muted: false, music: true, seen: {}, lab: {}, rush: { best: 0, combo: 0 } }, d);
+    this.d = Object.assign({ unlocked: 1, stars: [], best: [], muted: false, music: true, seen: {}, lab: {}, rush: { best: 0, combo: 0 }, adaptSkill: 0 }, d);
     // 一次性开放前 24 关，方便直接试玩第 25 关；不改写已有成绩。
     if (!this.d.preview24Unlocked) {
       this.d.unlocked = Math.max(this.d.unlocked || 1, 25);
@@ -1962,7 +1983,9 @@ const Game = {
     $$('[data-act=levels]').forEach(b => { b.textContent = this.lab ? '返回实验室' : '关卡列表'; });
     $$('.rate button').forEach(b => b.classList.remove('on'));
     if (!lab) ensureLevels(i + 1);
-    this.level = i; this.cfg = this.lab ? this.lab.level : CONFIG.levels[i];
+    this.level = i;
+    const baseCfg = this.lab ? this.lab.level : CONFIG.levels[i];
+    this.cfg = !this.lab && i >= 24 ? adaptedLevel(baseCfg, Store.d.adaptSkill) : baseCfg;
     this.mods = this.cfg.mods || {};
     this.R = this.cfg.rows || CONFIG.rows; this.C = this.cfg.cols || CONFIG.cols;
     // 有巧克力墙的关卡不用 🍫 图案，免得看混
@@ -2263,8 +2286,9 @@ const Game = {
     const remain = Math.ceil(this.timeLeft), bonus = remain * CONFIG.timeScore, total = this.score + bonus;
     const ratio = this.timeLeft / this.timeTotal;
     const stars = this.mods.rise ? 3 : ratio >= CONFIG.stars[0] ? 3 : ratio >= CONFIG.stars[1] ? 2 : 1;
-    if (this.mods.rise) Renderer.floatText('⬆️ 坚持住了！', innerWidth / 2, innerHeight * 0.35, 'feverT', 1500);
     const i = this.level, d = Store.d, lab = this.lab;
+    const adaptDelta = !lab && i >= 24 && !this.mods.rise ? updateAdaptiveSkill(ratio >= 0.55 ? 1 : ratio <= 0.2 ? -1 : 0) : 0;
+    if (this.mods.rise) Renderer.floatText('⬆️ 坚持住了！', innerWidth / 2, innerHeight * 0.35, 'feverT', 1500);
     const isBest = !lab && total > (d.best[i] || 0);
     if (!lab) {                                        // 实验关不计入关卡进度
       d.stars[i] = Math.max(d.stars[i] || 0, stars);
@@ -2287,6 +2311,7 @@ const Game = {
       const ss = $$('#winStars span');
       ss.forEach(s => s.className = '');
       UI.overlay('ovWin', true);
+      if (adaptDelta) UI.toast(adaptDelta > 0 ? '表现很轻松，后续关卡会稍微加难' : '这关比较吃力，后续关卡会稍微放缓');
       clearInterval(this.autoNextTimer);
       if (!lab) {
         let seconds = 5;
@@ -2343,6 +2368,7 @@ const Game = {
 
   lose() {
     if (this.mods.rush) return this.rushEnd();
+    const adaptDelta = !this.lab && this.level >= 24 ? updateAdaptiveSkill(-1) : 0;
     this.running = false; this.busy = true; this.setFever(false); this.clearSel(); this.clearHint();
     this.musicOverride = null; Renderer.setTopWarn(false);
     Sound.play('lose'); Renderer.loseFx();
@@ -2351,7 +2377,11 @@ const Game = {
     $('#loseText').textContent = G.type === 'collect' ? `还差 ${G.need - G.got} 个 ${THEME.tiles[G.kind][0]}，再快一点点！`
       : G.type === 'boss' ? `蛋糕大魔王还剩 ${Math.ceil(G.hp)} 点血，下次一定！`
       : this.loseMsg || `还剩 ${this.tiles.size / 2} 对没消掉，布丁都化掉了…`;
-    setTimeout(() => { if (tok === this.token) UI.overlay('ovLose', true); }, 700);
+    setTimeout(() => {
+      if (tok !== this.token) return;
+      UI.overlay('ovLose', true);
+      if (adaptDelta < 0) UI.toast('没关系，后续关卡会稍微放缓');
+    }, 700);
   },
 
   quit() {
@@ -2366,7 +2396,7 @@ const Game = {
 const Backup = {
   sum(s) { let h = 7; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 1679616; return h.toString(36).padStart(4, '0'); },
   encode() {
-    const d = Store.d, json = JSON.stringify({ v: 1, u: d.unlocked, s: d.stars, b: d.best, l: d.lab });
+    const d = Store.d, json = JSON.stringify({ v: 1, u: d.unlocked, s: d.stars, b: d.best, l: d.lab, a: d.adaptSkill || 0 });
     const b64 = btoa(unescape(encodeURIComponent(json))).replace(/=+$/, '');
     return 'SWEET-' + b64 + '-' + this.sum(b64);
   },
@@ -2386,6 +2416,7 @@ const Backup = {
       d.best[i] = Math.max(d.best[i] || 0, (o.b || [])[i] | 0);
     }
     if (o.l && typeof o.l === 'object') d.lab = Object.assign({}, o.l, d.lab);
+    if (Number.isFinite(Number(o.a))) d.adaptSkill = Math.max(-4, Math.min(4, Number(o.a)));
     Store.save(); return true;
   },
 };
